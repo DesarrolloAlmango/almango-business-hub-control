@@ -1,74 +1,9 @@
 
+@import './styles/variables.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  :root {
-    --background: 240 20% 10%; // Deep dark purple background
-    --foreground: 270 60% 90%; // Light lavender text
-
-    --card: 240 20% 12%; // Slightly lighter background for cards
-    --card-foreground: 270 50% 85%; 
-
-    --primary: 270 70% 60%; // Vivid purple
-    --primary-foreground: 0 0% 100%; // White text on primary
-
-    --secondary: 320 70% 60%; // Magenta
-    --secondary-foreground: 0 0% 100%; 
-
-    --muted: 240 15% 20%; // Muted dark purple
-    --muted-foreground: 270 20% 60%; 
-
-    --accent: 200 70% 60%; // Ocean blue
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 350 70% 50%; // Red for error states
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 240 20% 25%; // Dark border
-    --input: 240 20% 30%; 
-    --ring: 270 70% 60%;
-
-    --sidebar-background: 240 20% 10%; 
-    --sidebar-foreground: 270 60% 90%;
-    --sidebar-primary: 320 70% 60%;
-    --sidebar-accent: 200 70% 60%;
-  }
-
-  .dark {
-    // Dark mode can use similar colors or slightly adjusted tones
-    --background: 240 20% 8%;
-    --foreground: 270 60% 95%;
-
-    --card: 240 20% 10%;
-    --card-foreground: 270 50% 90%;
-
-    --primary: 270 70% 65%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 320 70% 65%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 240 15% 25%;
-    --muted-foreground: 270 20% 65%;
-
-    --accent: 200 70% 65%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 350 70% 55%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 240 20% 30%;
-    --input: 240 20% 35%;
-    --ring: 270 70% 65%;
-
-    --sidebar-background: 240 20% 8%;
-    --sidebar-foreground: 270 60% 95%;
-    --sidebar-primary: 320 70% 65%;
-    --sidebar-accent: 200 70% 65%;
-  }
-}
 
 @layer base {
   * {
@@ -79,3 +14,4 @@
     @apply bg-background text-foreground;
   }
 }
+
