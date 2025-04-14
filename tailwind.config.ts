@@ -52,6 +52,12 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+                almango: {
+                    blue: '#4285B9',
+                    'light-blue': '#C5E4F3',
+                    orange: '#F77D24',
+                    'light-orange': '#FFC499',
+                },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
