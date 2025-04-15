@@ -37,7 +37,7 @@
   }
   
   .white-on-black-card {
-    @apply bg-card border border-white/10 shadow-lg shadow-white/5;
+    @apply bg-[hsl(var(--card))] border border-white/10 shadow-lg shadow-white/5;
   }
   
   .white-on-black-button {
