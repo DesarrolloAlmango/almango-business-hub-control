@@ -48,9 +48,9 @@ export function DashboardHeader() {
           aria-label="Cambiar tema"
         >
           {theme === 'light' ? (
-            <Moon className="rounded-full hover:bg-accent/10 text-accent" />
+            <Moon className="text-primary" />
           ) : (
-            <Sun className="h-5 w-5 text-primary" />
+            <Sun className="text-primary" />
           )}
         </Toggle>
         
