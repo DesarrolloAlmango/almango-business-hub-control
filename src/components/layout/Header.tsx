@@ -40,17 +40,17 @@ export function DashboardHeader() {
         />
       </div>
       
-      <div className="ml-auto flex items-center gap-4">
+      <div className="ml-auto flex items-center ">
         <Toggle 
           pressed={theme === 'light'} 
           onPressedChange={toggleTheme}
-          className="flex items-center justify-center"
+          className="rounded-full hover:bg-primary/10 h-10 w-10 p-0 flex items-center justify-center"
           aria-label="Cambiar tema"
         >
           {theme === 'light' ? (
-            <Moon className="rounded-full hover:bg-secondary/10 text-secondary" />
+            <Moon className="h-5 w-5 text-primary" />
           ) : (
-            <Sun className="rounded-full hover:bg-secondary/10 text-secondary" />
+            <Sun className="h-5 w-5 text-primary" />
           )}
         </Toggle>
         
