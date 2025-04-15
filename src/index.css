@@ -133,14 +133,17 @@
   }
   
   .border-accent {
-    @apply border border-accent;
+    @apply border;
+    border-color: hsl(var(--accent));
   }
   
   .border-primary {
-    @apply border border-primary;
+    @apply border;
+    border-color: hsl(var(--primary));
   }
   
   .border-secondary {
-    @apply border border-secondary;
+    @apply border;
+    border-color: hsl(var(--secondary));
   }
 }
