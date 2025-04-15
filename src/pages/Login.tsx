@@ -78,7 +78,7 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@almango.com.uy"
+                  placeholder="correo@almango.com.uy"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="white-on-black-input"
