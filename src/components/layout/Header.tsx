@@ -44,7 +44,7 @@ export function DashboardHeader() {
         <Toggle 
           pressed={theme === 'light'} 
           onPressedChange={toggleTheme}
-          className="rounded-full h-10 w-10 p-0 flex items-center justify-center"
+          className="flex items-center justify-center"
           aria-label="Cambiar tema"
         >
           {theme === 'light' ? (
