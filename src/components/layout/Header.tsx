@@ -1,5 +1,5 @@
 
-import { Bell, ChevronDown, MessageSquare, Moon, Search, Settings, Sun, User } from "lucide-react";
+import { Bell, ChevronDown, LogOut, MessageSquare, Moon, Search, Settings, Sun, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,30 @@ import {
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useTheme } from "@/hooks/use-theme";
 import { Toggle } from "@/components/ui/toggle";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
 
 export function DashboardHeader() {
   const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  const handleLogout = () => {
+    // Clear the login state
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userEmail');
+    
+    toast({
+      title: "Sesión cerrada",
+      description: "Ha cerrado sesión correctamente",
+    });
+    
+    // Redirect to login page
+    navigate('/login');
+  };
+  
+  // Get user email from localStorage
+  const userEmail = localStorage.getItem('userEmail') || 'Administrador';
   
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-[hsl(var(--background))] px-4 sm:px-6">
@@ -86,7 +107,7 @@ export function DashboardHeader() {
                 </AvatarFallback>
               </Avatar>
               <span className="hidden text-sm font-medium md:inline-block highlight-text">
-                Administrador
+                {userEmail}
               </span>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </Button>
@@ -103,7 +124,11 @@ export function DashboardHeader() {
               <span>Configuración</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="border-border" />
-            <DropdownMenuItem className="hover:bg-destructive/10 text-destructive">
+            <DropdownMenuItem 
+              className="hover:bg-destructive/10 text-destructive cursor-pointer"
+              onClick={handleLogout}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
               Cerrar Sesión
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -3,8 +3,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
 import SubUsuarios from "./pages/SubUsuarios";
 import Solicitudes from "./pages/Solicitudes";
 import LinkQR from "./pages/LinkQR";
@@ -28,38 +30,74 @@ import { ThemeProvider } from "./hooks/use-theme";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/subusuarios" element={<SubUsuarios />} />
-            <Route path="/solicitudes" element={<Solicitudes />} />
-            <Route path="/links-qr" element={<LinkQR />} />
-            <Route path="/visualizacion-solicitudes" element={<VisualizacionSolicitudes />} />
-            <Route path="/feedback" element={<Feedback />} />
-            <Route path="/reportes" element={<Reportes />} />
-            <Route path="/lista-negra" element={<ListaNegra />} />
-            <Route path="/documentacion" element={<Documentacion />} />
-            <Route path="/incidencias" element={<Incidencias />} />
-            <Route path="/estadisticas" element={<Estadisticas />} />
-            <Route path="/calendario" element={<Calendario />} />
-            <Route path="/pagos" element={<Pagos />} />
-            <Route path="/campanas" element={<Campanas />} />
-            <Route path="/clientes" element={<Clientes />} />
-            <Route path="/comunicacion" element={<Comunicacion />} />
-            <Route path="/developer" element={<DeveloperEnhanced />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+// Auth check component
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
+
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
+};
+
+const App = () => {
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  
+  useEffect(() => {
+    // Check if user is logged in
+    const checkAuth = () => {
+      setIsCheckingAuth(false);
+    };
+    
+    // Small delay to prevent flash of login screen
+    setTimeout(checkAuth, 100);
+  }, []);
+  
+  if (isCheckingAuth) {
+    return null; // Or a loading spinner
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              
+              <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/subusuarios" element={<ProtectedRoute><SubUsuarios /></ProtectedRoute>} />
+              <Route path="/solicitudes" element={<ProtectedRoute><Solicitudes /></ProtectedRoute>} />
+              <Route path="/links-qr" element={<ProtectedRoute><LinkQR /></ProtectedRoute>} />
+              <Route path="/visualizacion-solicitudes" element={<ProtectedRoute><VisualizacionSolicitudes /></ProtectedRoute>} />
+              <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
+              <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+              <Route path="/lista-negra" element={<ProtectedRoute><ListaNegra /></ProtectedRoute>} />
+              <Route path="/documentacion" element={<ProtectedRoute><Documentacion /></ProtectedRoute>} />
+              <Route path="/incidencias" element={<ProtectedRoute><Incidencias /></ProtectedRoute>} />
+              <Route path="/estadisticas" element={<ProtectedRoute><Estadisticas /></ProtectedRoute>} />
+              <Route path="/calendario" element={<ProtectedRoute><Calendario /></ProtectedRoute>} />
+              <Route path="/pagos" element={<ProtectedRoute><Pagos /></ProtectedRoute>} />
+              <Route path="/campanas" element={<ProtectedRoute><Campanas /></ProtectedRoute>} />
+              <Route path="/clientes" element={<ProtectedRoute><Clientes /></ProtectedRoute>} />
+              <Route path="/comunicacion" element={<ProtectedRoute><Comunicacion /></ProtectedRoute>} />
+              <Route path="/developer" element={<ProtectedRoute><DeveloperEnhanced /></ProtectedRoute>} />
+              
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
