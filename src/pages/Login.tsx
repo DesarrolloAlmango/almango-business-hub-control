@@ -78,7 +78,7 @@ export default function Login() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="correo@ejemplo.com"
+                  placeholder="admin@almango.com.uy"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="white-on-black-input"
@@ -86,7 +86,7 @@ export default function Login() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Contraseña</Label>
+                  <Label htmlFor="password">123</Label>
                   <a 
                     href="#" 
                     className="text-xs text-[hsl(var(--primary))] hover:underline"
