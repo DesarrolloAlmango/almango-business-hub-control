@@ -44,13 +44,13 @@ export function DashboardHeader() {
         <Toggle 
           pressed={theme === 'light'} 
           onPressedChange={toggleTheme}
-          className="rounded-full hover:bg-primary/10 h-10 w-10 p-0 flex items-center justify-center"
+          className="rounded-full h-10 w-10 p-0 flex items-center justify-center"
           aria-label="Cambiar tema"
         >
           {theme === 'light' ? (
-            <Moon className="text-primary" />
+            <Moon className="rounded-full hover:bg-secondary/10 text-secondary" />
           ) : (
-            <Sun className="text-primary" />
+            <Sun className="rounded-full hover:bg-secondary/10 text-secondary" />
           )}
         </Toggle>
         
