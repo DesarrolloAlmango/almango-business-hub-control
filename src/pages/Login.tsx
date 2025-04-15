@@ -86,7 +86,7 @@ export default function Login() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">123</Label>
+                  <Label htmlFor="password">Contraseña</Label>
                   <a 
                     href="#" 
                     className="text-xs text-[hsl(var(--primary))] hover:underline"
