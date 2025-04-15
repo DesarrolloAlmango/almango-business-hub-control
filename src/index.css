@@ -33,6 +33,30 @@
   }
 
   .gradient-heading {
-    @apply bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-white/70 via-white to-white/70 bg-clip-text text-transparent;
+  }
+  
+  .white-on-black-card {
+    @apply bg-card border border-white/10 shadow-lg shadow-white/5;
+  }
+  
+  .white-on-black-button {
+    @apply bg-white text-black hover:bg-white/90 transition-colors;
+  }
+  
+  .white-on-black-input {
+    @apply bg-muted border-white/20 focus:border-white/50 text-white placeholder:text-white/50;
+  }
+  
+  .glass-panel {
+    @apply backdrop-blur-sm bg-white/5 border border-white/10;
+  }
+  
+  .highlight-text {
+    @apply text-white font-medium;
+  }
+  
+  .subtle-glow {
+    @apply shadow-[0_0_15px_rgba(255,255,255,0.1)];
   }
 }

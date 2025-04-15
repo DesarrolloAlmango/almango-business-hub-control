@@ -1,4 +1,3 @@
-
 import {
   Users,
   FileText,
@@ -16,6 +15,7 @@ import {
   UserCircle,
   MessageSquare,
   LayoutDashboard,
+  Code,
 } from "lucide-react";
 import { Link as RouterLink } from "react-router-dom";
 import {
@@ -114,6 +114,11 @@ const sidebarItems = [
     icon: MessageSquare,
     path: "/comunicacion",
   },
+  {
+    title: "Desarrollador",
+    icon: Code,
+    path: "/developer",
+  },
 ];
 
 export function DashboardSidebar() {
@@ -199,6 +204,27 @@ export function DashboardSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.slice(11, 16).map((item) => (
+                <SidebarMenuItem key={item.path}>
+                  <SidebarMenuButton 
+                    tooltip={item.title}
+                    asChild
+                  >
+                    <RouterLink to={item.path} className={cn("flex items-center")}>
+                      <item.icon className="mr-2" size={20} />
+                      <span>{item.title}</span>
+                    </RouterLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Desarrollo</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarItems.slice(16).map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     tooltip={item.title}

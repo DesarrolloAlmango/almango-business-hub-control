@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import SubUsuarios from "./pages/SubUsuarios";
 import Solicitudes from "./pages/Solicitudes";
 import LinkQR from "./pages/LinkQR";
+import Developer from "./pages/Developer"; // New developer page
 import {
   VisualizacionSolicitudes,
   Feedback,
@@ -48,6 +50,7 @@ const App = () => (
           <Route path="/campanas" element={<Campanas />} />
           <Route path="/clientes" element={<Clientes />} />
           <Route path="/comunicacion" element={<Comunicacion />} />
+          <Route path="/developer" element={<Developer />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

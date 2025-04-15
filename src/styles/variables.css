@@ -1,25 +1,25 @@
 
 :root {
   /* Background colors */
-  --background: 215 40% 15%; /* Dark navy background */
-  --foreground: 0 0% 100%; /* White text */
-  --card: 215 35% 20%; /* Slightly lighter navy for cards */
+  --background: 0 0% 0%; /* Pure black background */
+  --foreground: 0 0% 100%; /* Pure white text */
+  --card: 0 0% 10%; /* Dark gray cards */
   --card-foreground: 0 0% 100%;
   
   /* Primary colors */
-  --primary: 30 100% 50%; /* Vibrant orange */
+  --primary: 0 0% 100%; /* White primary */
   --primary-foreground: 0 0% 0%; /* Black text on primary */
   
   /* Secondary colors */
-  --secondary: 210 100% 45%; /* Bright blue */
-  --secondary-foreground: 0 0% 100%;
+  --secondary: 0 0% 80%; /* Light gray */
+  --secondary-foreground: 0 0% 0%;
   
   /* Muted colors */
-  --muted: 215 15% 25%; /* Muted dark navy */
-  --muted-foreground: 210 10% 80%;
+  --muted: 0 0% 15%; /* Dark gray */
+  --muted-foreground: 0 0% 70%;
   
   /* Accent colors */
-  --accent: 210 100% 45%; /* Blue accent */
+  --accent: 0 0% 25%; /* Medium gray accent */
   --accent-foreground: 0 0% 100%;
   
   /* Destructive colors */
@@ -27,46 +27,46 @@
   --destructive-foreground: 0 0% 100%;
   
   /* UI element colors */
-  --border: 215 30% 30%; /* Dark border */
-  --input: 215 30% 25%;
-  --ring: 30 100% 50%;
+  --border: 0 0% 20%; /* Dark border */
+  --input: 0 0% 15%;
+  --ring: 0 0% 80%;
   
   /* Sidebar specific colors */
-  --sidebar-background: 0 0% 0%; /* Pure black */
+  --sidebar-background: 0 0% 5%; /* Near black */
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 30 100% 50%;
-  --sidebar-accent: 210 100% 45%;
+  --sidebar-primary: 0 0% 100%;
+  --sidebar-accent: 0 0% 80%;
 }
 
 .dark {
-  /* Dark mode colors - slightly adjusted tones */
-  --background: 215 45% 12%;
+  /* Dark mode is the same for white-on-black theme */
+  --background: 0 0% 0%;
   --foreground: 0 0% 100%;
   
-  --card: 215 40% 17%;
+  --card: 0 0% 8%;
   --card-foreground: 0 0% 100%;
   
-  --primary: 30 100% 55%;
+  --primary: 0 0% 100%;
   --primary-foreground: 0 0% 0%;
   
-  --secondary: 210 100% 50%;
-  --secondary-foreground: 0 0% 100%;
+  --secondary: 0 0% 80%;
+  --secondary-foreground: 0 0% 0%;
   
-  --muted: 215 20% 30%;
-  --muted-foreground: 210 15% 85%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 70%;
   
-  --accent: 210 100% 50%;
+  --accent: 0 0% 25%;
   --accent-foreground: 0 0% 100%;
   
-  --destructive: 0 100% 55%;
+  --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
   
-  --border: 215 35% 35%;
-  --input: 215 35% 30%;
-  --ring: 30 100% 55%;
+  --border: 0 0% 20%;
+  --input: 0 0% 15%;
+  --ring: 0 0% 80%;
   
-  --sidebar-background: 0 0% 0%;
+  --sidebar-background: 0 0% 5%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 30 100% 55%;
-  --sidebar-accent: 210 100% 50%;
+  --sidebar-primary: 0 0% 100%;
+  --sidebar-accent: 0 0% 80%;
 }
