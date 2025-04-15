@@ -1,5 +1,5 @@
 
-import { Bell, ChevronDown, MessageSquare, Search, Settings, User } from "lucide-react";
+import { Bell, ChevronDown, MessageSquare, Moon, Search, Settings, Sun, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,8 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useTheme } from "@/hooks/use-theme";
+import { Toggle } from "@/components/ui/toggle";
 
 export function DashboardHeader() {
+  const { theme, toggleTheme } = useTheme();
+  
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/10 bg-[hsl(var(--background))] px-4 sm:px-6">
       <SidebarTrigger className="h-9 w-9 lg:hidden" />
@@ -37,6 +41,19 @@ export function DashboardHeader() {
       </div>
       
       <div className="ml-auto flex items-center gap-4">
+        <Toggle 
+          pressed={theme === 'light'} 
+          onPressedChange={toggleTheme}
+          className="rounded-full hover:bg-white/5 h-10 w-10 p-0 flex items-center justify-center"
+          aria-label="Cambiar tema"
+        >
+          {theme === 'light' ? (
+            <Moon className="h-5 w-5" />
+          ) : (
+            <Sun className="h-5 w-5" />
+          )}
+        </Toggle>
+        
         <Button
           variant="ghost"
           size="icon"
