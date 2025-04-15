@@ -15,7 +15,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-white/10 bg-[hsl(var(--background))] px-4 sm:px-6">
       <SidebarTrigger className="h-9 w-9 lg:hidden" />
       
       <div className="flex items-center gap-2 lg:hidden">
@@ -24,7 +24,7 @@ export function DashboardHeader() {
           alt="Almango Logo" 
           className="h-8 w-8"
         />
-        <span className="font-semibold text-lg">Almango</span>
+        <span className="font-semibold text-lg highlight-text">Almango</span>
       </div>
 
       <div className="relative hidden lg:flex lg:w-64 xl:w-80">
@@ -32,7 +32,7 @@ export function DashboardHeader() {
         <Input
           type="search"
           placeholder="Buscar..."
-          className="w-full rounded-lg bg-background pl-8 shadow-none md:bg-muted"
+          className="w-full rounded-lg border-white/10 pl-8 shadow-none white-on-black-input"
         />
       </div>
       
@@ -40,7 +40,7 @@ export function DashboardHeader() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className="rounded-full hover:bg-white/5"
           aria-label="Notificaciones"
         >
           <Bell className="h-5 w-5" />
@@ -49,7 +49,7 @@ export function DashboardHeader() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className="rounded-full hover:bg-white/5"
           aria-label="Mensajes"
         >
           <MessageSquare className="h-5 w-5" />
@@ -58,7 +58,7 @@ export function DashboardHeader() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className="rounded-full hover:bg-white/5"
           aria-label="Configuración"
         >
           <Settings className="h-5 w-5" />
@@ -68,33 +68,33 @@ export function DashboardHeader() {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="flex items-center gap-2 rounded-full pr-1"
+              className="flex items-center gap-2 rounded-full pr-1 hover:bg-white/5"
             >
-              <Avatar className="h-8 w-8">
+              <Avatar className="h-8 w-8 border border-white/10">
                 <AvatarImage src="" alt="Usuario" />
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   <User className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
-              <span className="hidden text-sm font-medium md:inline-block">
+              <span className="hidden text-sm font-medium md:inline-block highlight-text">
                 Administrador
               </span>
               <ChevronDown className="h-4 w-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+          <DropdownMenuContent align="end" className="w-56 white-on-black-card">
+            <DropdownMenuLabel className="highlight-text">Mi Cuenta</DropdownMenuLabel>
+            <DropdownMenuSeparator className="border-white/10" />
+            <DropdownMenuItem className="hover:bg-white/5">
               <User className="mr-2 h-4 w-4" />
               <span>Perfil</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="hover:bg-white/5">
               <Settings className="mr-2 h-4 w-4" />
               <span>Configuración</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuSeparator className="border-white/10" />
+            <DropdownMenuItem className="hover:bg-white/5">
               Cerrar Sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
