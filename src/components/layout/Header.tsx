@@ -22,15 +22,7 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-[hsl(var(--background))] px-4 sm:px-6">
       <SidebarTrigger className="h-9 w-9 lg:hidden" />
       
-      <div className="flex items-center gap-2 lg:hidden">
-        <img 
-          src="/lovable-uploads/bbb7cf38-3978-487f-8d60-82f4e16d39c6.png" 
-          alt="Almango Logo" 
-          className="h-8 w-8"
-        />
-        <span className="font-semibold text-lg highlight-text">Almango</span>
-      </div>
-
+ 
       <div className="relative hidden lg:flex lg:w-64 xl:w-80">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
@@ -40,7 +32,7 @@ export function DashboardHeader() {
         />
       </div>
       
-      <div className="ml-auto flex items-center ">
+      <div className="ml-auto flex items-center gap-4">
         <Toggle 
           pressed={theme === 'light'} 
           onPressedChange={toggleTheme}
