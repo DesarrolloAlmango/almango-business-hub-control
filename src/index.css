@@ -16,33 +16,33 @@
   
   .light-mode {
     --background: 0 0% 100%;
-    --foreground: 0 0% 10%;
+    --foreground: 0 0% 7%;
     --card: 0 0% 98%;
-    --card-foreground: 0 0% 10%;
+    --card-foreground: 0 0% 7%;
     
-    --primary: 0 0% 10%;
+    --primary: 25 100% 46%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 192 49% 47%;
+    --secondary-foreground: 0 0% 100%;
     
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
     
-    --accent: 0 0% 94%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 202 100% 36%;
+    --accent-foreground: 0 0% 100%;
     
     --destructive: 0 100% 45%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 0 0% 85%;
+    --border: 0 0% 80%;
     --input: 0 0% 90%;
-    --ring: 0 0% 20%;
+    --ring: 202 100% 36%;
     
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 10%;
-    --sidebar-primary: 0 0% 10%;
-    --sidebar-accent: 0 0% 25%;
+    --sidebar-background: 217 27% 16%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 25 100% 46%;
+    --sidebar-accent: 192 49% 47%;
   }
   
   .light-mode .highlight-text {
@@ -105,5 +105,42 @@
   
   .subtle-glow {
     @apply shadow-[0_0_15px_rgba(255,255,255,0.1)];
+  }
+  
+  /* New color-specific utility classes */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors;
+  }
+  
+  .btn-accent {
+    @apply bg-accent text-accent-foreground hover:bg-accent/90 transition-colors;
+  }
+  
+  .badge-primary {
+    @apply bg-primary/20 text-primary-foreground px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .badge-secondary {
+    @apply bg-secondary/20 text-secondary-foreground px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .badge-accent {
+    @apply bg-accent/20 text-accent-foreground px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .border-accent {
+    @apply border border-accent;
+  }
+  
+  .border-primary {
+    @apply border border-primary;
+  }
+  
+  .border-secondary {
+    @apply border border-secondary;
   }
 }

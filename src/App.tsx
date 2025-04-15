@@ -8,7 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import SubUsuarios from "./pages/SubUsuarios";
 import Solicitudes from "./pages/Solicitudes";
 import LinkQR from "./pages/LinkQR";
-import Developer from "./pages/Developer"; // New developer page
+import DeveloperEnhanced from "./pages/DeveloperEnhanced"; // Use our enhanced developer page
 import {
   VisualizacionSolicitudes,
   Feedback,
@@ -52,7 +52,7 @@ const App = () => (
             <Route path="/campanas" element={<Campanas />} />
             <Route path="/clientes" element={<Clientes />} />
             <Route path="/comunicacion" element={<Comunicacion />} />
-            <Route path="/developer" element={<Developer />} />
+            <Route path="/developer" element={<DeveloperEnhanced />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

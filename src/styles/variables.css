@@ -1,72 +1,80 @@
 
 :root {
-  /* Background colors */
-  --background: 0 0% 0%; /* Pure black background */
-  --foreground: 0 0% 100%; /* Pure white text */
-  --card: 0 0% 10%; /* Dark gray cards */
+  /* Primary colors from the palette */
+  --orange: 25 100% 46%;  /* #e47911 */
+  --navy: 217 27% 16%;    /* #232f3e */
+  --black: 0 0% 7%;       /* #111111 */
+  --teal: 192 49% 47%;    /* #48a3c6 */
+  --blue: 202 100% 36%;   /* #007eb9 */
+  --white: 0 0% 100%;     /* #ffffff */
+  --gray: 0 0% 47%;       /* #37475a */
+  --light-gray: 0 0% 80%; /* #cccccc */
+  
+  /* Dark theme (default) */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 10%;
   --card-foreground: 0 0% 100%;
   
   /* Primary colors */
-  --primary: 0 0% 100%; /* White primary */
-  --primary-foreground: 0 0% 0%; /* Black text on primary */
+  --primary: 25 100% 46%; /* Orange as primary */
+  --primary-foreground: 0 0% 100%;
   
   /* Secondary colors */
-  --secondary: 0 0% 80%; /* Light gray */
-  --secondary-foreground: 0 0% 0%;
+  --secondary: 192 49% 47%; /* Teal as secondary */
+  --secondary-foreground: 0 0% 100%;
   
   /* Muted colors */
-  --muted: 0 0% 15%; /* Dark gray */
-  --muted-foreground: 0 0% 70%;
-  
-  /* Accent colors */
-  --accent: 0 0% 25%; /* Medium gray accent */
-  --accent-foreground: 0 0% 100%;
-  
-  /* Destructive colors */
-  --destructive: 0 100% 50%; /* Red for error states */
-  --destructive-foreground: 0 0% 100%;
-  
-  /* UI element colors */
-  --border: 0 0% 20%; /* Dark border */
-  --input: 0 0% 15%;
-  --ring: 0 0% 80%;
-  
-  /* Sidebar specific colors */
-  --sidebar-background: 0 0% 5%; /* Near black */
-  --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 0 0% 100%;
-  --sidebar-accent: 0 0% 80%;
-}
-
-.dark {
-  /* Dark mode is the same for white-on-black theme */
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  
-  --card: 0 0% 8%;
-  --card-foreground: 0 0% 100%;
-  
-  --primary: 0 0% 100%;
-  --primary-foreground: 0 0% 0%;
-  
-  --secondary: 0 0% 80%;
-  --secondary-foreground: 0 0% 0%;
-  
   --muted: 0 0% 15%;
   --muted-foreground: 0 0% 70%;
   
-  --accent: 0 0% 25%;
+  /* Accent colors */
+  --accent: 202 100% 36%; /* Blue as accent */
   --accent-foreground: 0 0% 100%;
   
+  /* Destructive colors */
   --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
   
-  --border: 0 0% 20%;
+  /* UI element colors */
+  --border: 217 27% 16%; /* Navy for borders */
   --input: 0 0% 15%;
-  --ring: 0 0% 80%;
+  --ring: 202 100% 36%; /* Blue for focus rings */
   
-  --sidebar-background: 0 0% 5%;
+  /* Sidebar specific colors */
+  --sidebar-background: 217 27% 16%; /* Navy */
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 0 0% 100%;
-  --sidebar-accent: 0 0% 80%;
+  --sidebar-primary: 25 100% 46%; /* Orange */
+  --sidebar-accent: 192 49% 47%; /* Teal */
+}
+
+.light-mode {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 7%; /* Black */
+  --card: 0 0% 98%;
+  --card-foreground: 0 0% 7%;
+  
+  --primary: 25 100% 46%; /* Orange as primary */
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: 192 49% 47%; /* Teal as secondary */
+  --secondary-foreground: 0 0% 100%;
+  
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 40%;
+  
+  --accent: 202 100% 36%; /* Blue as accent */
+  --accent-foreground: 0 0% 100%;
+  
+  --destructive: 0 100% 45%;
+  --destructive-foreground: 0 0% 100%;
+  
+  --border: 0 0% 80%; /* Light gray for borders */
+  --input: 0 0% 90%;
+  --ring: 202 100% 36%; /* Blue for focus rings */
+  
+  --sidebar-background: 217 27% 16%; /* Keep sidebar dark */
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-primary: 25 100% 46%; /* Orange */
+  --sidebar-accent: 192 49% 47%; /* Teal */
 }

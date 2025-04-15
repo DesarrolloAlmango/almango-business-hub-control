@@ -1,3 +1,4 @@
+
 import {
   Users,
   FileText,
@@ -123,7 +124,7 @@ const sidebarItems = [
 
 export function DashboardSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className="bg-[hsl(var(--sidebar-background))] border-r border-border">
       <SidebarHeader className="flex items-center justify-start p-4">
         <div className="flex items-center gap-2">
           <img 
@@ -131,13 +132,15 @@ export function DashboardSidebar() {
             alt="Almango Logo" 
             className="h-10 w-10"
           />
-          <span className="text-xl font-bold text-white">Almango Business</span>
+          <span className="text-xl font-bold text-white">
+            <span className="text-[hsl(var(--primary))]">Almango</span> Business
+          </span>
         </div>
       </SidebarHeader>
       
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Principal</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.slice(0, 3).map((item) => (
@@ -146,8 +149,8 @@ export function DashboardSidebar() {
                     tooltip={item.title}
                     asChild
                   >
-                    <RouterLink to={item.path} className={cn("flex items-center")}>
-                      <item.icon className="mr-2" size={20} />
+                    <RouterLink to={item.path} className={cn("flex items-center hover:text-[hsl(var(--primary))] transition-colors")}>
+                      <item.icon className="mr-2 text-[hsl(var(--primary))]" size={20} />
                       <span>{item.title}</span>
                     </RouterLink>
                   </SidebarMenuButton>
@@ -158,7 +161,7 @@ export function DashboardSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Visualización</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Visualización</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.slice(3, 6).map((item) => (
@@ -167,8 +170,8 @@ export function DashboardSidebar() {
                     tooltip={item.title}
                     asChild
                   >
-                    <RouterLink to={item.path} className={cn("flex items-center")}>
-                      <item.icon className="mr-2" size={20} />
+                    <RouterLink to={item.path} className={cn("flex items-center hover:text-[hsl(var(--primary))] transition-colors")}>
+                      <item.icon className="mr-2 text-[hsl(var(--secondary))]" size={20} />
                       <span>{item.title}</span>
                     </RouterLink>
                   </SidebarMenuButton>
@@ -179,7 +182,7 @@ export function DashboardSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Reportes</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Reportes</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.slice(6, 11).map((item) => (
@@ -188,8 +191,8 @@ export function DashboardSidebar() {
                     tooltip={item.title}
                     asChild
                   >
-                    <RouterLink to={item.path} className={cn("flex items-center")}>
-                      <item.icon className="mr-2" size={20} />
+                    <RouterLink to={item.path} className={cn("flex items-center hover:text-[hsl(var(--primary))] transition-colors")}>
+                      <item.icon className="mr-2 text-[hsl(var(--accent))]" size={20} />
                       <span>{item.title}</span>
                     </RouterLink>
                   </SidebarMenuButton>
@@ -200,7 +203,7 @@ export function DashboardSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Gestión</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Gestión</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.slice(11, 16).map((item) => (
@@ -209,8 +212,8 @@ export function DashboardSidebar() {
                     tooltip={item.title}
                     asChild
                   >
-                    <RouterLink to={item.path} className={cn("flex items-center")}>
-                      <item.icon className="mr-2" size={20} />
+                    <RouterLink to={item.path} className={cn("flex items-center hover:text-[hsl(var(--primary))] transition-colors")}>
+                      <item.icon className="mr-2 text-[hsl(var(--secondary))]" size={20} />
                       <span>{item.title}</span>
                     </RouterLink>
                   </SidebarMenuButton>
@@ -221,7 +224,7 @@ export function DashboardSidebar() {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Desarrollo</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Desarrollo</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.slice(16).map((item) => (
@@ -230,8 +233,8 @@ export function DashboardSidebar() {
                     tooltip={item.title}
                     asChild
                   >
-                    <RouterLink to={item.path} className={cn("flex items-center")}>
-                      <item.icon className="mr-2" size={20} />
+                    <RouterLink to={item.path} className={cn("flex items-center hover:text-[hsl(var(--primary))] transition-colors")}>
+                      <item.icon className="mr-2 text-[hsl(var(--primary))]" size={20} />
                       <span>{item.title}</span>
                     </RouterLink>
                   </SidebarMenuButton>
@@ -243,7 +246,7 @@ export function DashboardSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-4">
-        <div className="text-xs text-white/80 text-center">
+        <div className="text-xs text-[hsl(var(--secondary))] text-center">
           Almango Business Hub © {new Date().getFullYear()}
         </div>
       </SidebarFooter>
