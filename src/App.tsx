@@ -12,6 +12,7 @@ import Solicitudes from "./pages/Solicitudes";
 import LinkQR from "./pages/LinkQR";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import Messages from "./pages/Messages"; // Import the Messages page
 import DeveloperEnhanced from "./pages/DeveloperEnhanced"; // Use our enhanced developer page
 import {
   VisualizacionSolicitudes,
@@ -87,6 +88,7 @@ const App = () => {
               <Route path="/links-qr" element={<ProtectedRoute><LinkQR /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/visualizacion-solicitudes" element={<ProtectedRoute><VisualizacionSolicitudes /></ProtectedRoute>} />
               <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
               <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
