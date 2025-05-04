@@ -90,6 +90,7 @@ export function DashboardHeader() {
           size="icon"
           className="rounded-full hover:bg-accent/10 text-accent"
           aria-label="Configuración"
+          onClick={() => navigate('/settings')}
         >
           <Settings className="h-5 w-5" />
         </Button>
@@ -115,11 +116,17 @@ export function DashboardHeader() {
           <DropdownMenuContent align="end" className="w-56 white-on-black-card">
             <DropdownMenuLabel className="highlight-text">Mi Cuenta</DropdownMenuLabel>
             <DropdownMenuSeparator className="border-border" />
-            <DropdownMenuItem className="hover:bg-primary/10 text-foreground">
+            <DropdownMenuItem 
+              className="hover:bg-primary/10 text-foreground cursor-pointer"
+              onClick={() => navigate('/profile')}
+            >
               <User className="mr-2 h-4 w-4 text-primary" />
               <span>Perfil</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-primary/10 text-foreground">
+            <DropdownMenuItem 
+              className="hover:bg-primary/10 text-foreground cursor-pointer"
+              onClick={() => navigate('/settings')}
+            >
               <Settings className="mr-2 h-4 w-4 text-primary" />
               <span>Configuración</span>
             </DropdownMenuItem>

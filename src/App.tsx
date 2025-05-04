@@ -10,6 +10,8 @@ import Login from "./pages/Login";
 import SubUsuarios from "./pages/SubUsuarios";
 import Solicitudes from "./pages/Solicitudes";
 import LinkQR from "./pages/LinkQR";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import DeveloperEnhanced from "./pages/DeveloperEnhanced"; // Use our enhanced developer page
 import {
   VisualizacionSolicitudes,
@@ -28,7 +30,7 @@ import {
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./hooks/use-theme";
 
-// Import new error pages
+// Import error pages
 import NotFound404 from "./pages/errors/NotFound404";
 import Unauthorized401 from "./pages/errors/Unauthorized401";
 import Forbidden403 from "./pages/errors/Forbidden403";
@@ -83,6 +85,8 @@ const App = () => {
               <Route path="/subusuarios" element={<ProtectedRoute><SubUsuarios /></ProtectedRoute>} />
               <Route path="/solicitudes" element={<ProtectedRoute><Solicitudes /></ProtectedRoute>} />
               <Route path="/links-qr" element={<ProtectedRoute><LinkQR /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
               <Route path="/visualizacion-solicitudes" element={<ProtectedRoute><VisualizacionSolicitudes /></ProtectedRoute>} />
               <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
               <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
