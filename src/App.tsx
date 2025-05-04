@@ -28,6 +28,13 @@ import {
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "./hooks/use-theme";
 
+// Import new error pages
+import NotFound404 from "./pages/errors/NotFound404";
+import Unauthorized401 from "./pages/errors/Unauthorized401";
+import Forbidden403 from "./pages/errors/Forbidden403";
+import ServerError500 from "./pages/errors/ServerError500";
+import GatewayTimeout504 from "./pages/errors/GatewayTimeout504";
+
 const queryClient = new QueryClient();
 
 // Auth check component
@@ -90,8 +97,15 @@ const App = () => {
               <Route path="/comunicacion" element={<ProtectedRoute><Comunicacion /></ProtectedRoute>} />
               <Route path="/developer" element={<ProtectedRoute><DeveloperEnhanced /></ProtectedRoute>} />
               
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
+              {/* Error Pages */}
+              <Route path="/error/401" element={<Unauthorized401 />} />
+              <Route path="/error/403" element={<Forbidden403 />} />
+              <Route path="/error/404" element={<NotFound404 />} />
+              <Route path="/error/500" element={<ServerError500 />} />
+              <Route path="/error/504" element={<GatewayTimeout504 />} />
+              
+              {/* Use the new 404 page */}
+              <Route path="*" element={<NotFound404 />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
