@@ -147,13 +147,13 @@ export default function SubastasIndex() {
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
-            className="flex items-center gap-2" 
+            className="flex items-center gap-2 border-[#d6ccc2]" 
             onClick={() => setShowFilters(!showFilters)}
           >
             <Filter className="h-4 w-4" />
             {showFilters ? "Ocultar filtros" : "Mostrar filtros"}
           </Button>
-          <Button asChild>
+          <Button className="bg-[#f0c14b] hover:bg-[#e5b94b] text-black border-[#a88734]" asChild>
             <Link to="/subastas/nueva" className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Nueva Subasta
@@ -163,7 +163,7 @@ export default function SubastasIndex() {
       </div>
 
       {showFilters && (
-        <Card className="mb-6">
+        <Card className="mb-6 border-[#e6dfd7]">
           <CardHeader className="pb-3">
             <CardTitle className="text-lg">Filtros</CardTitle>
             <CardDescription>Filtre las subastas según sus necesidades</CardDescription>
@@ -175,58 +175,52 @@ export default function SubastasIndex() {
       )}
 
       <div className="mb-6 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-900">
-          <CardContent className="p-4">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-blue-800 dark:text-blue-300">
-                  <Bell className="h-5 w-5" />
-                  <h3 className="font-medium">Ofertas Nuevas</h3>
-                </div>
-                <Badge className="bg-blue-600 hover:bg-blue-700">
-                  {OFERTAS_NUEVAS.todas} Total
-                </Badge>
+        <div className="amazon-card-info blue">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-blue-800">
+                <Bell className="h-5 w-5" />
+                <h3 className="font-medium">Ofertas Nuevas</h3>
               </div>
-              <p className="text-sm text-blue-700 dark:text-blue-400">
-                {OFERTAS_NUEVAS.activas} ofertas nuevas en subastas activas
-              </p>
+              <Badge variant="blue">
+                {OFERTAS_NUEVAS.todas} Total
+              </Badge>
             </div>
-          </CardContent>
-        </Card>
+            <p className="text-sm text-blue-700">
+              {OFERTAS_NUEVAS.activas} ofertas nuevas en subastas activas
+            </p>
+          </div>
+        </div>
         
-        <Card className="border-green-200 bg-green-50 dark:bg-green-950/30 dark:border-green-900">
-          <CardContent className="p-4">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-green-800 dark:text-green-300">
-                  <Users className="h-5 w-5" />
-                  <h3 className="font-medium">Postulantes</h3>
-                </div>
-                <Badge className="bg-green-600 hover:bg-green-700">12 Total</Badge>
+        <div className="amazon-card-info green">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-green-800">
+                <Users className="h-5 w-5" />
+                <h3 className="font-medium">Postulantes</h3>
               </div>
-              <p className="text-sm text-green-700 dark:text-green-400">
-                8 postulantes en subastas activas
-              </p>
+              <Badge variant="green">12 Total</Badge>
             </div>
-          </CardContent>
-        </Card>
+            <p className="text-sm text-green-700">
+              8 postulantes en subastas activas
+            </p>
+          </div>
+        </div>
         
-        <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-900">
-          <CardContent className="p-4">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300">
-                  <Calendar className="h-5 w-5" />
-                  <h3 className="font-medium">Próximos Cierres</h3>
-                </div>
-                <Badge className="bg-amber-600 hover:bg-amber-700">3 Subastas</Badge>
+        <div className="amazon-card-info amber">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-amber-800">
+                <Calendar className="h-5 w-5" />
+                <h3 className="font-medium">Próximos Cierres</h3>
               </div>
-              <p className="text-sm text-amber-700 dark:text-amber-400">
-                La próxima subasta cierra en 5 días
-              </p>
+              <Badge variant="amber">3 Subastas</Badge>
             </div>
-          </CardContent>
-        </Card>
+            <p className="text-sm text-amber-700">
+              La próxima subasta cierra en 5 días
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Destacados con countdown y postulantes */}
@@ -234,18 +228,17 @@ export default function SubastasIndex() {
         <h2 className="text-xl font-semibold mb-3">Subastas Destacadas</h2>
         <div className="space-y-4">
           {SUBASTAS_DESTACADAS.map((subasta) => (
-            <Card key={subasta.id} className="overflow-hidden border-gray-200 hover:border-gray-300 transition-all">
+            <Card key={subasta.id} className="overflow-hidden border-[#e6dfd7] hover:border-[#d6ccc2] transition-all">
               <div className="grid grid-cols-1 lg:grid-cols-12">
                 <div className="lg:col-span-9 p-4">
                   <div className="flex flex-col md:flex-row md:items-center gap-4 justify-between mb-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <Link to={`/subastas/${subasta.id}`} className="text-lg font-medium hover:underline">
+                        <Link to={`/subastas/${subasta.id}`} className="text-lg font-medium hover:underline text-[#0066c0]">
                           {subasta.titulo}
                         </Link>
                         <Badge 
-                          variant={subasta.estado === "en_postulacion" ? "outline" : "secondary"}
-                          className={subasta.estado === "en_postulacion" ? "border-blue-400 text-blue-600" : ""}
+                          variant={subasta.estado === "en_postulacion" ? "blue" : "purple"}
                         >
                           {subasta.estado === "en_postulacion" ? "En Postulación" : "Adjudicada"}
                         </Badge>
@@ -262,7 +255,7 @@ export default function SubastasIndex() {
                         variant="outline" 
                         size="sm"
                         onClick={() => togglePostulantes(subasta.id)}
-                        className="flex items-center gap-1"
+                        className="flex items-center gap-1 border-[#d6ccc2]"
                       >
                         <Users className="h-3.5 w-3.5" />
                         <span>{subasta.postulantes?.length || 0} Postulantes</span>
@@ -270,7 +263,11 @@ export default function SubastasIndex() {
                           className={`h-3.5 w-3.5 transition-transform ${showPostulantes === subasta.id ? "rotate-90" : ""}`}
                         />
                       </Button>
-                      <Button size="sm" asChild>
+                      <Button 
+                        size="sm" 
+                        className="bg-[#f0c14b] hover:bg-[#e5b94b] text-black border-[#a88734]" 
+                        asChild
+                      >
                         <Link to={`/subastas/${subasta.id}`}>
                           Ver Detalles
                         </Link>
@@ -287,16 +284,16 @@ export default function SubastasIndex() {
                   </div>
                   
                   {showPostulantes === subasta.id && (
-                    <div className="mt-4 border rounded-md">
-                      <div className="bg-muted/50 p-3 border-b">
+                    <div className="mt-4 border rounded-md border-[#e6dfd7]">
+                      <div className="bg-[#f7f5f2] p-3 border-b border-[#e6dfd7]">
                         <h4 className="font-medium">Lista de Postulantes</h4>
                       </div>
-                      <div className="p-2 divide-y">
+                      <div className="p-2 divide-y divide-[#e6dfd7]">
                         {subasta.postulantes && subasta.postulantes.map((postulante) => (
                           <div key={postulante.id} className="py-2 px-1">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <Avatar className="h-8 w-8">
+                                <Avatar className="h-8 w-8 bg-[#f7f5f2] text-gray-700">
                                   <AvatarFallback>{postulante.avatar}</AvatarFallback>
                                 </Avatar>
                                 <div>
@@ -318,13 +315,8 @@ export default function SubastasIndex() {
                                   <div className="font-medium">${postulante.monto}</div>
                                   <Badge 
                                     variant={
-                                      postulante.estado === "seleccionada" ? "outline" : 
-                                      postulante.estado === "pendiente" ? "secondary" : "destructive"
-                                    }
-                                    className={
-                                      postulante.estado === "seleccionada" 
-                                        ? "border-green-400 text-green-600" 
-                                        : ""
+                                      postulante.estado === "seleccionada" ? "green" : 
+                                      postulante.estado === "pendiente" ? "amber" : "destructive"
                                     }
                                   >
                                     {postulante.estado === "seleccionada" ? "Seleccionada" : 
@@ -334,6 +326,7 @@ export default function SubastasIndex() {
                                 <Button 
                                   size="sm"
                                   variant="outline"
+                                  className="border-[#d6ccc2]"
                                   onClick={() => handleVerOferta(postulante)}
                                 >
                                   Ver Oferta
@@ -347,7 +340,7 @@ export default function SubastasIndex() {
                   )}
                 </div>
                 
-                <div className="lg:col-span-3 bg-muted/30 border-t lg:border-t-0 lg:border-l">
+                <div className="lg:col-span-3 bg-[#f7f5f2] border-t lg:border-t-0 lg:border-l border-[#e6dfd7]">
                   <CountdownTimer endDate={subasta.fecha_fin_postulacion} variant="box" className="border-0 rounded-none h-full" />
                 </div>
               </div>
@@ -362,8 +355,8 @@ export default function SubastasIndex() {
         value={selectedTab}
         onValueChange={setSelectedTab}
       >
-        <TabsList className="grid w-full md:w-auto grid-cols-4 md:grid-cols-none md:flex">
-          <TabsTrigger value="activas" className="relative">
+        <TabsList className="grid w-full md:w-auto grid-cols-4 md:grid-cols-none md:flex bg-[#f7f5f2]">
+          <TabsTrigger value="activas" className="relative data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black">
             Activas
             {OFERTAS_NUEVAS.activas > 0 && (
               <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-red-500 hover:bg-red-600">
@@ -371,7 +364,7 @@ export default function SubastasIndex() {
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="pendientes" className="relative">
+          <TabsTrigger value="pendientes" className="relative data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black">
             Pendientes
             {OFERTAS_NUEVAS.pendientes > 0 && (
               <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-amber-500 hover:bg-amber-600">
@@ -379,8 +372,10 @@ export default function SubastasIndex() {
               </Badge>
             )}
           </TabsTrigger>
-          <TabsTrigger value="finalizadas">Finalizadas</TabsTrigger>
-          <TabsTrigger value="todas" className="relative">
+          <TabsTrigger value="finalizadas" className="data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black">
+            Finalizadas
+          </TabsTrigger>
+          <TabsTrigger value="todas" className="relative data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black">
             Todas
             {OFERTAS_NUEVAS.todas > 0 && (
               <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-blue-500 hover:bg-blue-600">

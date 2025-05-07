@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -149,11 +148,11 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
     switch(estado) {
       case "borrador": return "secondary";
       case "publicada": return "default";
-      case "en_revision": return "outline";
-      case "en_postulacion": return "outline";
-      case "adjudicada": return "secondary";
-      case "en_progreso": return "secondary";
-      case "finalizada": return "outline";
+      case "en_revision": return "sand";
+      case "en_postulacion": return "blue";
+      case "adjudicada": return "purple";
+      case "en_progreso": return "amber";
+      case "finalizada": return "green";
       default: return "default";
     }
   };
@@ -205,10 +204,10 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
   }
   
   return (
-    <div className="rounded-md border">
-      <Table>
+    <div className="rounded-md border border-[#e6dfd7]">
+      <Table amazonStyle={true}>
         <TableHeader>
-          <TableRow className="bg-muted/50">
+          <TableRow>
             <TableHead>Subasta</TableHead>
             <TableHead>Estado</TableHead>
             <TableHead>Progreso</TableHead>
@@ -226,17 +225,17 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
               asChild
             >
               <>
-                <TableRow className="hover:bg-muted/30">
+                <TableRow>
                   <TableCell>
                     <div className="flex items-center justify-between">
                       <Link 
                         to={`/subastas/${subasta.id}`} 
-                        className="font-medium hover:underline"
+                        className="font-medium hover:underline text-[#0066c0]"
                       >
                         {subasta.titulo}
                       </Link>
                       {subasta.estado === "en_postulacion" && subasta.postulantes?.length > 0 && (
-                        <Badge className="ml-2 bg-blue-500 text-xs">
+                        <Badge variant="blue" className="ml-2 text-xs">
                           {subasta.postulantes.length} ofertas
                         </Badge>
                       )}
@@ -249,8 +248,7 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
                   </TableCell>
                   <TableCell>
                     <Badge 
-                      variant={getBadgeVariant(subasta.estado)}
-                      className={getBadgeClass(subasta.estado)}
+                      variant={getBadgeVariant(subasta.estado) as any}
                     >
                       {getEstadoText(subasta.estado)}
                     </Badge>
@@ -266,7 +264,7 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="h-7 flex items-center gap-1"
+                        className="h-7 flex items-center gap-1 border-[#d6ccc2]"
                         disabled={!subasta.postulantes?.length}
                       >
                         <Users className="h-3.5 w-3.5" />
@@ -285,7 +283,7 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button size="sm" asChild>
+                    <Button size="sm" className="bg-[#f0c14b] hover:bg-[#e5b94b] text-black border-[#a88734]">
                       <Link to={`/subastas/${subasta.id}`}>
                         Ver Detalles
                       </Link>
@@ -296,13 +294,13 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
                 <CollapsibleContent asChild>
                   <TableRow className="hover:bg-transparent border-t-0">
                     <TableCell colSpan={6} className="p-0">
-                      <div className="bg-muted/20 p-3">
+                      <div className="bg-[#f7f5f2] p-3">
                         <h4 className="font-medium mb-2">Postulantes para "{subasta.titulo}"</h4>
                         <div className="space-y-2">
                           {subasta.postulantes?.map((postulante) => (
                             <div 
                               key={postulante.id}
-                              className="bg-background p-3 rounded-md border flex items-center justify-between"
+                              className="bg-white p-3 rounded-md border border-[#e6dfd7] flex items-center justify-between"
                             >
                               <div>
                                 <div className="font-medium">{postulante.proveedor}</div>
@@ -320,10 +318,9 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
                               <div className="flex items-center gap-2">
                                 <Badge 
                                   variant={
-                                    postulante.estado === "seleccionada" ? "outline" : 
-                                    postulante.estado === "pendiente" ? "secondary" : "destructive"
+                                    postulante.estado === "seleccionada" ? "green" : 
+                                    postulante.estado === "pendiente" ? "amber" : "destructive"
                                   }
-                                  className={postulante.estado === "seleccionada" ? "border-green-400 text-green-600" : ""}
                                 >
                                   {postulante.estado === "seleccionada" ? "Seleccionada" : 
                                     postulante.estado === "pendiente" ? "Pendiente" : "Rechazada"}
@@ -331,6 +328,7 @@ export function SubastasList({ estado, onShowPostulantes }: SubastasListProps) {
                                 <Button 
                                   size="sm" 
                                   variant="outline"
+                                  className="border-[#d6ccc2]"
                                   onClick={() => onShowPostulantes && onShowPostulantes(postulante)}
                                 >
                                   Ver Detalles

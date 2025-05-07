@@ -12,6 +12,14 @@
   --sand: 26 18% 80%;    /* #d6ccc2 - Sand color for counters */
   --sand-dark: 26 18% 70%; /* #c1b6a7 - Darker sand for dark mode */
   
+  /* Amazon card colors */
+  --amazon-blue-light: 210 100% 97%;  /* #f3f9fd */
+  --amazon-green-light: 120 60% 97%;  /* #f4fbf4 */
+  --amazon-amber-light: 45 100% 96%;  /* #fffbf0 */
+  --amazon-blue-border: 210 100% 85%; /* #c9e6fb */
+  --amazon-green-border: 120 40% 85%; /* #d5efd5 */
+  --amazon-amber-border: 45 100% 85%; /* #ffe7b3 */
+  
   /* Dark theme (default) */
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;
@@ -53,6 +61,13 @@
   --countdown-background: 26 18% 80%; /* #d6ccc2 */
   --countdown-text: 0 0% 20%; /* Dark text for contrast */
   --countdown-label: 0 0% 40%; /* Medium grey for labels */
+  
+  /* Table colors */
+  --table-header-bg: 26 18% 92%; /* #efe9e4 - Light sand for table headers */
+  --table-row-even: 0 0% 98%;    /* #fafafa - Almost white for even rows */
+  --table-row-odd: 26 18% 97%;   /* #fbf9f7 - Very light sand for odd rows */
+  --table-border: 26 18% 85%;    /* #e6dfd7 - Medium sand for table borders */
+  --table-hover: 26 18% 95%;     /* #f7f5f2 - Slightly darker for hover */
 }
 
 .light-mode {
@@ -89,4 +104,11 @@
   --countdown-background: 26 18% 80%; /* #d6ccc2 - same as dark mode */
   --countdown-text: 0 0% 20%; /* Dark text for contrast */
   --countdown-label: 0 0% 40%; /* Medium grey for labels */
+  
+  /* Table colors - same as dark mode for consistency */
+  --table-header-bg: 26 18% 92%;
+  --table-row-even: 0 0% 98%;
+  --table-row-odd: 26 18% 97%;
+  --table-border: 26 18% 85%;
+  --table-hover: 26 18% 95%;
 }

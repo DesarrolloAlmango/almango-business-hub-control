@@ -1,3 +1,4 @@
+
 @import './styles/variables.css';
 
 @tailwind base;
@@ -169,7 +170,7 @@
   }
   
   .amazon-table thead {
-    @apply bg-[#eae0d7];
+    @apply bg-[#efe9e4];
   }
   
   .amazon-table th {
@@ -177,7 +178,19 @@
   }
   
   .amazon-table tbody tr {
-    @apply border-t border-[#d6ccc2] hover:bg-[#f5f0eb];
+    @apply border-t border-[#e6dfd7];
+  }
+  
+  .amazon-table tbody tr:nth-child(odd) {
+    @apply bg-[#fbf9f7];
+  }
+  
+  .amazon-table tbody tr:nth-child(even) {
+    @apply bg-[#fafafa];
+  }
+  
+  .amazon-table tbody tr:hover {
+    @apply bg-[#f7f5f2];
   }
   
   .amazon-table td {
@@ -191,5 +204,22 @@
   
   .badge-amazon-amber {
     @apply bg-amber-600 text-white rounded-full text-xs px-2 py-0.5 font-medium;
+  }
+  
+  /* Amazon-inspired card styles */
+  .amazon-card-info {
+    @apply border rounded-md p-4 transition-all hover:shadow-md;
+  }
+  
+  .amazon-card-info.blue {
+    @apply bg-[#f3f9fd] border-[#c9e6fb];
+  }
+  
+  .amazon-card-info.green {
+    @apply bg-[#f4fbf4] border-[#d5efd5];
+  }
+  
+  .amazon-card-info.amber {
+    @apply bg-[#fffbf0] border-[#ffe7b3];
   }
 }
