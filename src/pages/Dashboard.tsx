@@ -129,9 +129,9 @@ export default function Dashboard() {
           <TabsList>
             <TabsTrigger value="overview">Vista General</TabsTrigger>
             <TabsTrigger value="services">Servicios</TabsTrigger>
-            <TabsTrigger value="feedback">Feedback</TabsTrigger>
+            <TabsTrigger value="subastas">Subastas</TabsTrigger>            
             <TabsTrigger value="economic">Resumen Económico</TabsTrigger>
-            <TabsTrigger value="subastas">Subastas</TabsTrigger>
+            <TabsTrigger value="feedback">Feedback</TabsTrigger>
           </TabsList>
           
           {/* Overview Tab - All sections */}
