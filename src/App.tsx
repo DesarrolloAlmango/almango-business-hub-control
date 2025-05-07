@@ -1,10 +1,11 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ThemeProvider } from "@/utils/theme-provider";
+import { ThemeProvider } from "@/utils/theme-provider"; // Usamos solo este ThemeProvider
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import SubUsuarios from "./pages/SubUsuarios";
@@ -12,8 +13,8 @@ import Solicitudes from "./pages/Solicitudes";
 import LinkQR from "./pages/LinkQR";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import Messages from "./pages/Messages"; // Import the Messages page
-import DeveloperEnhanced from "./pages/DeveloperEnhanced"; // Use our enhanced developer page
+import Messages from "./pages/Messages";
+import DeveloperEnhanced from "./pages/DeveloperEnhanced";
 import {
   VisualizacionSolicitudes,
   Feedback,
@@ -78,7 +79,7 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
           <Sonner />

@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Settings2, Bell, Moon, Sun, Palette, Globe, Shield, CreditCard } from "lucide-react";
 import { useState } from "react";
-import { useTheme } from "@/hooks/use-theme";
+import { useTheme } from "@/hooks/use-theme"; // Aseguramos que use el hook correcto
 import { useToast } from "@/components/ui/use-toast";
 
 export default function Settings() {
