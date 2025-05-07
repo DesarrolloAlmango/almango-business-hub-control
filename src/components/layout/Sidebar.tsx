@@ -17,6 +17,7 @@ import {
   MessageSquare,
   LayoutDashboard,
   Code,
+  Gavel,
 } from "lucide-react";
 import { Link as RouterLink } from "react-router-dom";
 import {
@@ -59,6 +60,11 @@ const sidebarItems = [
     title: "Links/QR",
     icon: Link,
     path: "/links-qr",
+  },
+  {
+    title: "Subastas de Servicios",
+    icon: Gavel,
+    path: "/subastas",
   },
   {
     title: "Feedback y Evaluaciones",
@@ -143,7 +149,7 @@ export function DashboardSidebar() {
           <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.slice(0, 3).map((item) => (
+              {sidebarItems.slice(0, 4).map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     tooltip={item.title}
@@ -164,7 +170,8 @@ export function DashboardSidebar() {
           <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Visualización</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.slice(3, 6).map((item) => (
+              {/* Added the Links/QR and Subastas items here */}
+              {sidebarItems.slice(4, 7).map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     tooltip={item.title}
@@ -185,7 +192,8 @@ export function DashboardSidebar() {
           <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Reportes</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.slice(6, 11).map((item) => (
+              {/* Adjusted the slice to account for the new item */}
+              {sidebarItems.slice(7, 12).map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     tooltip={item.title}
@@ -206,7 +214,8 @@ export function DashboardSidebar() {
           <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Gestión</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.slice(11, 16).map((item) => (
+              {/* Adjusted the slice to account for the new item */}
+              {sidebarItems.slice(12, 17).map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     tooltip={item.title}
@@ -227,7 +236,8 @@ export function DashboardSidebar() {
           <SidebarGroupLabel className="text-[hsl(var(--secondary))]">Desarrollo</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarItems.slice(16).map((item) => (
+              {/* Adjusted the slice to account for the new item */}
+              {sidebarItems.slice(17).map((item) => (
                 <SidebarMenuItem key={item.path}>
                   <SidebarMenuButton 
                     tooltip={item.title}

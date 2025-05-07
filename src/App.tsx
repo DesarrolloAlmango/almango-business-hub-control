@@ -28,10 +28,14 @@ import {
   Clientes,
   Comunicacion
 } from "./pages/PlaceholderRoutes";
-import NotFound from "./pages/NotFound";
-import { ThemeProvider } from "./hooks/use-theme";
+
+// Import Subastas pages
+import SubastasIndex from "./pages/subastas/SubastasIndex";
+import NuevaSubasta from "./pages/subastas/NuevaSubasta";
+import DetalleSubasta from "./pages/subastas/DetalleSubasta";
 
 // Import error pages
+import NotFound from "./pages/NotFound";
 import NotFound404 from "./pages/errors/NotFound404";
 import Unauthorized401 from "./pages/errors/Unauthorized401";
 import Forbidden403 from "./pages/errors/Forbidden403";
@@ -102,6 +106,11 @@ const App = () => {
               <Route path="/clientes" element={<ProtectedRoute><Clientes /></ProtectedRoute>} />
               <Route path="/comunicacion" element={<ProtectedRoute><Comunicacion /></ProtectedRoute>} />
               <Route path="/developer" element={<ProtectedRoute><DeveloperEnhanced /></ProtectedRoute>} />
+              
+              {/* Subastas Routes */}
+              <Route path="/subastas" element={<ProtectedRoute><SubastasIndex /></ProtectedRoute>} />
+              <Route path="/subastas/nueva" element={<ProtectedRoute><NuevaSubasta /></ProtectedRoute>} />
+              <Route path="/subastas/:id" element={<ProtectedRoute><DetalleSubasta /></ProtectedRoute>} />
               
               {/* Error Pages */}
               <Route path="/error/401" element={<Unauthorized401 />} />
