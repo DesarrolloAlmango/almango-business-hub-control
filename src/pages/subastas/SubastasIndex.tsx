@@ -22,66 +22,6 @@ const OFERTAS_NUEVAS = {
   todas: 7,
 };
 
-// Mock data para las subastas destacadas con postulantes
-const SUBASTAS_DESTACADAS = [
-  {
-    id: "1",
-    titulo: "Remodelación de oficina central",
-    estado: "en_postulacion",
-    progreso: 70,
-    fecha_fin_postulacion: "2025-07-15",
-    postulantes: [
-      {
-        id: "p1",
-        proveedor: "Constructora ABC",
-        avatar: "CA",
-        monto: 15800,
-        fechaEntrega: "2025-10-01",
-        rating: 4.7,
-        estado: "pendiente",
-        propuesta: "Ofrecemos un servicio rápido con materiales de calidad superior y acabados premium.",
-        incluye_capacitacion: true,
-        incluye_garantia: true,
-        incluye_postventa: true
-      },
-      {
-        id: "p2",
-        proveedor: "Soluciones Integrales",
-        avatar: "SI",
-        monto: 14200,
-        fechaEntrega: "2025-10-10",
-        rating: 4.9,
-        estado: "pendiente",
-        propuesta: "Nuestra propuesta incluye diseño personalizado con materiales ecológicos.",
-        incluye_capacitacion: true,
-        incluye_garantia: false,
-        incluye_postventa: true
-      }
-    ]
-  },
-  {
-    id: "2",
-    titulo: "Desarrollo aplicación móvil",
-    estado: "adjudicada",
-    progreso: 45,
-    fecha_fin_postulacion: "2025-06-20",
-    postulantes: [
-      {
-        id: "p3",
-        proveedor: "Tech Solutions",
-        avatar: "TS",
-        monto: 22500,
-        fechaEntrega: "2025-08-15",
-        rating: 4.5,
-        estado: "seleccionada",
-        propuesta: "Ofrecemos desarrollo ágil con actualizaciones semanales y soporte técnico.",
-        incluye_capacitacion: true,
-        incluye_garantia: true,
-        incluye_postventa: true
-      }
-    ]
-  }
-];
 
 export default function SubastasIndex() {
   const [showFilters, setShowFilters] = useState(false);
