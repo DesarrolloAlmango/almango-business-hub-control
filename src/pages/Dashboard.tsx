@@ -1,4 +1,3 @@
-
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import {
   Card,
@@ -15,9 +14,11 @@ import { EconomicSummary } from "@/components/dashboard/EconomicSummary";
 import { SubastasActivas } from "@/components/subastas/SubastasActivas";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Gavel, PlusCircle, Bell } from "lucide-react";
+import { Gavel, PlusCircle, Bell, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { DetalleOferta } from "@/components/subastas/DetalleOferta";
 
 // Mock data for active auctions overview
 const SUBASTAS_ACTIVAS_MOCK = [
@@ -27,7 +28,35 @@ const SUBASTAS_ACTIVAS_MOCK = [
     progreso: 70,
     ofertas_total: 5,
     ofertas_nuevas: 2,
-    en_postulacion: true
+    en_postulacion: true,
+    postulantes: [
+      {
+        id: "p1",
+        proveedor: "Constructora ABC",
+        avatar: "CA",
+        monto: 15800,
+        fechaEntrega: "2025-10-01",
+        rating: 4.7,
+        estado: "pendiente",
+        propuesta: "Ofrecemos un servicio rápido con materiales de calidad superior y acabados premium.",
+        incluye_capacitacion: true,
+        incluye_garantia: true,
+        incluye_postventa: true
+      },
+      {
+        id: "p2",
+        proveedor: "Soluciones Integrales",
+        avatar: "SI",
+        monto: 14200,
+        fechaEntrega: "2025-10-10",
+        rating: 4.9,
+        estado: "pendiente",
+        propuesta: "Nuestra propuesta incluye diseño personalizado con materiales ecológicos.",
+        incluye_capacitacion: true,
+        incluye_garantia: false,
+        incluye_postventa: true
+      }
+    ]
   },
   {
     id: "2",
@@ -35,7 +64,22 @@ const SUBASTAS_ACTIVAS_MOCK = [
     progreso: 45,
     ofertas_total: 3,
     ofertas_nuevas: 0,
-    en_postulacion: false
+    en_postulacion: false,
+    postulantes: [
+      {
+        id: "p3",
+        proveedor: "Tech Solutions",
+        avatar: "TS",
+        monto: 22500,
+        fechaEntrega: "2025-08-15",
+        rating: 4.5,
+        estado: "seleccionada",
+        propuesta: "Ofrecemos desarrollo ágil con actualizaciones semanales y soporte técnico.",
+        incluye_capacitacion: true,
+        incluye_garantia: true,
+        incluye_postventa: true
+      }
+    ]
   },
   {
     id: "3",
@@ -43,11 +87,34 @@ const SUBASTAS_ACTIVAS_MOCK = [
     progreso: 20,
     ofertas_total: 1,
     ofertas_nuevas: 0,
-    en_postulacion: false
+    en_postulacion: false,
+    postulantes: [
+      {
+        id: "p4",
+        proveedor: "Servicios Técnicos",
+        avatar: "ST",
+        monto: 8900,
+        fechaEntrega: "2025-07-30",
+        rating: 4.2,
+        estado: "rechazada",
+        propuesta: "Servicio completo de revisión y mantenimiento con piezas originales.",
+        incluye_capacitacion: false,
+        incluye_garantia: true,
+        incluye_postventa: false
+      }
+    ]
   },
 ];
 
 export default function Dashboard() {
+  const [selectedOferta, setSelectedOferta] = useState<any>(null);
+  const [showDetalleOferta, setShowDetalleOferta] = useState(false);
+
+  const handleVerOferta = (oferta: any) => {
+    setSelectedOferta(oferta);
+    setShowDetalleOferta(true);
+  };
+
   return (
     <DashboardLayout>
       <div className="flex items-center justify-between mb-6">
@@ -93,19 +160,24 @@ export default function Dashboard() {
                   {SUBASTAS_ACTIVAS_MOCK.map((subasta) => (
                     <div key={subasta.id} className="border-b last:border-0 pb-4 last:pb-0">
                       <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center">
-                          <span className="text-sm">{subasta.titulo}</span>
-                          <div className="flex space-x-1 ml-2">
+                        <div className="flex items-center flex-wrap gap-2">
+                          <span className="text-sm font-medium">{subasta.titulo}</span>
+                          <div className="flex gap-1">
                             {subasta.en_postulacion && (
                               <Badge variant="outline" className="text-xs py-0 px-2 h-5">
                                 En postulación
                               </Badge>
                             )}
-                            <Badge className="bg-blue-500 hover:bg-blue-600 text-xs py-0 px-2 h-5" title="Total ofertas">
+                            <Badge 
+                              className="bg-blue-500 hover:bg-blue-600 text-xs py-0 px-2 h-5" 
+                              title="Total ofertas"
+                            >
                               {subasta.ofertas_total} ofertas
                             </Badge>
                             {subasta.ofertas_nuevas > 0 && (
-                              <Badge className="bg-green-500 hover:bg-green-600 text-xs py-0 px-2 h-5 flex items-center">
+                              <Badge 
+                                className="bg-green-500 hover:bg-green-600 text-xs py-0 px-2 h-5 flex items-center"
+                              >
                                 <Bell className="h-3 w-3 mr-1" />
                                 {subasta.ofertas_nuevas} nuevas
                               </Badge>
@@ -124,6 +196,40 @@ export default function Dashboard() {
                           </Link>
                         </Button>
                       </div>
+                      
+                      {/* Mostrar postulantes si hay ofertas */}
+                      {subasta.postulantes && subasta.postulantes.length > 0 && (
+                        <div className="mt-2 bg-muted/20 p-2 rounded-md">
+                          <div className="text-xs font-medium mb-1">Postulantes:</div>
+                          <div className="space-y-1">
+                            {subasta.postulantes.map((postulante) => (
+                              <div key={postulante.id} className="flex items-center justify-between text-xs">
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{postulante.proveedor}</span>
+                                  <Badge variant={
+                                    postulante.estado === "seleccionada" ? "outline" :
+                                    postulante.estado === "pendiente" ? "secondary" : "destructive"
+                                  } className="text-xs py-0 h-4">
+                                    {postulante.estado === "seleccionada" ? "Seleccionada" : 
+                                     postulante.estado === "pendiente" ? "Pendiente" : "Rechazada"}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">${postulante.monto}</span>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="h-6 w-6 p-0" 
+                                    onClick={() => handleVerOferta(postulante)}
+                                  >
+                                    <Eye className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -215,6 +321,13 @@ export default function Dashboard() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Modal para ver detalle de la oferta */}
+      <DetalleOferta 
+        oferta={selectedOferta} 
+        open={showDetalleOferta} 
+        onClose={() => setShowDetalleOferta(false)} 
+      />
     </DashboardLayout>
   );
 }
