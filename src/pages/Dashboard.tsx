@@ -15,8 +15,37 @@ import { EconomicSummary } from "@/components/dashboard/EconomicSummary";
 import { SubastasActivas } from "@/components/subastas/SubastasActivas";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Gavel, PlusCircle } from "lucide-react";
+import { Gavel, PlusCircle, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+
+// Mock data for active auctions overview
+const SUBASTAS_ACTIVAS_MOCK = [
+  {
+    id: "1",
+    titulo: "Remodelación de oficina central",
+    progreso: 70,
+    ofertas_total: 5,
+    ofertas_nuevas: 2,
+    en_postulacion: true
+  },
+  {
+    id: "2",
+    titulo: "Desarrollo aplicación móvil",
+    progreso: 45,
+    ofertas_total: 3,
+    ofertas_nuevas: 0,
+    en_postulacion: false
+  },
+  {
+    id: "3",
+    titulo: "Mantenimiento sistema HVAC",
+    progreso: 20,
+    ofertas_total: 1,
+    ofertas_nuevas: 0,
+    en_postulacion: false
+  },
+];
 
 export default function Dashboard() {
   return (
@@ -60,28 +89,43 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {/* Mock data for active auctions overview */}
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm">Remodelación de oficina central</span>
-                      <span className="text-xs text-muted-foreground">70%</span>
+                  {/* Subastas with indicators for offers */}
+                  {SUBASTAS_ACTIVAS_MOCK.map((subasta) => (
+                    <div key={subasta.id} className="border-b last:border-0 pb-4 last:pb-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center">
+                          <span className="text-sm">{subasta.titulo}</span>
+                          <div className="flex space-x-1 ml-2">
+                            {subasta.en_postulacion && (
+                              <Badge variant="outline" className="text-xs py-0 px-2 h-5">
+                                En postulación
+                              </Badge>
+                            )}
+                            <Badge className="bg-blue-500 hover:bg-blue-600 text-xs py-0 px-2 h-5" title="Total ofertas">
+                              {subasta.ofertas_total} ofertas
+                            </Badge>
+                            {subasta.ofertas_nuevas > 0 && (
+                              <Badge className="bg-green-500 hover:bg-green-600 text-xs py-0 px-2 h-5 flex items-center">
+                                <Bell className="h-3 w-3 mr-1" />
+                                {subasta.ofertas_nuevas} nuevas
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-xs text-muted-foreground">{subasta.progreso}%</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1">
+                          <Progress value={subasta.progreso} className="h-2" />
+                        </div>
+                        <Button variant="ghost" size="sm" asChild className="h-6 px-2 text-xs">
+                          <Link to={`/subastas/${subasta.id}`}>
+                            Ver
+                          </Link>
+                        </Button>
+                      </div>
                     </div>
-                    <Progress value={70} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm">Desarrollo aplicación móvil</span>
-                      <span className="text-xs text-muted-foreground">45%</span>
-                    </div>
-                    <Progress value={45} className="h-2" />
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm">Mantenimiento sistema HVAC</span>
-                      <span className="text-xs text-muted-foreground">20%</span>
-                    </div>
-                    <Progress value={20} className="h-2" />
-                  </div>
+                  ))}
                 </div>
               </CardContent>
               <CardFooter>

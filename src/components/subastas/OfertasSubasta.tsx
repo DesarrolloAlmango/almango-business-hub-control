@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { 
   Card, 
@@ -16,7 +17,8 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Clock, Star, ThumbsUp } from "lucide-react";
+import { CheckCircle, Clock, Star, ThumbsUp, Eye } from "lucide-react";
+import { DetalleOferta } from "./DetalleOferta";
 
 // Mock data
 const MOCK_OFERTAS = [
@@ -27,7 +29,11 @@ const MOCK_OFERTAS = [
     monto: 14500,
     fechaEntrega: "2025-09-25",
     rating: 4.8,
-    estado: "seleccionada"
+    estado: "seleccionada",
+    propuesta: "Ofrecemos un servicio completo con materiales premium y garantía extendida por 2 años.",
+    incluye_capacitacion: true,
+    incluye_garantia: true,
+    incluye_postventa: true
   },
   {
     id: "2",
@@ -36,7 +42,11 @@ const MOCK_OFERTAS = [
     monto: 15200,
     fechaEntrega: "2025-09-15",
     rating: 4.5,
-    estado: "pendiente"
+    estado: "pendiente",
+    propuesta: "Nuestra propuesta incluye un equipo especializado y plazos de entrega garantizados.",
+    incluye_capacitacion: false,
+    incluye_garantia: true,
+    incluye_postventa: true
   },
   {
     id: "3",
@@ -45,7 +55,11 @@ const MOCK_OFERTAS = [
     monto: 16000,
     fechaEntrega: "2025-09-10",
     rating: 4.2,
-    estado: "rechazada"
+    estado: "rechazada",
+    propuesta: "Ofrecemos la mejor calidad en todos nuestros servicios con un enfoque en la durabilidad.",
+    incluye_capacitacion: true,
+    incluye_garantia: false,
+    incluye_postventa: false
   },
 ];
 
@@ -54,6 +68,9 @@ interface OfertasSubastaProps {
 }
 
 export function OfertasSubasta({ id }: OfertasSubastaProps) {
+  const [selectedOferta, setSelectedOferta] = useState<any>(null);
+  const [showDetalleOferta, setShowDetalleOferta] = useState(false);
+
   const getBadgeVariant = (estado: string) => {
     switch(estado) {
       case "seleccionada": return "green";
@@ -70,6 +87,11 @@ export function OfertasSubasta({ id }: OfertasSubastaProps) {
       case "rechazada": return "Rechazada";
       default: return estado;
     }
+  };
+
+  const handleVerDetalle = (oferta: any) => {
+    setSelectedOferta(oferta);
+    setShowDetalleOferta(true);
   };
   
   return (
@@ -121,19 +143,31 @@ export function OfertasSubasta({ id }: OfertasSubastaProps) {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    {oferta.estado === "pendiente" ? (
-                      <div className="flex gap-2 justify-end">
+                    <div className="flex gap-2 justify-end">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-8 px-2"
+                        onClick={() => handleVerDetalle(oferta)}
+                      >
+                        <Eye className="h-3 w-3 mr-1" />
+                        Detalle
+                      </Button>
+                      
+                      {oferta.estado === "pendiente" && (
                         <Button size="sm" variant="outline" className="h-8 px-2">
                           <ThumbsUp className="h-3 w-3 mr-1" />
                           Aprobar
                         </Button>
-                      </div>
-                    ) : (
-                      <Button size="sm" variant="ghost" className="h-8 px-2" disabled>
-                        <CheckCircle className="h-3 w-3 mr-1" />
-                        Decidido
-                      </Button>
-                    )}
+                      )}
+                      
+                      {oferta.estado === "seleccionada" && (
+                        <Button size="sm" variant="ghost" className="h-8 px-2" disabled>
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Decidido
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -144,6 +178,13 @@ export function OfertasSubasta({ id }: OfertasSubastaProps) {
             <p>No hay ofertas disponibles para esta subasta</p>
           </div>
         )}
+
+        {/* Modal de detalle de oferta */}
+        <DetalleOferta 
+          oferta={selectedOferta} 
+          open={showDetalleOferta} 
+          onClose={() => setShowDetalleOferta(false)} 
+        />
       </CardContent>
     </Card>
   );

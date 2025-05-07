@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Gavel, FileText, PlusCircle } from "lucide-react";
+import { Calendar, Clock, Gavel, FileText, PlusCircle, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // Mock data para las subastas activas
@@ -24,7 +24,9 @@ const SUBASTAS_ACTIVAS = [
     trabajos_totales: 5,
     trabajos_completados: 4,
     documentos: 3,
-    multimedia: 2
+    multimedia: 2,
+    ofertas_totales: 5,
+    ofertas_nuevas: 2
   },
   {
     id: "2",
@@ -35,7 +37,9 @@ const SUBASTAS_ACTIVAS = [
     trabajos_totales: 8,
     trabajos_completados: 3,
     documentos: 5,
-    multimedia: 4
+    multimedia: 4,
+    ofertas_totales: 3,
+    ofertas_nuevas: 0
   },
   {
     id: "3",
@@ -46,7 +50,9 @@ const SUBASTAS_ACTIVAS = [
     trabajos_totales: 3,
     trabajos_completados: 0,
     documentos: 2,
-    multimedia: 1
+    multimedia: 1,
+    ofertas_totales: 1,
+    ofertas_nuevas: 0
   }
 ];
 
@@ -105,9 +111,16 @@ export function SubastasActivas() {
                     <span>Vence: {new Date(subasta.fecha_fin_postulacion).toLocaleDateString()}</span>
                   </CardDescription>
                 </div>
-                <Badge variant={getBadgeVariant(subasta.estado) as any}>
-                  {getEstadoText(subasta.estado)}
-                </Badge>
+                <div className="flex flex-col gap-1 items-end">
+                  <Badge variant={getBadgeVariant(subasta.estado) as any}>
+                    {getEstadoText(subasta.estado)}
+                  </Badge>
+                  {subasta.ofertas_totales > 0 && (
+                    <Badge className="bg-blue-500 text-xs">
+                      {subasta.ofertas_totales} ofertas
+                    </Badge>
+                  )}
+                </div>
               </div>
             </CardHeader>
             <CardContent>
@@ -134,6 +147,15 @@ export function SubastasActivas() {
                     <p className="text-sm font-medium">{subasta.multimedia}</p>
                   </div>
                 </div>
+
+                {subasta.ofertas_nuevas > 0 && subasta.estado === "en_postulacion" && (
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-2 flex items-center justify-center gap-2">
+                    <Bell className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    <span className="text-sm text-green-700 dark:text-green-400">
+                      {subasta.ofertas_nuevas} nuevas ofertas recibidas
+                    </span>
+                  </div>
+                )}
               </div>
             </CardContent>
             <CardFooter className="pt-0 mt-auto">
