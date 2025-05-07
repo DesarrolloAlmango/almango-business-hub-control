@@ -5,7 +5,7 @@ import { Timer, Calendar } from "lucide-react";
 
 interface CountdownTimerProps {
   endDate: string;
-  variant?: "card" | "inline" | "compact";
+  variant?: "card" | "inline" | "compact" | "box";
   className?: string;
 }
 
@@ -55,11 +55,46 @@ export function CountdownTimer({ endDate, variant = "inline", className = "" }: 
     return () => clearInterval(timer);
   }, [endDate]);
 
+  if (variant === "box") {
+    return (
+      <div className={`bg-[#d6ccc2] p-4 rounded-md ${className}`}>
+        <div className="text-center mb-2">
+          <div className="flex items-center justify-center gap-2 text-amber-600">
+            <Timer className="h-5 w-5" />
+            <h4 className="font-medium text-amber-600">Tiempo restante</h4>
+          </div>
+        </div>
+        {isExpired ? (
+          <div className="text-red-600 text-center font-medium">Subasta finalizada</div>
+        ) : (
+          <div className="grid grid-cols-4 gap-2 text-center">
+            <div>
+              <div className="text-2xl font-bold text-gray-800">{timeLeft.days}</div>
+              <div className="text-xs text-gray-600">días</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-800">{timeLeft.hours}</div>
+              <div className="text-xs text-gray-600">horas</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-800">{timeLeft.minutes}</div>
+              <div className="text-xs text-gray-600">min</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-gray-800">{timeLeft.seconds}</div>
+              <div className="text-xs text-gray-600">seg</div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (variant === "card") {
     return (
-      <Card className={`${className} border-orange-200 bg-orange-50 dark:bg-orange-950/30 dark:border-orange-900`}>
+      <Card className={`${className} ${isExpired ? "border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900" : "border-[#d6ccc2] bg-[#d6ccc2] dark:bg-[#c1b6a7]"}`}>
         <CardContent className="p-4 flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-2 text-orange-800 dark:text-orange-300">
+          <div className="flex items-center gap-2 mb-2 text-amber-600">
             <Timer className="h-4 w-4" />
             <h4 className="font-medium">Tiempo restante</h4>
           </div>
@@ -68,20 +103,20 @@ export function CountdownTimer({ endDate, variant = "inline", className = "" }: 
           ) : (
             <div className="grid grid-cols-4 gap-2 w-full">
               <div className="flex flex-col items-center">
-                <div className="text-xl font-bold">{timeLeft.days}</div>
-                <div className="text-xs text-muted-foreground">días</div>
+                <div className="text-xl font-bold text-gray-800 dark:text-gray-900">{timeLeft.days}</div>
+                <div className="text-xs text-gray-600 dark:text-gray-700">días</div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="text-xl font-bold">{timeLeft.hours}</div>
-                <div className="text-xs text-muted-foreground">horas</div>
+                <div className="text-xl font-bold text-gray-800 dark:text-gray-900">{timeLeft.hours}</div>
+                <div className="text-xs text-gray-600 dark:text-gray-700">horas</div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="text-xl font-bold">{timeLeft.minutes}</div>
-                <div className="text-xs text-muted-foreground">min</div>
+                <div className="text-xl font-bold text-gray-800 dark:text-gray-900">{timeLeft.minutes}</div>
+                <div className="text-xs text-gray-600 dark:text-gray-700">min</div>
               </div>
               <div className="flex flex-col items-center">
-                <div className="text-xl font-bold">{timeLeft.seconds}</div>
-                <div className="text-xs text-muted-foreground">seg</div>
+                <div className="text-xl font-bold text-gray-800 dark:text-gray-900">{timeLeft.seconds}</div>
+                <div className="text-xs text-gray-600 dark:text-gray-700">seg</div>
               </div>
             </div>
           )}

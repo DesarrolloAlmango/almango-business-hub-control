@@ -1,4 +1,3 @@
-
 @import './styles/variables.css';
 
 @tailwind base;
@@ -147,13 +146,30 @@
     border-color: hsl(var(--secondary));
   }
   
-  /* Amazon-inspired table styling */
+  /* Amazon-inspired countdown box */
+  .countdown-box {
+    @apply bg-[#d6ccc2] rounded-md p-4 text-center;
+  }
+  
+  .countdown-box-header {
+    @apply flex items-center justify-center gap-2 text-amber-600 mb-2;
+  }
+  
+  .countdown-number {
+    @apply text-2xl font-bold text-gray-800;
+  }
+  
+  .countdown-label {
+    @apply text-xs text-gray-600;
+  }
+  
+  /* Amazon-inspired table styling with updated colors */
   .amazon-table {
-    @apply border border-gray-200 rounded-md overflow-hidden;
+    @apply border border-[#d6ccc2] rounded-md overflow-hidden;
   }
   
   .amazon-table thead {
-    @apply bg-gray-100;
+    @apply bg-[#eae0d7];
   }
   
   .amazon-table th {
@@ -161,23 +177,19 @@
   }
   
   .amazon-table tbody tr {
-    @apply border-t border-gray-200 hover:bg-gray-50;
+    @apply border-t border-[#d6ccc2] hover:bg-[#f5f0eb];
   }
   
   .amazon-table td {
     @apply py-3 px-4;
   }
   
-  /* Amazon-inspired badge styling */
-  .badge-amazon-orange {
-    @apply bg-orange-600 text-white rounded-full text-xs px-2 py-0.5 font-medium;
+  /* Amazon-inspired badge styling with updated colors */
+  .badge-amazon-sand {
+    @apply bg-[#d6ccc2] text-gray-800 rounded-full text-xs px-2 py-0.5 font-medium;
   }
   
-  .badge-amazon-blue {
-    @apply bg-blue-600 text-white rounded-full text-xs px-2 py-0.5 font-medium;
-  }
-  
-  .badge-amazon-neutral {
-    @apply bg-gray-100 text-gray-800 rounded-full text-xs px-2 py-0.5 font-medium;
+  .badge-amazon-amber {
+    @apply bg-amber-600 text-white rounded-full text-xs px-2 py-0.5 font-medium;
   }
 }

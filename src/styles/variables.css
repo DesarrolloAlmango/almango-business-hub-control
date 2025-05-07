@@ -9,6 +9,8 @@
   --white: 0 0% 100%;    /* #ffffff */
   --gray: 213 12% 28%;   /* #37475a - Amazon's gray */
   --light-gray: 0 0% 80%; /* #cccccc */
+  --sand: 26 18% 80%;    /* #d6ccc2 - Sand color for counters */
+  --sand-dark: 26 18% 70%; /* #c1b6a7 - Darker sand for dark mode */
   
   /* Dark theme (default) */
   --background: 0 0% 0%;
@@ -46,6 +48,11 @@
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
+  
+  /* Countdown colors */
+  --countdown-background: 26 18% 80%; /* #d6ccc2 */
+  --countdown-text: 0 0% 20%; /* Dark text for contrast */
+  --countdown-label: 0 0% 40%; /* Medium grey for labels */
 }
 
 .light-mode {
@@ -77,4 +84,9 @@
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
+  
+  /* Countdown colors (light mode) */
+  --countdown-background: 26 18% 80%; /* #d6ccc2 - same as dark mode */
+  --countdown-text: 0 0% 20%; /* Dark text for contrast */
+  --countdown-label: 0 0% 40%; /* Medium grey for labels */
 }

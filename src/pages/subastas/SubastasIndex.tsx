@@ -1,4 +1,3 @@
-
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -349,7 +348,7 @@ export default function SubastasIndex() {
                 </div>
                 
                 <div className="lg:col-span-3 bg-muted/30 border-t lg:border-t-0 lg:border-l">
-                  <CountdownTimer endDate={subasta.fecha_fin_postulacion} variant="card" className="border-0 rounded-none" />
+                  <CountdownTimer endDate={subasta.fecha_fin_postulacion} variant="box" className="border-0 rounded-none h-full" />
                 </div>
               </div>
             </Card>
