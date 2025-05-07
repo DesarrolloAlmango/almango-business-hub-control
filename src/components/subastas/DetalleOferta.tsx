@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -38,13 +37,40 @@ export function DetalleOferta({ oferta, open, onClose }: DetalleOfertaProps) {
     </div>
   );
 
+  // Function to get the appropriate badge variant
+  const getBadgeVariant = (estado: string) => {
+    switch (estado) {
+      case "seleccionada":
+        return "outline";
+      case "pendiente":
+        return "secondary";
+      default:
+        return "destructive";
+    }
+  }
+
+  // Function to get the appropriate badge class
+  const getBadgeClass = (estado: string) => {
+    switch (estado) {
+      case "seleccionada":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 border-green-400";
+      case "pendiente":
+        return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300 border-amber-400";
+      default:
+        return "";
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             Detalles de la Oferta
-            <Badge variant={oferta.estado === "seleccionada" ? "green" : (oferta.estado === "pendiente" ? "yellow" : "destructive")}>
+            <Badge 
+              variant={getBadgeVariant(oferta.estado)} 
+              className={getBadgeClass(oferta.estado)}
+            >
               {oferta.estado === "seleccionada" ? "Seleccionada" : (oferta.estado === "pendiente" ? "Pendiente" : "Rechazada")}
             </Badge>
           </DialogTitle>
