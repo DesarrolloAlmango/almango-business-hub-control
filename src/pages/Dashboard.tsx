@@ -6,11 +6,17 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ServiceStatusGrid } from "@/components/dashboard/ServiceStatusGrid";
 import { FeedbackList } from "@/components/dashboard/FeedbackList";
 import { EconomicSummary } from "@/components/dashboard/EconomicSummary";
+import { SubastasActivas } from "@/components/subastas/SubastasActivas";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Gavel, PlusCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   return (
@@ -29,10 +35,64 @@ export default function Dashboard() {
             <TabsTrigger value="services">Servicios</TabsTrigger>
             <TabsTrigger value="feedback">Feedback</TabsTrigger>
             <TabsTrigger value="economic">Resumen Económico</TabsTrigger>
+            <TabsTrigger value="subastas">Subastas</TabsTrigger>
           </TabsList>
           
           {/* Overview Tab - All sections */}
           <TabsContent value="overview" className="space-y-6">
+            <Card>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center">
+                      <Gavel className="mr-2 h-5 w-5" />
+                      Subastas Activas
+                    </CardTitle>
+                    <CardDescription>Subastas en curso y su progreso</CardDescription>
+                  </div>
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/subastas/nueva" className="flex items-center gap-1">
+                      <PlusCircle className="h-3.5 w-3.5" />
+                      <span>Nueva Subasta</span>
+                    </Link>
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Mock data for active auctions overview */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm">Remodelación de oficina central</span>
+                      <span className="text-xs text-muted-foreground">70%</span>
+                    </div>
+                    <Progress value={70} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm">Desarrollo aplicación móvil</span>
+                      <span className="text-xs text-muted-foreground">45%</span>
+                    </div>
+                    <Progress value={45} className="h-2" />
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm">Mantenimiento sistema HVAC</span>
+                      <span className="text-xs text-muted-foreground">20%</span>
+                    </div>
+                    <Progress value={20} className="h-2" />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="link" asChild className="ml-auto px-0">
+                  <Link to="/subastas">
+                    Ver todas las subastas
+                  </Link>
+                </Button>
+              </CardFooter>
+            </Card>
+
             <ServiceStatusGrid />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <FeedbackList />
@@ -103,6 +163,11 @@ export default function Dashboard() {
           {/* Economic Summary Tab */}
           <TabsContent value="economic">
             <EconomicSummary />
+          </TabsContent>
+
+          {/* Subastas Tab */}
+          <TabsContent value="subastas">
+            <SubastasActivas />
           </TabsContent>
         </Tabs>
       </div>

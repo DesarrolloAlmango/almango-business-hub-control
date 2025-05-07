@@ -33,10 +33,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
-import { ArrowLeft, Plus, Save, Trash } from "lucide-react";
+import { ArrowLeft, Plus, Save, Trash, FileText, Upload, Video } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { TrabajosSubasta } from "@/components/subastas/TrabajosSubasta";
+import { DocumentosSubasta } from "@/components/subastas/DocumentosSubasta";
+import { MultimediaSubasta } from "@/components/subastas/MultimediaSubasta";
 
 // Definir esquema de validación
 const subastaFormSchema = z.object({
@@ -49,11 +51,15 @@ const subastaFormSchema = z.object({
   incluye_materiales: z.boolean().default(false),
   incluye_bonificacion: z.boolean().default(false),
   detalle_bonificacion: z.string().optional(),
+  tipo_desembolso: z.enum(["total", "parcial", "porcentaje"]).default("total"),
+  detalle_desembolso: z.string().optional(),
 });
 
 export default function NuevaSubasta() {
   const navigate = useNavigate();
   const [trabajos, setTrabajos] = useState<{id: string, descripcion: string}[]>([]);
+  const [documentos, setDocumentos] = useState<{id: string, titulo: string, descripcion: string, archivo: File | null}[]>([]);
+  const [multimedia, setMultimedia] = useState<{id: string, tipo: string, titulo: string, archivo: File | null, url: string | null}[]>([]);
   
   const form = useForm<z.infer<typeof subastaFormSchema>>({
     resolver: zodResolver(subastaFormSchema),
@@ -64,6 +70,8 @@ export default function NuevaSubasta() {
       incluye_materiales: false,
       incluye_bonificacion: false,
       detalle_bonificacion: "",
+      tipo_desembolso: "total",
+      detalle_desembolso: "",
     },
   });
   
@@ -75,7 +83,7 @@ export default function NuevaSubasta() {
       }
       
       // Aquí iría la lógica para guardar la subasta
-      console.log({ ...values, trabajos });
+      console.log({ ...values, trabajos, documentos, multimedia });
       
       toast.success("Subasta creada correctamente");
       navigate("/subastas");
@@ -284,6 +292,55 @@ export default function NuevaSubasta() {
                       )}
                     />
                   )}
+
+                  {/* Nuevo campo: Tipo de desembolso */}
+                  <FormField
+                    control={form.control}
+                    name="tipo_desembolso"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tipo de Desembolso</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Seleccione tipo" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="total">Pago total al finalizar</SelectItem>
+                            <SelectItem value="parcial">Pagos parciales</SelectItem>
+                            <SelectItem value="porcentaje">Por porcentaje de avance</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormDescription>
+                          Defina cómo se realizarán los pagos del proyecto
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {form.watch("tipo_desembolso") !== "total" && (
+                    <FormField
+                      control={form.control}
+                      name="detalle_desembolso"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Detalles del Plan de Desembolso</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Describa el plan de desembolsos (ej: 30% al iniciar, 40% al llegar a la mitad, 30% al finalizar)" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </CardContent>
               </Card>
               
@@ -298,6 +355,28 @@ export default function NuevaSubasta() {
                 </CardHeader>
                 <CardContent>
                   <TrabajosSubasta trabajos={trabajos} setTrabajos={setTrabajos} />
+                </CardContent>
+              </Card>
+
+              {/* Nueva sección: Documentos */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Documentos Adjuntos</CardTitle>
+                  <CardDescription>Archivos relacionados al proyecto (planos, especificaciones, etc.)</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DocumentosSubasta documentos={documentos} setDocumentos={setDocumentos} />
+                </CardContent>
+              </Card>
+
+              {/* Nueva sección: Multimedia */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Contenido Multimedia</CardTitle>
+                  <CardDescription>Videos y fotos relacionados al proyecto</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <MultimediaSubasta multimedia={multimedia} setMultimedia={setMultimedia} />
                 </CardContent>
               </Card>
               
@@ -352,6 +431,22 @@ export default function NuevaSubasta() {
               </div>
             </CardContent>
           </Card>
+
+          <div className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Restricciones</CardTitle>
+                <CardDescription>Información importante</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm space-y-2 text-muted-foreground border-l-4 border-amber-500 pl-4 py-2 bg-amber-50 dark:bg-amber-950/20 rounded">
+                  <p className="font-medium text-amber-800 dark:text-amber-400">Nota importante:</p>
+                  <p>Una vez que la subasta sea aceptada, no se podrá modificar ningún dato.</p>
+                  <p>Solo se podrá cambiar el estado mediante una solicitud de cierre total del proyecto.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </DashboardLayout>
