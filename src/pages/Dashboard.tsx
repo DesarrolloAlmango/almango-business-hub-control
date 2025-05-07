@@ -165,7 +165,7 @@ export default function Dashboard() {
                           <div className="flex gap-1">
                             {subasta.en_postulacion && (
                               <Badge variant="outline" className="text-xs py-0 px-2 h-5">
-                                En postulación
+                                Postulación
                               </Badge>
                             )}
                             <Badge 
