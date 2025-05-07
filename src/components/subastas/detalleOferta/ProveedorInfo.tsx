@@ -18,7 +18,7 @@ export function ProveedorInfo({ proveedor, avatar, rating }: ProveedorInfoProps)
       <div>
         <h3 className="text-xl font-semibold">{proveedor}</h3>
         <div className="flex items-center gap-1 mt-1">
-          <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+          <Star className="h-4 w-4 text-orange-400 fill-orange-400" />
           <span>{rating} de calificación</span>
         </div>
       </div>

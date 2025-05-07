@@ -57,9 +57,9 @@ export function CountdownTimer({ endDate, variant = "inline", className = "" }: 
 
   if (variant === "card") {
     return (
-      <Card className={`${className} border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-900`}>
+      <Card className={`${className} border-orange-200 bg-orange-50 dark:bg-orange-950/30 dark:border-orange-900`}>
         <CardContent className="p-4 flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-2 text-amber-800 dark:text-amber-300">
+          <div className="flex items-center gap-2 mb-2 text-orange-800 dark:text-orange-300">
             <Timer className="h-4 w-4" />
             <h4 className="font-medium">Tiempo restante</h4>
           </div>
@@ -93,7 +93,7 @@ export function CountdownTimer({ endDate, variant = "inline", className = "" }: 
   if (variant === "compact") {
     return (
       <div className={`flex items-center gap-1 ${className}`}>
-        <Timer className="h-3 w-3 text-amber-600" />
+        <Timer className="h-3 w-3 text-orange-600" />
         {isExpired ? (
           <span className="text-xs text-red-600">Finalizada</span>
         ) : (
@@ -109,7 +109,7 @@ export function CountdownTimer({ endDate, variant = "inline", className = "" }: 
   // Default inline variant
   return (
     <div className={`flex items-center gap-1.5 ${className}`}>
-      <Timer className="h-4 w-4 text-amber-600" />
+      <Timer className="h-4 w-4 text-orange-600" />
       {isExpired ? (
         <span className="text-sm text-red-600 font-medium">Subasta finalizada</span>
       ) : (

@@ -20,16 +20,16 @@
     --card: 0 0% 98%;
     --card-foreground: 0 0% 7%;
     
-    --primary: 25 100% 46%;
+    --primary: 25 95% 38%;
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 192 49% 47%;
+    --secondary: 205 89% 40%;
     --secondary-foreground: 0 0% 100%;
     
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
     
-    --accent: 202 100% 36%;
+    --accent: 219 34% 26%;
     --accent-foreground: 0 0% 100%;
     
     --destructive: 0 100% 45%;
@@ -37,12 +37,12 @@
     
     --border: 0 0% 80%;
     --input: 0 0% 90%;
-    --ring: 202 100% 36%;
+    --ring: 205 89% 40%;
     
     --sidebar-background: 217 27% 16%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 25 100% 46%;
-    --sidebar-accent: 192 49% 47%;
+    --sidebar-primary: 25 95% 38%;
+    --sidebar-accent: 205 89% 40%;
   }
   
   .light-mode .highlight-text {
@@ -145,5 +145,39 @@
   .border-secondary {
     @apply border;
     border-color: hsl(var(--secondary));
+  }
+  
+  /* Amazon-inspired table styling */
+  .amazon-table {
+    @apply border border-gray-200 rounded-md overflow-hidden;
+  }
+  
+  .amazon-table thead {
+    @apply bg-gray-100;
+  }
+  
+  .amazon-table th {
+    @apply py-3 px-4 text-left text-sm font-medium text-gray-700;
+  }
+  
+  .amazon-table tbody tr {
+    @apply border-t border-gray-200 hover:bg-gray-50;
+  }
+  
+  .amazon-table td {
+    @apply py-3 px-4;
+  }
+  
+  /* Amazon-inspired badge styling */
+  .badge-amazon-orange {
+    @apply bg-orange-600 text-white rounded-full text-xs px-2 py-0.5 font-medium;
+  }
+  
+  .badge-amazon-blue {
+    @apply bg-blue-600 text-white rounded-full text-xs px-2 py-0.5 font-medium;
+  }
+  
+  .badge-amazon-neutral {
+    @apply bg-gray-100 text-gray-800 rounded-full text-xs px-2 py-0.5 font-medium;
   }
 }

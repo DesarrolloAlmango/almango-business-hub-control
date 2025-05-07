@@ -27,9 +27,9 @@ export function OfertaHeader({ estado }: OfertaHeaderProps) {
   const getBadgeClass = (estado: string) => {
     switch (estado) {
       case "seleccionada":
-        return "border-green-400 text-green-800 dark:text-green-300 bg-green-50 dark:bg-green-900/30";
+        return "border-green-500 text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/30";
       case "pendiente":
-        return "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300";
+        return "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
       default:
         return "";
     }

@@ -1,13 +1,13 @@
 
 :root {
-  /* Primary colors from the palette */
-  --orange: 25 100% 46%;  /* #e47911 */
-  --navy: 217 27% 16%;    /* #232f3e */
-  --black: 0 0% 7%;       /* #111111 */
-  --teal: 192 49% 47%;    /* #48a3c6 */
-  --blue: 202 100% 36%;   /* #007eb9 */
-  --white: 0 0% 100%;     /* #ffffff */
-  --gray: 0 0% 47%;       /* #37475a */
+  /* Primary colors from Amazon palette */
+  --orange: 25 95% 38%;  /* #E67600 - Amazon's main orange */
+  --navy: 219 34% 26%;   /* #232F3E - Amazon's dark blue/navy */
+  --black: 0 0% 7%;      /* #111111 */
+  --teal: 205 89% 40%;   /* #148FCA - Amazon's blue */
+  --blue: 205 89% 40%;   /* #148FCA - Amazon's blue, same as teal */
+  --white: 0 0% 100%;    /* #ffffff */
+  --gray: 213 12% 28%;   /* #37475a - Amazon's gray */
   --light-gray: 0 0% 80%; /* #cccccc */
   
   /* Dark theme (default) */
@@ -17,11 +17,11 @@
   --card-foreground: 0 0% 100%;
   
   /* Primary colors */
-  --primary: 25 100% 46%; /* Orange as primary */
+  --primary: 25 95% 38%; /* Orange as primary */
   --primary-foreground: 0 0% 100%;
   
   /* Secondary colors */
-  --secondary: 192 49% 47%; /* Teal as secondary */
+  --secondary: 205 89% 40%; /* Teal as secondary */
   --secondary-foreground: 0 0% 100%;
   
   /* Muted colors */
@@ -29,7 +29,7 @@
   --muted-foreground: 0 0% 70%;
   
   /* Accent colors */
-  --accent: 202 100% 36%; /* Blue as accent */
+  --accent: 219 34% 26%; /* Navy as accent */
   --accent-foreground: 0 0% 100%;
   
   /* Destructive colors */
@@ -37,15 +37,15 @@
   --destructive-foreground: 0 0% 100%;
   
   /* UI element colors */
-  --border: 217 27% 16%; /* Navy for borders */
+  --border: 219 34% 26%; /* Navy for borders */
   --input: 0 0% 15%;
-  --ring: 202 100% 36%; /* Blue for focus rings */
+  --ring: 205 89% 40%; /* Blue for focus rings */
   
   /* Sidebar specific colors */
-  --sidebar-background: 217 27% 16%; /* Navy */
+  --sidebar-background: 219 34% 26%; /* Navy */
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 25 100% 46%; /* Orange */
-  --sidebar-accent: 192 49% 47%; /* Teal */
+  --sidebar-primary: 25 95% 38%; /* Orange */
+  --sidebar-accent: 205 89% 40%; /* Teal */
 }
 
 .light-mode {
@@ -54,16 +54,16 @@
   --card: 0 0% 98%;
   --card-foreground: 0 0% 7%;
   
-  --primary: 25 100% 46%; /* Orange as primary */
+  --primary: 25 95% 38%; /* Orange as primary */
   --primary-foreground: 0 0% 100%;
   
-  --secondary: 192 49% 47%; /* Teal as secondary */
+  --secondary: 205 89% 40%; /* Teal as secondary */
   --secondary-foreground: 0 0% 100%;
   
   --muted: 0 0% 96%;
   --muted-foreground: 0 0% 40%;
   
-  --accent: 202 100% 36%; /* Blue as accent */
+  --accent: 219 34% 26%; /* Navy as accent */
   --accent-foreground: 0 0% 100%;
   
   --destructive: 0 100% 45%;
@@ -71,10 +71,10 @@
   
   --border: 0 0% 80%; /* Light gray for borders */
   --input: 0 0% 90%;
-  --ring: 202 100% 36%; /* Blue for focus rings */
+  --ring: 205 89% 40%; /* Blue for focus rings */
   
-  --sidebar-background: 217 27% 16%; /* Keep sidebar dark */
+  --sidebar-background: 219 34% 26%; /* Keep sidebar dark */
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-primary: 25 100% 46%; /* Orange */
-  --sidebar-accent: 192 49% 47%; /* Teal */
+  --sidebar-primary: 25 95% 38%; /* Orange */
+  --sidebar-accent: 205 89% 40%; /* Teal */
 }
