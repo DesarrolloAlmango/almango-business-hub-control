@@ -22,6 +22,99 @@ const OFERTAS_NUEVAS = {
   todas: 7,
 };
 
+// Mock data para subastas destacadas (resolviendo el error de variable no definida)
+const SUBASTAS_DESTACADAS = [
+  {
+    id: "SUB-2023-001",
+    titulo: "Desarrollo de App Móvil Empresarial",
+    estado: "en_postulacion",
+    fecha_fin_postulacion: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 días desde ahora
+    progreso: 65,
+    postulantes: [
+      {
+        id: "POST-001",
+        proveedor: "TechSolutions Inc.",
+        avatar: "TS",
+        rating: 4.8,
+        fechaEntrega: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 12500,
+        estado: "pendiente"
+      },
+      {
+        id: "POST-002",
+        proveedor: "DevMasters",
+        avatar: "DM",
+        rating: 4.5,
+        fechaEntrega: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 14200,
+        estado: "pendiente"
+      },
+      {
+        id: "POST-003",
+        proveedor: "AppCreators",
+        avatar: "AC",
+        rating: 4.9,
+        fechaEntrega: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 11800,
+        estado: "seleccionada"
+      }
+    ]
+  },
+  {
+    id: "SUB-2023-002",
+    titulo: "Rediseño de Plataforma Web Corporativa",
+    estado: "en_postulacion",
+    fecha_fin_postulacion: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 días desde ahora
+    progreso: 80,
+    postulantes: [
+      {
+        id: "POST-004",
+        proveedor: "WebExperts",
+        avatar: "WE",
+        rating: 4.7,
+        fechaEntrega: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 8500,
+        estado: "pendiente"
+      },
+      {
+        id: "POST-005",
+        proveedor: "CreativeWeb",
+        avatar: "CW",
+        rating: 4.3,
+        fechaEntrega: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 7800,
+        estado: "rechazada"
+      }
+    ]
+  },
+  {
+    id: "SUB-2023-003",
+    titulo: "Implementación de Sistema CRM",
+    estado: "adjudicada",
+    fecha_fin_postulacion: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 días atrás
+    progreso: 100,
+    postulantes: [
+      {
+        id: "POST-006",
+        proveedor: "SystemPro",
+        avatar: "SP",
+        rating: 5.0,
+        fechaEntrega: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 18500,
+        estado: "seleccionada"
+      },
+      {
+        id: "POST-007",
+        proveedor: "CRMasters",
+        avatar: "CR",
+        rating: 4.6,
+        fechaEntrega: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 16700,
+        estado: "rechazada"
+      }
+    ]
+  }
+];
 
 export default function SubastasIndex() {
   const [showFilters, setShowFilters] = useState(false);
