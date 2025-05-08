@@ -1,4 +1,3 @@
-
 import { Link as RouterLink } from "react-router-dom";
 import {
   SidebarGroup,
@@ -23,21 +22,34 @@ interface SidebarMenuSectionProps {
   iconColor?: string;
 }
 
-export function SidebarMenuSection({ label, items, iconColor }: SidebarMenuSectionProps) {
+export function SidebarMenuSection({
+  label,
+  items,
+  iconColor,
+}: SidebarMenuSectionProps) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-[hsl(var(--secondary))]">{label}</SidebarGroupLabel>
+      <SidebarGroupLabel className='text-[hsl(var(--secondary))]'>
+        {label}
+      </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.path}>
-              <SidebarMenuButton 
-                tooltip={item.title}
-                asChild
-              >
-                <RouterLink to={item.path} className={cn("flex items-center hover:text-[hsl(var(--primary))] transition-colors")}>
-                  <item.icon className={`mr-2 ${iconColor || "text-[hsl(var(--secondary))]"}`} size={20} />
-                  <span>{item.title}</span>
+              <SidebarMenuButton tooltip={item.title} asChild>
+                <RouterLink
+                  to={item.path}
+                  className={cn(
+                    "flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors"
+                  )}
+                >
+                  <item.icon
+                    className={`mr-2 ${
+                      iconColor || "text-[hsl(var(--secondary))]"
+                    }`}
+                    size={20}
+                  />
+                  <span>{item.title.toUpperCase()}</span>
                 </RouterLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

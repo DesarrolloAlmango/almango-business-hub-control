@@ -1,4 +1,3 @@
-
 import {
   Users,
   FileText,
@@ -40,7 +39,7 @@ export const principalItems: SidebarItem[] = [
     path: "/subusuarios",
   },
   {
-    title: "Solicitudes de Servicio",
+    title: "Oferta de Servicio",
     icon: FileText,
     path: "/solicitudes",
   },
@@ -52,18 +51,18 @@ export const principalItems: SidebarItem[] = [
 ];
 
 export const visualizacionItems: SidebarItem[] = [
+  // {
+  //   title: "Links/QR",
+  //   icon: Link,
+  //   path: "/links-qr",
+  // },
   {
-    title: "Links/QR",
-    icon: Link,
-    path: "/links-qr",
-  },
-  {
-    title: "Subastas de Servicios",
+    title: "Subastas",
     icon: Gavel,
     path: "/subastas",
   },
   {
-    title: "Feedback y Evaluaciones",
+    title: "Ofertas",
     icon: Star,
     path: "/feedback",
   },
@@ -71,12 +70,12 @@ export const visualizacionItems: SidebarItem[] = [
 
 export const reportesItems: SidebarItem[] = [
   {
-    title: "Reportes de Actividad",
+    title: "Seguimiento de Obras",
     icon: BarChart,
     path: "/reportes",
   },
   {
-    title: "Solicitudes Lista Negra",
+    title: "Lista Negra",
     icon: UserX,
     path: "/lista-negra",
   },
@@ -85,13 +84,13 @@ export const reportesItems: SidebarItem[] = [
     icon: FileImage,
     path: "/documentacion",
   },
+  // {
+  //   title: "Gestión de Incidencias",
+  //   icon: Flag,
+  //   path: "/incidencias",
+  // },
   {
-    title: "Gestión de Incidencias",
-    icon: Flag,
-    path: "/incidencias",
-  },
-  {
-    title: "Estadísticas y Métricas",
+    title: "Estadísticas",
     icon: LineChart,
     path: "/estadisticas",
   },
@@ -108,16 +107,16 @@ export const gestionItems: SidebarItem[] = [
     icon: CreditCard,
     path: "/pagos",
   },
-  {
-    title: "Campañas y Promociones",
-    icon: Tag,
-    path: "/campanas",
-  },
-  {
-    title: "Gestión de Clientes",
-    icon: UserCircle,
-    path: "/clientes",
-  },
+  // {
+  //   title: "Campañas y Promociones",
+  //   icon: Tag,
+  //   path: "/campanas",
+  // },
+  // {
+  //   title: "Gestión de Clientes",
+  //   icon: UserCircle,
+  //   path: "/clientes",
+  // },
   {
     title: "Comunicación",
     icon: MessageSquare,
@@ -125,10 +124,10 @@ export const gestionItems: SidebarItem[] = [
   },
 ];
 
-export const desarrolloItems: SidebarItem[] = [
-  {
-    title: "Desarrollador",
-    icon: Code,
-    path: "/developer",
-  },
-];
+// export const desarrolloItems: SidebarItem[] = [
+//   {
+//     title: "Desarrollador",
+//     icon: Code,
+//     path: "/developer",
+//   },
+// ];
