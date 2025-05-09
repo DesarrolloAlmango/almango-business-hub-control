@@ -16,9 +16,9 @@ import Settings from "./pages/Settings";
 import Messages from "./pages/Messages";
 import DeveloperEnhanced from "./pages/DeveloperEnhanced";
 import DocumentacionGestion from "./pages/DocumentacionGestion";
+import ReportesFeedback from "./pages/reportes/ReportesFeedback";
 import {
   VisualizacionSolicitudes,
-  Feedback,
   Reportes,
   ListaNegra,
   Documentacion,
@@ -96,8 +96,13 @@ const App = () => {
               <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
               <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
               <Route path="/visualizacion-solicitudes" element={<ProtectedRoute><VisualizacionSolicitudes /></ProtectedRoute>} />
-              <Route path="/feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
+              
+              {/* Redirecting old feedback route to the new reportes/feedback */}
+              <Route path="/feedback" element={<Navigate to="/reportes/feedback" replace />} />
+              
               <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
+              <Route path="/reportes/feedback" element={<ProtectedRoute><ReportesFeedback /></ProtectedRoute>} />
+              
               <Route path="/lista-negra" element={<ProtectedRoute><ListaNegra /></ProtectedRoute>} />
               <Route path="/documentacion" element={<ProtectedRoute><Documentacion /></ProtectedRoute>} />
               <Route path="/documentacion-gestion" element={<ProtectedRoute><DocumentacionGestion /></ProtectedRoute>} />

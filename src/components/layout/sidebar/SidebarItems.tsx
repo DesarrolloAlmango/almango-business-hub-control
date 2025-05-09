@@ -1,3 +1,4 @@
+
 import {
   Users,
   FileText,
@@ -25,6 +26,10 @@ interface SidebarItem {
   title: string;
   icon: LucideIcon;
   path: string;
+}
+
+interface SidebarItemWithSubmenu extends SidebarItem {
+  submenu?: SidebarItem[];
 }
 
 // Sidebar navigation items organized by sections
@@ -63,22 +68,24 @@ export const visualizacionItems: SidebarItem[] = [
     path: "/subastas",
   },
   {
-    title: "Ofertas",
-    icon: Star,
-    path: "/feedback",
-  },
-  {
     title: "Documentación de gestión",
     icon: FolderArchive,
     path: "/documentacion-gestion",
   },
 ];
 
-export const reportesItems: SidebarItem[] = [
+export const reportesItems: SidebarItemWithSubmenu[] = [
   {
     title: "Seguimiento de Obras",
     icon: BarChart,
     path: "/reportes",
+    submenu: [
+      {
+        title: "Feedback y Evaluaciones",
+        icon: Star,
+        path: "/reportes/feedback",
+      },
+    ]
   },
   {
     title: "Lista Negra",

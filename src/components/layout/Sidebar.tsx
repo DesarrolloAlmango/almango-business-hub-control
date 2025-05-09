@@ -1,3 +1,4 @@
+
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 import { SidebarHeader } from "./sidebar/SidebarHeader";
 import { SidebarFooter } from "./sidebar/SidebarFooter";
