@@ -1,4 +1,3 @@
-
 import {
   Users,
   FileText,
@@ -67,11 +66,6 @@ export const visualizacionItems: SidebarItem[] = [
     icon: Gavel,
     path: "/subastas",
   },
-  {
-    title: "Documentación de gestión",
-    icon: FolderArchive,
-    path: "/documentacion-gestion",
-  },
 ];
 
 export const reportesItems: SidebarItemWithSubmenu[] = [
@@ -85,7 +79,12 @@ export const reportesItems: SidebarItemWithSubmenu[] = [
         icon: Star,
         path: "/reportes/feedback",
       },
-    ]
+      {
+        title: "Reportes de Actividad",
+        icon: BarChart,
+        path: "/reportes",
+      },
+    ],
   },
   {
     title: "Lista Negra",
@@ -134,6 +133,11 @@ export const gestionItems: SidebarItem[] = [
     title: "Comunicación",
     icon: MessageSquare,
     path: "/comunicacion",
+  },
+  {
+    title: "Documentación de gestión",
+    icon: FolderArchive,
+    path: "/documentacion-gestion",
   },
 ];
 

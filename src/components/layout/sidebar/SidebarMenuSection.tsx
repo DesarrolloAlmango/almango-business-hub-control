@@ -1,4 +1,3 @@
-
 import { Link as RouterLink } from "react-router-dom";
 import {
   SidebarGroup,
@@ -50,20 +49,21 @@ export function SidebarMenuSection({
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => {
-            const hasSubmenu = 'submenu' in item && item.submenu && item.submenu.length > 0;
-            
+            const hasSubmenu =
+              "submenu" in item && item.submenu && item.submenu.length > 0;
+
             return (
               <SidebarMenuItem key={item.path}>
                 {hasSubmenu ? (
                   <>
-                    <SidebarMenuButton 
-                      tooltip={item.title} 
+                    <SidebarMenuButton
+                      tooltip={item.title}
                       onClick={() => toggleSubmenu(item.path)}
                       className={cn(
                         "flex items-center justify-between text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors"
                       )}
                     >
-                      <div className="flex items-center">
+                      <div className='flex items-center'>
                         <item.icon
                           className={`mr-2 ${
                             iconColor || "text-[hsl(var(--secondary))]"
@@ -72,13 +72,14 @@ export function SidebarMenuSection({
                         />
                         <span>{item.title.toUpperCase()}</span>
                       </div>
-                      <ChevronDown 
-                        className={cn("h-4 w-4 transition-transform", 
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 transition-transform",
                           openSubmenu === item.path && "transform rotate-180"
-                        )} 
+                        )}
                       />
                     </SidebarMenuButton>
-                    
+
                     {openSubmenu === item.path && (
                       <SidebarMenuSub>
                         {item.submenu!.map((subItem) => (
@@ -86,7 +87,7 @@ export function SidebarMenuSection({
                             <SidebarMenuSubButton asChild>
                               <RouterLink
                                 to={subItem.path}
-                                className="flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors"
+                                className='flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors'
                               >
                                 <subItem.icon
                                   className={`mr-2 ${
@@ -94,7 +95,9 @@ export function SidebarMenuSection({
                                   }`}
                                   size={16}
                                 />
-                                <span>{subItem.title}</span>
+                                <span className='text-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))] transition-colors'>
+                                  {subItem.title}
+                                </span>
                               </RouterLink>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
