@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Messages from "./pages/Messages";
 import DeveloperEnhanced from "./pages/DeveloperEnhanced";
+import DocumentacionGestion from "./pages/DocumentacionGestion";
 import {
   VisualizacionSolicitudes,
   Feedback,
@@ -99,6 +100,7 @@ const App = () => {
               <Route path="/reportes" element={<ProtectedRoute><Reportes /></ProtectedRoute>} />
               <Route path="/lista-negra" element={<ProtectedRoute><ListaNegra /></ProtectedRoute>} />
               <Route path="/documentacion" element={<ProtectedRoute><Documentacion /></ProtectedRoute>} />
+              <Route path="/documentacion-gestion" element={<ProtectedRoute><DocumentacionGestion /></ProtectedRoute>} />
               <Route path="/incidencias" element={<ProtectedRoute><Incidencias /></ProtectedRoute>} />
               <Route path="/estadisticas" element={<ProtectedRoute><Estadisticas /></ProtectedRoute>} />
               <Route path="/calendario" element={<ProtectedRoute><Calendario /></ProtectedRoute>} />

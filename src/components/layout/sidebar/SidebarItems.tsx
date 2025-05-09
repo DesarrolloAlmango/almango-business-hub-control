@@ -17,6 +17,7 @@ import {
   LayoutDashboard,
   Code,
   Gavel,
+  FolderArchive,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
@@ -65,6 +66,11 @@ export const visualizacionItems: SidebarItem[] = [
     title: "Ofertas",
     icon: Star,
     path: "/feedback",
+  },
+  {
+    title: "Documentación de gestión",
+    icon: FolderArchive,
+    path: "/documentacion-gestion",
   },
 ];
 
