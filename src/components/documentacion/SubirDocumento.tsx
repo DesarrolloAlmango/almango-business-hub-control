@@ -48,6 +48,7 @@ export function SubirDocumento({ servicioId, servicioNombre, onExito }: SubirDoc
     const files = e.target.files;
     if (files && files.length > 0) {
       setArchivoSeleccionado(files[0]);
+      form.setValue("archivo", files);
     }
   };
 
@@ -153,7 +154,7 @@ export function SubirDocumento({ servicioId, servicioNombre, onExito }: SubirDoc
           <FormField
             control={form.control}
             name="archivo"
-            render={({ field: { onChange, ...rest } }) => (
+            render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
                 <FormLabel>Archivo</FormLabel>
                 <FormControl>
@@ -163,10 +164,7 @@ export function SubirDocumento({ servicioId, servicioNombre, onExito }: SubirDoc
                         id="archivo"
                         type="file"
                         className="hidden"
-                        onChange={(e) => {
-                          onChange(e.target.files);
-                          handleArchivoChange(e);
-                        }}
+                        onChange={handleArchivoChange}
                         {...rest}
                       />
                       <Card>
