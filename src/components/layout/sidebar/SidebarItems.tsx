@@ -56,7 +56,7 @@ export const principalItems: SidebarItem[] = [
   },
 ];
 
-export const visualizacionItems: SidebarItemWithSubmenu[] = [
+export const visualizacionItems: SidebarItem[] = [
   // {
   //   title: "Links/QR",
   //   icon: Link,
