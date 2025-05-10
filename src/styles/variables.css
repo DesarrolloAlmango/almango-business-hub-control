@@ -52,13 +52,13 @@
   --ring: 205 89% 40%; /* Blue for focus rings */
   
   /* Sidebar specific colors */
-  --sidebar-background: 219 34% 26%; /* Navy */
-  --sidebar-foreground: 0 0% 100%;
+  --sidebar-background: 26 18% 70%; /* Navy */
+  --sidebar-foreground: 255 255% 255%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
   
   /* Countdown colors */
-  --countdown-background: 26 18% 80%; /* #d6ccc2 */
+  --countdown-background: 26 18% 70%; /* #d6ccc2 */
   --countdown-text: 0 0% 20%; /* Dark text for contrast */
   --countdown-label: 0 0% 40%; /* Medium grey for labels */
   
