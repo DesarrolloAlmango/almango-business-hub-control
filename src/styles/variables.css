@@ -52,7 +52,7 @@
   --ring: 205 89% 40%; /* Blue for focus rings */
   
   /* Sidebar specific colors */
-  --sidebar-background: 219 34% 26%; /* Navy */
+  --sidebar-background: 8 15 24/60%; /* Navy */
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
