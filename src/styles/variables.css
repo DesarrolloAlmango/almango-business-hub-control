@@ -1,106 +1,73 @@
 
-@font-face {
-  font-family: "ArkibalMono";
-  src: url("/fonts/ArkibalMono.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
 :root {
   /* Primary colors from Amazon palette */
-  --orange: 25 95% 38%; /* #E67600 - Amazon's main orange */
-  --navy: 219 34% 26%; /* #232F3E - Amazon's dark blue/navy */
-  --black: 0 0% 7%; /* #111111 */
-  --teal: 205 89% 40%; /* #148FCA - Amazon's blue */
-  --blue: 205 89% 40%; /* #148FCA - Amazon's blue, same as teal */
-  --white: 0 0% 100%; /* #ffffff */
-  --gray: 213 12% 28%; /* #37475a - Amazon's gray */
+  --orange: 25 95% 38%;  /* #E67600 - Amazon's main orange */
+  --navy: 219 34% 26%;   /* #232F3E - Amazon's dark blue/navy */
+  --black: 0 0% 7%;      /* #111111 */
+  --teal: 205 89% 40%;   /* #148FCA - Amazon's blue */
+  --blue: 205 89% 40%;   /* #148FCA - Amazon's blue, same as teal */
+  --white: 0 0% 100%;    /* #ffffff */
+  --gray: 213 12% 28%;   /* #37475a - Amazon's gray */
   --light-gray: 0 0% 80%; /* #cccccc */
-  --sand: 26 18% 80%; /* #d6ccc2 - Sand color for counters */
+  --sand: 26 18% 80%;    /* #d6ccc2 - Sand color for counters */
   --sand-dark: 26 18% 70%; /* #c1b6a7 - Darker sand for dark mode */
-
+  
   /* Amazon card colors */
-  --amazon-blue-light: 210 100% 97%; /* #f3f9fd */
-  --amazon-green-light: 120 60% 97%; /* #f4fbf4 */
-  --amazon-amber-light: 45 100% 96%; /* #fffbf0 */
+  --amazon-blue-light: 210 100% 97%;  /* #f3f9fd */
+  --amazon-green-light: 120 60% 97%;  /* #f4fbf4 */
+  --amazon-amber-light: 45 100% 96%;  /* #fffbf0 */
   --amazon-blue-border: 210 100% 85%; /* #c9e6fb */
   --amazon-green-border: 120 40% 85%; /* #d5efd5 */
   --amazon-amber-border: 45 100% 85%; /* #ffe7b3 */
-
-  /* Typography settings */
-  --font-size-xs: 0.75rem;    /* 12px */
-  --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-base: 1rem;     /* 16px */
-  --font-size-lg: 1.125rem;   /* 18px */
-  --font-size-xl: 1.25rem;    /* 20px */
-  --font-size-2xl: 1.5rem;    /* 24px */
-  --font-size-3xl: 1.875rem;  /* 30px */
-  --font-size-4xl: 2.25rem;   /* 36px */
   
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  
-  --letter-spacing-tight: -0.025em;
-  --letter-spacing-normal: 0;
-  --letter-spacing-wide: 0.025em;
-  
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  
-  /* Font family */
-  --font-family-base: "ArkibalMono", sans-serif;
-
   /* Dark theme (default) */
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;
   --card: 0 0% 10%;
   --card-foreground: 0 0% 100%;
-
+  
   /* Primary colors */
   --primary: 25 95% 38%; /* Orange as primary */
   --primary-foreground: 0 0% 100%;
-
+  
   /* Secondary colors */
   --secondary: 205 89% 40%; /* Teal as secondary */
   --secondary-foreground: 0 0% 100%;
-
+  
   /* Muted colors */
   --muted: 0 0% 15%;
   --muted-foreground: 0 0% 70%;
-
+  
   /* Accent colors */
   --accent: 219 34% 26%; /* Navy as accent */
   --accent-foreground: 0 0% 100%;
-
+  
   /* Destructive colors */
   --destructive: 0 100% 50%;
   --destructive-foreground: 0 0% 100%;
-
+  
   /* UI element colors */
   --border: 219 34% 26%; /* Navy for borders */
   --input: 0 0% 15%;
   --ring: 205 89% 40%; /* Blue for focus rings */
-
+  
   /* Sidebar specific colors */
   --sidebar-background: 219 34% 26%; /* Navy */
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
-
+  
   /* Countdown colors */
   --countdown-background: 26 18% 80%; /* #d6ccc2 */
   --countdown-text: 0 0% 20%; /* Dark text for contrast */
   --countdown-label: 0 0% 40%; /* Medium grey for labels */
-
+  
   /* Table colors */
   --table-header-bg: 26 18% 92%; /* #efe9e4 - Light sand for table headers */
-  --table-row-even: 0 0% 98%; /* #fafafa - Almost white for even rows */
-  --table-row-odd: 26 18% 97%; /* #fbf9f7 - Very light sand for odd rows */
-  --table-border: 26 18% 85%; /* #e6dfd7 - Medium sand for table borders */
-  --table-hover: 26 18% 95%; /* #f7f5f2 - Slightly darker for hover */
+  --table-row-even: 0 0% 98%;    /* #fafafa - Almost white for even rows */
+  --table-row-odd: 26 18% 97%;   /* #fbf9f7 - Very light sand for odd rows */
+  --table-border: 26 18% 85%;    /* #e6dfd7 - Medium sand for table borders */
+  --table-hover: 26 18% 95%;     /* #f7f5f2 - Slightly darker for hover */
 }
 
 .light-mode {
@@ -108,36 +75,36 @@
   --foreground: 0 0% 7%; /* Black */
   --card: 0 0% 98%;
   --card-foreground: 0 0% 7%;
-
+  
   --primary: 25 95% 38%; /* Orange as primary */
   --primary-foreground: 0 0% 100%;
-
+  
   --secondary: 205 89% 40%; /* Teal as secondary */
   --secondary-foreground: 0 0% 100%;
-
+  
   --muted: 0 0% 96%;
   --muted-foreground: 0 0% 40%;
-
+  
   --accent: 219 34% 26%; /* Navy as accent */
   --accent-foreground: 0 0% 100%;
-
+  
   --destructive: 0 100% 45%;
   --destructive-foreground: 0 0% 100%;
-
+  
   --border: 0 0% 80%; /* Light gray for borders */
   --input: 0 0% 90%;
   --ring: 205 89% 40%; /* Blue for focus rings */
-
+  
   --sidebar-background: 219 34% 26%; /* Keep sidebar dark */
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
-
+  
   /* Countdown colors (light mode) */
   --countdown-background: 26 18% 80%; /* #d6ccc2 - same as dark mode */
   --countdown-text: 0 0% 20%; /* Dark text for contrast */
   --countdown-label: 0 0% 40%; /* Medium grey for labels */
-
+  
   /* Table colors - same as dark mode for consistency */
   --table-header-bg: 26 18% 92%;
   --table-row-even: 0 0% 98%;
@@ -145,4 +112,3 @@
   --table-border: 26 18% 85%;
   --table-hover: 26 18% 95%;
 }
-
