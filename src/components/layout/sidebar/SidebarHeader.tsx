@@ -22,12 +22,13 @@ export function SidebarHeader() {
           <span className="text-[hsl(var(--primary))]">Almango</span> Business
         </span>     
         )}
-        
-        <Button 
+      </div>
+
+       <Button 
         variant="ghost" 
         size="icon" 
         onClick={toggleSidebar} 
-        className={`${theme === 'light' ? 'text-gray-600 hover:bg-gray-100' : 'text-white hover:bg-sidebar-accent'} transition-all duration-300`}
+        className={`${theme === 'light' ? 'text-white hover:bg-gray-100' : 'text-white hover:bg-sidebar-accent'} transition-all duration-300`}
       >
         {state === "expanded" ? (
           <ChevronRight size={18} />
@@ -35,8 +36,7 @@ export function SidebarHeader() {
           <Menu size={18} />
         )}
       </Button>
-      </div>
-    
+      
     </UISidebarHeader>
   );
 }
