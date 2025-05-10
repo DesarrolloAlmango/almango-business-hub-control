@@ -19,9 +19,6 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        custom: ["ArkibalMono", "sans-serif"],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -53,35 +50,6 @@ export default {
           foreground: "hsl(var(--sidebar-foreground))",
           primary: "hsl(var(--sidebar-primary))",
           accent: "hsl(var(--sidebar-accent))",
-        },
-      },
-      typography: {
-        DEFAULT: {
-          css: {
-            maxWidth: '65ch',
-            color: 'hsl(var(--foreground))',
-            h1: {
-              fontWeight: 700,
-              letterSpacing: '-0.025em',
-            },
-            h2: {
-              fontWeight: 600,
-              letterSpacing: '-0.025em',
-            },
-            h3: {
-              fontWeight: 600,
-            },
-            h4: {
-              fontWeight: 500,
-            },
-            a: {
-              color: 'hsl(var(--secondary))',
-              '&:hover': {
-                color: 'hsl(var(--secondary))',
-                textDecoration: 'underline',
-              },
-            },
-          },
         },
       },
       borderRadius: {
@@ -129,10 +97,8 @@ export default {
         "fade-in": "fade-in 0.5s ease-out",
       },
       backgroundImage: {
-        "dashboard-gradient":
-          "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%)",
-        "white-noise":
-          "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
+        "dashboard-gradient": "linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%)",
+        "white-noise": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E\")",
       },
     },
   },
