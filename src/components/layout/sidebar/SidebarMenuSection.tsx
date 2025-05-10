@@ -52,22 +52,22 @@ export function SidebarMenuSection({
     setOpenSubmenu(openSubmenu === path ? null : path);
   };
 
-  // Define theme-based classes
+  // Define theme-based classes with white text for both themes
   const menuTextClass = theme === "light" 
     ? "text-gray-800 hover:text-primary hover:bg-gray-100" 
-    : "text-white hover:text-primary hover:bg-sidebar-accent";
+    : "text-white hover:text-white hover:bg-sidebar-accent";
 
   const submenuTextClass = theme === "light"
     ? "text-gray-700 hover:text-primary hover:bg-gray-100"
-    : "text-gray-200 hover:text-primary hover:bg-sidebar-accent";
+    : "text-white hover:text-white hover:bg-sidebar-accent";
 
   const iconColorClass = theme === "light"
     ? iconColor || "text-primary"
-    : iconColor || "text-secondary";
+    : iconColor || "text-white";
 
   const labelClass = theme === "light"
     ? "text-gray-500"
-    : "text-gray-400";
+    : "text-white";
 
   return (
     <SidebarGroup>
