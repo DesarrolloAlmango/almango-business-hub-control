@@ -1,4 +1,3 @@
-Sidebar
 
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 import { SidebarHeader } from "./sidebar/SidebarHeader";
@@ -21,25 +20,25 @@ export function DashboardSidebar() {
         <SidebarMenuSection
           label='Principal'
           items={principalItems}
-          iconColor='text-[hsl(var(--primary))]'
+          iconColor='text-[hsl(var(--secondary))]'
         />
 
         <SidebarMenuSection
           label='Visualización'
           items={visualizacionItems}
-          iconColor='text-[hsl(var(--primary))]'
+          iconColor='text-[hsl(var(--secondary))]'
         />
 
         <SidebarMenuSection
           label='Reportes'
           items={reportesItems}
-          iconColor='text-[hsl(var(--primary))]'
+          iconColor='text-[hsl(var(--secondary))]'
         />
 
         <SidebarMenuSection
           label='Gestión'
           items={gestionItems}
-          iconColor='text-[hsl(var(--primary))]'
+          iconColor='text-[hsl(var(--secondary))]'
         />
 
         {/* <SidebarMenuSection

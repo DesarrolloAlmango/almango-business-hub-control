@@ -44,7 +44,7 @@ export function SidebarMenuSection({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-[hsl(var(--secondary))] text-sm font-semibold tracking-wide uppercase">
+      <SidebarGroupLabel className="text-[hsl(var(--secondary))] text-xs font-semibold tracking-wide uppercase">
         {label}
       </SidebarGroupLabel>
       <SidebarGroupContent>
@@ -61,8 +61,8 @@ export function SidebarMenuSection({
                       tooltip={item.title}
                       onClick={() => toggleSubmenu(item.path)}
                       className={cn(
-                        "flex items-center justify-between text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors",
-                        "py-2 px-3 rounded-md font-medium text-sm" // Added padding and font styling
+                        "flex items-center justify-between text-white hover:text-[hsl(var(--primary))] transition-colors",
+                        "py-1.5 px-3 rounded-md font-medium text-xs" // Reduced font size
                       )}
                     >
                       <div className="flex items-center">
@@ -70,13 +70,13 @@ export function SidebarMenuSection({
                           className={`mr-2 ${
                             iconColor || "text-[hsl(var(--secondary))]"
                           }`}
-                          size={20}
+                          size={18} // Reduced icon size
                         />
                         <span className="tracking-normal">{item.title.toUpperCase()}</span>
                       </div>
                       <ChevronDown
                         className={cn(
-                          "h-4 w-4 transition-transform",
+                          "h-3.5 w-3.5 transition-transform", // Reduced chevron size
                           openSubmenu === item.path && "transform rotate-180"
                         )}
                       />
@@ -89,15 +89,15 @@ export function SidebarMenuSection({
                             <SidebarMenuSubButton asChild>
                               <RouterLink
                                 to={subItem.path}
-                                className="flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors py-1.5 px-9 rounded-md" // Enhanced padding and spacing
+                                className="flex items-center text-white hover:text-[hsl(var(--primary))] transition-colors py-1.5 px-8 rounded-md text-xs" // Reduced font size and adjusted padding
                               >
                                 <subItem.icon
                                   className={`mr-2 ${
                                     iconColor || "text-[hsl(var(--secondary))]"
                                   }`}
-                                  size={16}
+                                  size={14} // Reduced icon size for submenus
                                 />
-                                <span className="text-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))] transition-colors text-sm">
+                                <span>
                                   {subItem.title}
                                 </span>
                               </RouterLink>
@@ -112,15 +112,15 @@ export function SidebarMenuSection({
                     <RouterLink
                       to={item.path}
                       className={cn(
-                        "flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors",
-                        "py-2 px-3 rounded-md font-medium text-sm" // Added padding and font styling
+                        "flex items-center text-white hover:text-[hsl(var(--primary))] transition-colors",
+                        "py-1.5 px-3 rounded-md font-medium text-xs" // Reduced font size
                       )}
                     >
                       <item.icon
                         className={`mr-2 ${
                           iconColor || "text-[hsl(var(--secondary))]"
                         }`}
-                        size={20}
+                        size={18} // Reduced icon size
                       />
                       <span className="tracking-normal">{item.title.toUpperCase()}</span>
                     </RouterLink>
