@@ -18,14 +18,12 @@ export function SidebarHeader() {
           className="h-10 w-10"
         />
         {state === "expanded" && (
-<span className="text-xl font-bold text-white">
+        <span className="text-xl font-bold text-white">
           <span className="text-[hsl(var(--primary))]">Almango</span> Business
-        </span>
-
-      
+        </span>     
         )}
-      </div>
-      <Button 
+        
+        <Button 
         variant="ghost" 
         size="icon" 
         onClick={toggleSidebar} 
@@ -37,6 +35,8 @@ export function SidebarHeader() {
           <Menu size={18} />
         )}
       </Button>
+      </div>
+    
     </UISidebarHeader>
   );
 }
