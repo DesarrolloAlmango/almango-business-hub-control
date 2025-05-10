@@ -52,10 +52,10 @@
   --ring: 205 89% 40%; /* Blue for focus rings */
   
   /* Sidebar specific colors */
-  --sidebar-background: 219 34% 22%; /* Slightly darker navy for sidebar */
+  --sidebar-background: 0 0% 11%; /* #1c1c1c - Dark gray for sidebar */
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
-  --sidebar-accent: 205 89% 40%; /* Teal */
+  --sidebar-accent: 220 13% 18%; /* Dark blue-gray for hovering */
   
   /* Countdown colors */
   --countdown-background: 26 18% 80%; /* #d6ccc2 */
@@ -95,11 +95,11 @@
   --input: 0 0% 90%;
   --ring: 205 89% 40%; /* Blue for focus rings */
   
-  /* Updated sidebar background for light mode - lighter navy */
-  --sidebar-background: 219 34% 30%; 
-  --sidebar-foreground: 0 0% 100%;
+  /* Updated sidebar background for light mode - white */
+  --sidebar-background: 0 0% 100%; /* White sidebar */
+  --sidebar-foreground: 0 0% 7%; 
   --sidebar-primary: 25 95% 38%; /* Orange */
-  --sidebar-accent: 205 89% 40%; /* Teal */
+  --sidebar-accent: 0 0% 95%; /* Light gray for hovering */
   
   /* Countdown colors (light mode) */
   --countdown-background: 26 18% 80%; /* #d6ccc2 - same as dark mode */
