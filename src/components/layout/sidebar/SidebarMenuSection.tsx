@@ -1,3 +1,4 @@
+
 import { Link as RouterLink } from "react-router-dom";
 import {
   SidebarGroup,
@@ -43,7 +44,7 @@ export function SidebarMenuSection({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className='text-[hsl(var(--secondary))]'>
+      <SidebarGroupLabel className="text-[hsl(var(--secondary))] text-sm font-semibold tracking-wide uppercase">
         {label}
       </SidebarGroupLabel>
       <SidebarGroupContent>
@@ -60,17 +61,18 @@ export function SidebarMenuSection({
                       tooltip={item.title}
                       onClick={() => toggleSubmenu(item.path)}
                       className={cn(
-                        "flex items-center justify-between text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors"
+                        "flex items-center justify-between text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors",
+                        "py-2 px-3 rounded-md font-medium text-sm" // Added padding and font styling
                       )}
                     >
-                      <div className='flex items-center'>
+                      <div className="flex items-center">
                         <item.icon
                           className={`mr-2 ${
                             iconColor || "text-[hsl(var(--secondary))]"
                           }`}
                           size={20}
                         />
-                        <span>{item.title.toUpperCase()}</span>
+                        <span className="tracking-normal">{item.title.toUpperCase()}</span>
                       </div>
                       <ChevronDown
                         className={cn(
@@ -87,7 +89,7 @@ export function SidebarMenuSection({
                             <SidebarMenuSubButton asChild>
                               <RouterLink
                                 to={subItem.path}
-                                className='flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors'
+                                className="flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors py-1.5 px-9 rounded-md" // Enhanced padding and spacing
                               >
                                 <subItem.icon
                                   className={`mr-2 ${
@@ -95,7 +97,7 @@ export function SidebarMenuSection({
                                   }`}
                                   size={16}
                                 />
-                                <span className='text-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))] transition-colors'>
+                                <span className="text-[hsl(var(--secondary))] hover:text-[hsl(var(--primary))] transition-colors text-sm">
                                   {subItem.title}
                                 </span>
                               </RouterLink>
@@ -110,7 +112,8 @@ export function SidebarMenuSection({
                     <RouterLink
                       to={item.path}
                       className={cn(
-                        "flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors"
+                        "flex items-center text-[hsl(var(--blue))] hover:text-[hsl(var(--primary))] transition-colors",
+                        "py-2 px-3 rounded-md font-medium text-sm" // Added padding and font styling
                       )}
                     >
                       <item.icon
@@ -119,7 +122,7 @@ export function SidebarMenuSection({
                         }`}
                         size={20}
                       />
-                      <span>{item.title.toUpperCase()}</span>
+                      <span className="tracking-normal">{item.title.toUpperCase()}</span>
                     </RouterLink>
                   </SidebarMenuButton>
                 )}

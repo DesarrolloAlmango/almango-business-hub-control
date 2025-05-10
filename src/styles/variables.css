@@ -1,3 +1,4 @@
+
 @font-face {
   font-family: "ArkibalMono";
   src: url("/fonts/ArkibalMono.otf") format("opentype");
@@ -25,6 +26,32 @@
   --amazon-blue-border: 210 100% 85%; /* #c9e6fb */
   --amazon-green-border: 120 40% 85%; /* #d5efd5 */
   --amazon-amber-border: 45 100% 85%; /* #ffe7b3 */
+
+  /* Typography settings */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-lg: 1.125rem;   /* 18px */
+  --font-size-xl: 1.25rem;    /* 20px */
+  --font-size-2xl: 1.5rem;    /* 24px */
+  --font-size-3xl: 1.875rem;  /* 30px */
+  --font-size-4xl: 2.25rem;   /* 36px */
+  
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Font family */
+  --font-family-base: "ArkibalMono", sans-serif;
 
   /* Dark theme (default) */
   --background: 0 0% 0%;
@@ -58,7 +85,7 @@
   --ring: 205 89% 40%; /* Blue for focus rings */
 
   /* Sidebar specific colors */
-  --sidebar-background: 0 0% 100%; /* Navy */
+  --sidebar-background: 219 34% 26%; /* Navy */
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
@@ -101,7 +128,7 @@
   --input: 0 0% 90%;
   --ring: 205 89% 40%; /* Blue for focus rings */
 
-  --sidebar-background: 0 0% 100%; /* Keep sidebar dark */
+  --sidebar-background: 219 34% 26%; /* Keep sidebar dark */
   --sidebar-foreground: 0 0% 100%;
   --sidebar-primary: 25 95% 38%; /* Orange */
   --sidebar-accent: 205 89% 40%; /* Teal */
@@ -118,3 +145,4 @@
   --table-border: 26 18% 85%;
   --table-hover: 26 18% 95%;
 }
+

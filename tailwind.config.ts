@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -52,6 +53,35 @@ export default {
           foreground: "hsl(var(--sidebar-foreground))",
           primary: "hsl(var(--sidebar-primary))",
           accent: "hsl(var(--sidebar-accent))",
+        },
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '65ch',
+            color: 'hsl(var(--foreground))',
+            h1: {
+              fontWeight: 700,
+              letterSpacing: '-0.025em',
+            },
+            h2: {
+              fontWeight: 600,
+              letterSpacing: '-0.025em',
+            },
+            h3: {
+              fontWeight: 600,
+            },
+            h4: {
+              fontWeight: 500,
+            },
+            a: {
+              color: 'hsl(var(--secondary))',
+              '&:hover': {
+                color: 'hsl(var(--secondary))',
+                textDecoration: 'underline',
+              },
+            },
+          },
         },
       },
       borderRadius: {

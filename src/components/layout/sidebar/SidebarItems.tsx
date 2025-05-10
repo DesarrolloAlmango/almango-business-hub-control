@@ -1,3 +1,4 @@
+
 import {
   Users,
   FileText,
@@ -81,8 +82,8 @@ export const reportesItems: SidebarItemWithSubmenu[] = [
       },
       {
         title: "Reportes de Actividad",
-        icon: BarChart,
-        path: "/reportes",
+        icon: LineChart,
+        path: "/reportes/actividad",
       },
     ],
   },

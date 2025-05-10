@@ -1,3 +1,4 @@
+
 @import "./styles/variables.css";
 
 @tailwind base;
@@ -13,6 +14,7 @@
   html,
   body {
     font-family: var(--font-family-base);
+    font-size: 16px;
   }
   * {
     @apply border-border;
@@ -20,6 +22,31 @@
 
   body {
     @apply bg-background text-foreground;
+    line-height: var(--line-height-normal);
+  }
+
+  h1 {
+    @apply text-3xl font-bold mb-4 tracking-tight;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold mb-3 tracking-tight;
+  }
+
+  h3 {
+    @apply text-xl font-semibold mb-2;
+  }
+
+  h4 {
+    @apply text-lg font-medium mb-2;
+  }
+
+  h5, h6 {
+    @apply text-base font-medium mb-1;
+  }
+
+  p {
+    @apply mb-4;
   }
 
   .light-mode {
@@ -47,7 +74,7 @@
     --input: 0 0% 90%;
     --ring: 205 89% 40%;
 
-    --sidebar-background: 217 27% 16%;
+    --sidebar-background: 219 34% 26%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 25 95% 38%;
     --sidebar-accent: 205 89% 40%;
@@ -71,6 +98,93 @@
 }
 
 @layer components {
+  /* Typography utilities */
+  .text-xs {
+    font-size: var(--font-size-xs);
+    line-height: 1rem;
+  }
+  
+  .text-sm {
+    font-size: var(--font-size-sm);
+    line-height: 1.25rem;
+  }
+  
+  .text-base {
+    font-size: var(--font-size-base);
+    line-height: 1.5rem;
+  }
+  
+  .text-lg {
+    font-size: var(--font-size-lg);
+    line-height: 1.75rem;
+  }
+  
+  .text-xl {
+    font-size: var(--font-size-xl);
+    line-height: 1.75rem;
+  }
+  
+  .text-2xl {
+    font-size: var(--font-size-2xl);
+    line-height: 2rem;
+  }
+  
+  .text-3xl {
+    font-size: var(--font-size-3xl);
+    line-height: 2.25rem;
+  }
+  
+  .text-4xl {
+    font-size: var(--font-size-4xl);
+    line-height: 2.5rem;
+  }
+  
+  .font-normal {
+    font-weight: var(--font-weight-normal);
+  }
+  
+  .font-medium {
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .font-semibold {
+    font-weight: var(--font-weight-semibold);
+  }
+  
+  .font-bold {
+    font-weight: var(--font-weight-bold);
+  }
+  
+  .tracking-tight {
+    letter-spacing: var(--letter-spacing-tight);
+  }
+  
+  .tracking-normal {
+    letter-spacing: var(--letter-spacing-normal);
+  }
+  
+  .tracking-wide {
+    letter-spacing: var(--letter-spacing-wide);
+  }
+
+  /* Title styles */
+  .title-large {
+    @apply text-3xl font-bold tracking-tight mb-4;
+  }
+  
+  .title-medium {
+    @apply text-2xl font-semibold tracking-tight mb-3;
+  }
+  
+  .title-small {
+    @apply text-xl font-semibold mb-2;
+  }
+  
+  .subtitle {
+    @apply text-lg font-medium text-muted-foreground mb-2;
+  }
+
+  /* Component styles */
   .card-highlight {
     @apply border-l-4 border-primary transition-all duration-200 hover:shadow-md hover:shadow-primary/20;
   }
@@ -155,6 +269,27 @@
     border-color: hsl(var(--secondary));
   }
 
+  .text-primary {
+    color: hsl(var(--primary));
+  }
+  
+  .text-secondary {
+    color: hsl(var(--secondary));
+  }
+  
+  .text-accent {
+    color: hsl(var(--accent));
+  }
+  
+  .text-muted {
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .text-almango-orange {
+    --tw-text-opacity: 1;
+    color: rgb(255 105 0 / var(--tw-text-opacity));
+  }
+
   /* Amazon-inspired countdown box */
   .countdown-box {
     @apply bg-[#d6ccc2] rounded-md p-4 text-center;
@@ -231,3 +366,4 @@
     @apply bg-[#fffbf0] border-[#ffe7b3];
   }
 }
+
