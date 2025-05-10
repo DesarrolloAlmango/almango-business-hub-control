@@ -9,7 +9,6 @@ import {
   visualizacionItems,
   reportesItems,
   gestionItems,
-  // desarrolloItems
 } from "./sidebar/SidebarItems";
 
 export function DashboardSidebar() {
@@ -17,11 +16,11 @@ export function DashboardSidebar() {
   
   return (
     <Sidebar 
-      className={
+      className={`${
         theme === 'light'
           ? 'bg-white border-r border-gray-200'
           : 'bg-[#1c1c1c] border-r border-border'
-      }
+      }`}
       collapsible="icon"
     >
       <SidebarHeader />

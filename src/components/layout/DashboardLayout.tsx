@@ -2,7 +2,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "./Sidebar";
 import { DashboardHeader } from "./Header";
-import { ThemeProvider } from "@/hooks/use-theme";  // Importamos el ThemeProvider de use-theme.tsx
+import { ThemeProvider } from "@/hooks/use-theme";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

@@ -4,7 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ThemeProvider } from "@/utils/theme-provider"; // Usamos solo este ThemeProvider
+// We're not using ThemeProvider from utils/theme-provider anymore
+// import { ThemeProvider } from "@/utils/theme-provider";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import SubUsuarios from "./pages/SubUsuarios";
@@ -79,230 +80,228 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme='dark'>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path='/login' element={<Login />} />
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path='/login' element={<Login />} />
 
-              <Route
-                path='/'
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/subusuarios'
-                element={
-                  <ProtectedRoute>
-                    <SubUsuarios />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/solicitudes'
-                element={
-                  <ProtectedRoute>
-                    <Solicitudes />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/links-qr'
-                element={
-                  <ProtectedRoute>
-                    <LinkQR />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/profile'
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/settings'
-                element={
-                  <ProtectedRoute>
-                    <Settings />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/messages'
-                element={
-                  <ProtectedRoute>
-                    <Messages />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/visualizacion-solicitudes'
-                element={
-                  <ProtectedRoute>
-                    <VisualizacionSolicitudes />
-                  </ProtectedRoute>
-                }
-              />
+            <Route
+              path='/'
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/subusuarios'
+              element={
+                <ProtectedRoute>
+                  <SubUsuarios />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/solicitudes'
+              element={
+                <ProtectedRoute>
+                  <Solicitudes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/links-qr'
+              element={
+                <ProtectedRoute>
+                  <LinkQR />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/profile'
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/settings'
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/messages'
+              element={
+                <ProtectedRoute>
+                  <Messages />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/visualizacion-solicitudes'
+              element={
+                <ProtectedRoute>
+                  <VisualizacionSolicitudes />
+                </ProtectedRoute>
+              }
+            />
 
-              {/* Redirecting old feedback route to the new reportes/feedback */}
-              <Route
-                path='/feedback'
-                element={<Navigate to='/reportes/feedback' replace />}
-              />
+            {/* Redirecting old feedback route to the new reportes/feedback */}
+            <Route
+              path='/feedback'
+              element={<Navigate to='/reportes/feedback' replace />}
+            />
 
-              <Route
-                path='/reportes'
-                element={
-                  <ProtectedRoute>
-                    <Reportes />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/reportes/feedback'
-                element={
-                  <ProtectedRoute>
-                    <ReportesFeedback />
-                  </ProtectedRoute>
-                }
-              />
+            <Route
+              path='/reportes'
+              element={
+                <ProtectedRoute>
+                  <Reportes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/reportes/feedback'
+              element={
+                <ProtectedRoute>
+                  <ReportesFeedback />
+                </ProtectedRoute>
+              }
+            />
 
-              <Route
-                path='/lista-negra'
-                element={
-                  <ProtectedRoute>
-                    <ListaNegra />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/documentacion'
-                element={
-                  <ProtectedRoute>
-                    <Documentacion />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/documentacion-gestion'
-                element={
-                  <ProtectedRoute>
-                    <DocumentacionGestion />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/incidencias'
-                element={
-                  <ProtectedRoute>
-                    <Incidencias />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/estadisticas'
-                element={
-                  <ProtectedRoute>
-                    <Estadisticas />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/calendario'
-                element={
-                  <ProtectedRoute>
-                    <Calendario />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/pagos'
-                element={
-                  <ProtectedRoute>
-                    <Pagos />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/campanas'
-                element={
-                  <ProtectedRoute>
-                    <Campanas />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/clientes'
-                element={
-                  <ProtectedRoute>
-                    <Clientes />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/comunicacion'
-                element={
-                  <ProtectedRoute>
-                    <Comunicacion />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/developer'
-                element={
-                  <ProtectedRoute>
-                    <DeveloperEnhanced />
-                  </ProtectedRoute>
-                }
-              />
+            <Route
+              path='/lista-negra'
+              element={
+                <ProtectedRoute>
+                  <ListaNegra />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/documentacion'
+              element={
+                <ProtectedRoute>
+                  <Documentacion />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/documentacion-gestion'
+              element={
+                <ProtectedRoute>
+                  <DocumentacionGestion />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/incidencias'
+              element={
+                <ProtectedRoute>
+                  <Incidencias />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/estadisticas'
+              element={
+                <ProtectedRoute>
+                  <Estadisticas />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/calendario'
+              element={
+                <ProtectedRoute>
+                  <Calendario />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/pagos'
+              element={
+                <ProtectedRoute>
+                  <Pagos />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/campanas'
+              element={
+                <ProtectedRoute>
+                  <Campanas />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/clientes'
+              element={
+                <ProtectedRoute>
+                  <Clientes />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/comunicacion'
+              element={
+                <ProtectedRoute>
+                  <Comunicacion />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/developer'
+              element={
+                <ProtectedRoute>
+                  <DeveloperEnhanced />
+                </ProtectedRoute>
+              }
+            />
 
-              {/* Subastas Routes */}
-              <Route
-                path='/subastas'
-                element={
-                  <ProtectedRoute>
-                    <SubastasIndex />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/subastas/nueva'
-                element={
-                  <ProtectedRoute>
-                    <NuevaSubasta />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/subastas/:id'
-                element={
-                  <ProtectedRoute>
-                    <DetalleSubasta />
-                  </ProtectedRoute>
-                }
-              />
+            {/* Subastas Routes */}
+            <Route
+              path='/subastas'
+              element={
+                <ProtectedRoute>
+                  <SubastasIndex />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/subastas/nueva'
+              element={
+                <ProtectedRoute>
+                  <NuevaSubasta />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/subastas/:id'
+              element={
+                <ProtectedRoute>
+                  <DetalleSubasta />
+                </ProtectedRoute>
+              }
+            />
 
-              {/* Error Pages */}
-              <Route path='/error/401' element={<Unauthorized401 />} />
-              <Route path='/error/403' element={<Forbidden403 />} />
-              <Route path='/error/404' element={<NotFound404 />} />
-              <Route path='/error/500' element={<ServerError500 />} />
-              <Route path='/error/504' element={<GatewayTimeout504 />} />
+            {/* Error Pages */}
+            <Route path='/error/401' element={<Unauthorized401 />} />
+            <Route path='/error/403' element={<Forbidden403 />} />
+            <Route path='/error/404' element={<NotFound404 />} />
+            <Route path='/error/500' element={<ServerError500 />} />
+            <Route path='/error/504' element={<GatewayTimeout504 />} />
 
-              {/* Use the new 404 page */}
-              <Route path='*' element={<NotFound404 />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </ThemeProvider>
+            {/* Use the new 404 page */}
+            <Route path='*' element={<NotFound404 />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
     </QueryClientProvider>
   );
 };
