@@ -15,12 +15,14 @@ export function SidebarHeader() {
         <img 
           src="/lovable-uploads/bbb7cf38-3978-487f-8d60-82f4e16d39c6.png" 
           alt="Almango Logo" 
-          className="h-8 w-8"
+          className="h-10 w-10"
         />
         {state === "expanded" && (
-          <span className={`text-lg font-bold ${theme === 'light' ? 'text-primary' : 'text-white'}`}>
-            <span className="text-[hsl(var(--primary))]">Almango</span> Business
-          </span>
+<span className="text-xl font-bold text-white">
+          <span className="text-[hsl(var(--primary))]">Almango</span> Business
+        </span>
+
+      
         )}
       </div>
       <Button 
