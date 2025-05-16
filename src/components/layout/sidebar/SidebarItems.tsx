@@ -1,4 +1,3 @@
-
 import {
   Users,
   FileText,
@@ -30,6 +29,7 @@ interface SidebarItem {
 
 interface SidebarItemWithSubmenu extends SidebarItem {
   submenu?: SidebarItem[];
+  isExpandable?: boolean;
 }
 
 // Sidebar navigation items organized by sections
@@ -63,7 +63,7 @@ export const visualizacionItems: SidebarItem[] = [
   //   path: "/links-qr",
   // },
   {
-    title: "Subastas",
+    title: "Ofertas y Subastas",
     icon: Gavel,
     path: "/subastas",
   },
@@ -73,7 +73,8 @@ export const reportesItems: SidebarItemWithSubmenu[] = [
   {
     title: "Seguimiento de Obras",
     icon: BarChart,
-    path: "/reportes",
+    path: "/#",
+    isExpandable: true,
     submenu: [
       {
         title: "Feedback y Evaluaciones",
@@ -83,7 +84,7 @@ export const reportesItems: SidebarItemWithSubmenu[] = [
       {
         title: "Reportes de Actividad",
         icon: LineChart,
-        path: "/reportes/actividad",
+        path: "/reportes",
       },
     ],
   },

@@ -1,5 +1,4 @@
-
-@import './styles/variables.css';
+@import "./styles/variables.css";
 
 @tailwind base;
 @tailwind components;
@@ -13,50 +12,50 @@
   body {
     @apply bg-background text-foreground;
   }
-  
+
   .light-mode {
     --background: 0 0% 100%;
     --foreground: 0 0% 7%;
     --card: 0 0% 98%;
     --card-foreground: 0 0% 7%;
-    
+
     --primary: 25 95% 38%;
     --primary-foreground: 0 0% 100%;
-    
+
     --secondary: 205 89% 40%;
     --secondary-foreground: 0 0% 100%;
-    
+
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
-    
+
     --accent: 219 34% 26%;
     --accent-foreground: 0 0% 100%;
-    
+
     --destructive: 0 100% 45%;
     --destructive-foreground: 0 0% 100%;
-    
+
     --border: 0 0% 80%;
     --input: 0 0% 90%;
     --ring: 205 89% 40%;
-    
-    --sidebar-background: 217 27% 16%;
+
+    --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 25 95% 38%;
     --sidebar-accent: 205 89% 40%;
   }
-  
+
   .light-mode .highlight-text {
     @apply text-black font-medium;
   }
-  
+
   .light-mode .white-on-black-card {
     @apply bg-[hsl(var(--card))] border border-black/5 shadow-lg shadow-black/5;
   }
-  
+
   .light-mode .white-on-black-input {
     @apply bg-white border-black/10 focus:border-black/30 text-black placeholder:text-black/40;
   }
-  
+
   .light-mode .glass-panel {
     @apply backdrop-blur-sm bg-black/5 border border-black/10;
   }
@@ -82,143 +81,143 @@
   .gradient-heading {
     @apply bg-gradient-to-r from-white/70 via-white to-white/70 bg-clip-text text-transparent;
   }
-  
+
   .white-on-black-card {
     @apply bg-[hsl(var(--card))] border border-white/10 shadow-lg shadow-white/5;
   }
-  
+
   .white-on-black-button {
     @apply bg-white text-black hover:bg-white/90 transition-colors;
   }
-  
+
   .white-on-black-input {
     @apply bg-muted border-white/20 focus:border-white/50 text-white placeholder:text-white/50;
   }
-  
+
   .glass-panel {
     @apply backdrop-blur-sm bg-white/5 border border-white/10;
   }
-  
+
   .highlight-text {
     @apply text-white font-medium;
   }
-  
+
   .subtle-glow {
     @apply shadow-[0_0_15px_rgba(255,255,255,0.1)];
   }
-  
+
   /* New color-specific utility classes */
   .btn-primary {
     @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-colors;
   }
-  
+
   .btn-secondary {
     @apply bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors;
   }
-  
+
   .btn-accent {
     @apply bg-accent text-accent-foreground hover:bg-accent/90 transition-colors;
   }
-  
+
   .badge-primary {
     @apply bg-primary/20 text-primary-foreground px-2 py-1 rounded-full text-xs font-medium;
   }
-  
+
   .badge-secondary {
     @apply bg-secondary/20 text-secondary-foreground px-2 py-1 rounded-full text-xs font-medium;
   }
-  
+
   .badge-accent {
     @apply bg-accent/20 text-accent-foreground px-2 py-1 rounded-full text-xs font-medium;
   }
-  
+
   .border-accent {
     @apply border;
     border-color: hsl(var(--accent));
   }
-  
+
   .border-primary {
     @apply border;
     border-color: hsl(var(--primary));
   }
-  
+
   .border-secondary {
     @apply border;
     border-color: hsl(var(--secondary));
   }
-  
+
   /* Amazon-inspired countdown box */
   .countdown-box {
     @apply bg-[#d6ccc2] rounded-md p-4 text-center;
   }
-  
+
   .countdown-box-header {
     @apply flex items-center justify-center gap-2 text-amber-600 mb-2;
   }
-  
+
   .countdown-number {
     @apply text-2xl font-bold text-gray-800;
   }
-  
+
   .countdown-label {
     @apply text-xs text-gray-600;
   }
-  
+
   /* Amazon-inspired table styling with updated colors */
   .amazon-table {
     @apply border border-[#d6ccc2] rounded-md overflow-hidden;
   }
-  
+
   .amazon-table thead {
     @apply bg-[#efe9e4];
   }
-  
+
   .amazon-table th {
     @apply py-3 px-4 text-left text-sm font-medium text-gray-700;
   }
-  
+
   .amazon-table tbody tr {
     @apply border-t border-[#e6dfd7];
   }
-  
+
   .amazon-table tbody tr:nth-child(odd) {
     @apply bg-[#fbf9f7];
   }
-  
+
   .amazon-table tbody tr:nth-child(even) {
     @apply bg-[#fafafa];
   }
-  
+
   .amazon-table tbody tr:hover {
     @apply bg-[#f7f5f2];
   }
-  
+
   .amazon-table td {
     @apply py-3 px-4;
   }
-  
+
   /* Amazon-inspired badge styling with updated colors */
   .badge-amazon-sand {
     @apply bg-[#d6ccc2] text-gray-800 rounded-full text-xs px-2 py-0.5 font-medium;
   }
-  
+
   .badge-amazon-amber {
     @apply bg-amber-600 text-white rounded-full text-xs px-2 py-0.5 font-medium;
   }
-  
+
   /* Amazon-inspired card styles */
   .amazon-card-info {
     @apply border rounded-md p-4 transition-all hover:shadow-md;
   }
-  
+
   .amazon-card-info.blue {
     @apply bg-[#f3f9fd] border-[#c9e6fb];
   }
-  
+
   .amazon-card-info.green {
     @apply bg-[#f4fbf4] border-[#d5efd5];
   }
-  
+
   .amazon-card-info.amber {
     @apply bg-[#fffbf0] border-[#ffe7b3];
   }

@@ -1,10 +1,9 @@
-
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from '@/components/ui/collapsible';
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -16,11 +15,11 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
   useSidebar,
-} from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
-import { ChevronDown, LucideIcon } from "lucide-react";
-import { useState } from "react";
-import { useTheme } from "@/hooks/use-theme";
+} from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
+import { ChevronDown, LucideIcon } from 'lucide-react';
+import { useState } from 'react';
+import { useTheme } from '@/hooks/use-theme';
 
 interface SidebarItem {
   title: string;
@@ -46,76 +45,92 @@ export function SidebarMenuSection({
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const { state } = useSidebar();
   const { theme } = useTheme();
-  const isCollapsed = state === "collapsed";
+  const isCollapsed = state === 'collapsed';
 
   const toggleSubmenu = (path: string) => {
     setOpenSubmenu(openSubmenu === path ? null : path);
   };
 
   // Define theme-based classes with white text for both themes
-  const menuTextClass = theme === "light" 
-    ? "text-white hover:text-primary hover:bg-gray-100"
-    : "text-white hover:text-white hover:bg-sidebar-accent";
-  
-  const submenuTextClass = theme === "light"
+  const menuTextClass =
+    theme === 'light'
+      ? 'text-black hover:text-primary !hover:bg-gray-100'
+      : 'text-white hover:text-white !hover:bg-sidebar-accent';
 
-  ? "text-white hover:text-primary hover:bg-gray-100" 
-    : "text-white hover:text-white hover:bg-sidebar-accent";
+  const submenuTextClass =
+    theme === 'light'
+      ? '!text-black hover:!text-primary !hover:bg-gray-100'
+      : '!text-white hover:!text-white !hover:bg-sidebar-accent';
 
-  const iconColorClass = theme === "light"
-    ? iconColor || "text-primary"
-    : iconColor || "text-white";
+  const iconColorClass =
+    theme === 'light' ? 'text-black' : iconColor || 'text-white';
 
-  const labelClass = theme === "light"
-    ? "text-gray-500"
-    : "text-white";
+  const labelClass = theme === 'light' ? 'text-gray-500' : 'text-white';
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className={`${labelClass} text-xs font-semibold tracking-wide uppercase mb-1`}>
+      <SidebarGroupLabel
+        className={`${labelClass} text-xs font-semibold tracking-wide uppercase mb-1`}
+      >
         {!isCollapsed && label}
       </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => {
             const hasSubmenu =
-              "submenu" in item && item.submenu && item.submenu.length > 0;
+              'submenu' in item && item.submenu && item.submenu.length > 0;
 
             return (
-              <SidebarMenuItem key={item.path} className="mb-0.5">
+              <SidebarMenuItem key={item.path} className='mb-0.5'>
                 {hasSubmenu ? (
                   <Collapsible>
-                    <CollapsibleTrigger className="w-full">
-                      <SidebarMenuButton
-                        tooltip={item.title}
+                    <CollapsibleTrigger className='w-full'>
+                      <div
+                        role='button'
+                        tabIndex={0}
                         onClick={() => toggleSubmenu(item.path)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            toggleSubmenu(item.path);
+                          }
+                        }}
                         className={cn(
-                          "flex items-center justify-between w-full",
+                          'flex items-center justify-between w-full',
                           menuTextClass,
-                          "transition-all duration-150 rounded-md",
-                          "py-1.5 px-2 text-xs font-medium"
+                          'transition-all duration-150 rounded-md',
+                          'py-1.5 px-2 text-xs font-medium cursor-pointer',
+                          isCollapsed && 'justify-center px-0'
                         )}
                       >
-                        <div className="flex items-center">
+                        <div
+                          className={cn(
+                            'flex items-center',
+                            isCollapsed && 'justify-center w-full' // Añadimos estas clases
+                          )}
+                        >
                           <item.icon
-                            className={cn("mr-2", iconColorClass)}
+                            className={cn(
+                              'mr-2',
+                              iconColorClass,
+                              isCollapsed && 'mr-0'
+                            )}
                             size={16}
                           />
-                          {!isCollapsed && (
-                            <span>{item.title}</span>
-                          )}
+                          {!isCollapsed && <span>{item.title}</span>}
                         </div>
                         {!isCollapsed && (
                           <ChevronDown
                             className={cn(
-                              "h-3.5 w-3.5 transition-transform",
-                              openSubmenu === item.path && "transform rotate-180"
+                              'h-3.5 w-3.5 transition-transform',
+                              openSubmenu === item.path &&
+                                'transform rotate-180'
                             )}
                           />
                         )}
-                      </SidebarMenuButton>
+                      </div>
                     </CollapsibleTrigger>
-                    
+
                     <CollapsibleContent>
                       {openSubmenu === item.path && !isCollapsed && (
                         <SidebarMenuSub>
@@ -125,14 +140,14 @@ export function SidebarMenuSection({
                                 <RouterLink
                                   to={subItem.path}
                                   className={cn(
-                                    "flex items-center", 
+                                    'flex items-center',
                                     submenuTextClass,
-                                    "transition-all duration-150",
-                                    "py-1 px-2 text-xs rounded-md"
+                                    'transition-all duration-150',
+                                    'py-1 px-2 text-xs rounded-md'
                                   )}
                                 >
                                   <subItem.icon
-                                    className={cn("mr-2", iconColorClass)}
+                                    className={cn('mr-2', iconColorClass)}
                                     size={14}
                                   />
                                   <span>{subItem.title}</span>
@@ -149,19 +164,22 @@ export function SidebarMenuSection({
                     <RouterLink
                       to={item.path}
                       className={cn(
-                        "flex items-center",
+                        'flex items-center',
                         menuTextClass,
-                        "transition-all duration-150 rounded-md",
-                        "py-1.5 px-2 text-xs font-medium"
+                        'transition-all duration-150 rounded-md',
+                        'py-1.5 px-2 text-xs font-medium',
+                        isCollapsed && 'justify-center px-0' // Añadimos estas clases
                       )}
                     >
                       <item.icon
-                        className={cn("mr-2", iconColorClass)}
+                        className={cn(
+                          'mr-2',
+                          iconColorClass,
+                          isCollapsed && 'mr-0'
+                        )}
                         size={16}
                       />
-                      {!isCollapsed && (
-                        <span>{item.title}</span>
-                      )}
+                      {!isCollapsed && <span>{item.title}</span>}
                     </RouterLink>
                   </SidebarMenuButton>
                 )}
