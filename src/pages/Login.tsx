@@ -30,15 +30,8 @@ export default function Login() {
 
   // Dialog states
   const [isRecoveryOpen, setIsRecoveryOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
   const [recoverySuccess, setRecoverySuccess] = useState(false);
-
-  // Registration states
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
-  const [registerName, setRegisterName] = useState("");
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -105,55 +98,6 @@ export default function Login() {
         setRecoverySuccess(false);
         setIsRecoveryOpen(false);
       }, 3000);
-    }, 1500);
-  };
-
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    // Validate
-    if (
-      !registerEmail ||
-      !registerPassword ||
-      !registerConfirmPassword ||
-      !registerName
-    ) {
-      toast({
-        title: "Error de registro",
-        description: "Por favor complete todos los campos",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    if (registerPassword !== registerConfirmPassword) {
-      toast({
-        title: "Error de registro",
-        description: "Las contraseñas no coinciden",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    // Mock registration
-    setTimeout(() => {
-      toast({
-        title: "Registro exitoso",
-        description:
-          "Se ha creado su cuenta exitosamente. Ya puede iniciar sesión.",
-      });
-
-      setIsLoading(false);
-
-      // Close dialog and reset form
-      setRegisterEmail("");
-      setRegisterPassword("");
-      setRegisterConfirmPassword("");
-      setRegisterName("");
-      setIsRegisterOpen(false);
     }, 1500);
   };
 
@@ -226,7 +170,7 @@ export default function Login() {
                     ¿Primera vez aquí?{" "}
                     <button
                       type="button"
-                      onClick={() => setIsRegisterOpen(true)}
+                      onClick={() => navigate("/register")}
                       className="text-orange-600 hover:underline font-medium rounded-lg"
                       style={{ color: "#ff8800" }}
                     >
@@ -267,143 +211,61 @@ export default function Login() {
       </div>
 
       <Dialog open={isRecoveryOpen} onOpenChange={setIsRecoveryOpen}>
-        <DialogContent className="white-on-black-card shadow-xl rounded-2xl border">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-semibold">
-              Recuperar Contraseña
-            </DialogTitle>
-            <DialogDescription>
-              Ingrese su correo y le enviaremos un enlace de recuperación.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="max-w-md w-full bg-white p-6 rounded-2xl shadow-xl border-none">
+          <Card className="bg-transparent shadow-none border-none rounded-2xl space-y-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-2xl font-bold text-black">
+                Recuperar Contraseña
+              </CardTitle>
+              <CardDescription className="text-gray-600">
+                Ingrese su correo y le enviaremos un enlace de recuperación
+              </CardDescription>
+            </CardHeader>
 
-          {recoverySuccess ? (
-            <Alert className="bg-primary/20 border border-primary mt-4">
-              <Lock className="h-4 w-4" aria-hidden />
-              <AlertDescription>
-                Revise su correo. Enviamos un enlace a {recoveryEmail}
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <form onSubmit={handleRecovery} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="recoveryEmail">Correo Electrónico</Label>
-                <Input
-                  id="recoveryEmail"
-                  type="email"
-                  placeholder="usuario@correo.com"
-                  value={recoveryEmail}
-                  onChange={(e) => setRecoveryEmail(e.target.value)}
-                  autoComplete="email"
-                  className="white-on-black-input"
-                />
-              </div>
-              <DialogFooter className="flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsRecoveryOpen(false)}
-                >
-                  Cancelar
-                </Button>
-                <Button
-                  type="submit"
-                  className="btn-primary"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Enviando..." : "Enviar Enlace"}
-                </Button>
-              </DialogFooter>
-            </form>
-          )}
-        </DialogContent>
-      </Dialog>
+            {recoverySuccess ? (
+              <Alert className="bg-orange-100 border border-orange-300">
+                <Lock className="h-4 w-4 text-orange-600" aria-hidden />
+                <AlertDescription className="text-black">
+                  Revise su correo. Enviamos un enlace a {recoveryEmail}
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <form onSubmit={handleRecovery} className="space-y-4">
+                <CardContent className="space-y-2">
+                  <Label htmlFor="recoveryEmail" className="text-gray-800">
+                    Correo Electrónico
+                  </Label>
+                  <Input
+                    id="recoveryEmail"
+                    type="email"
+                    placeholder="usuario@correo.com"
+                    value={recoveryEmail}
+                    onChange={(e) => setRecoveryEmail(e.target.value)}
+                    autoComplete="email"
+                    className="bg-white text-black border-gray-300"
+                  />
+                </CardContent>
 
-      <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-        <DialogContent className="white-on-black-card shadow-xl rounded-2xl border">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-semibold">
-              Crear Cuenta
-            </DialogTitle>
-            <DialogDescription>
-              Complete el formulario para crear una cuenta nueva
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleRegister} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="registerName">Nombre Completo</Label>
-              <Input
-                id="registerName"
-                type="text"
-                placeholder="Juan Pérez"
-                value={registerName}
-                onChange={(e) => setRegisterName(e.target.value)}
-                autoComplete="name"
-                className="white-on-black-input"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="registerEmail">Correo Electrónico</Label>
-              <Input
-                id="registerEmail"
-                type="email"
-                placeholder="usuario@correo.com"
-                value={registerEmail}
-                onChange={(e) => setRegisterEmail(e.target.value)}
-                autoComplete="email"
-                className="white-on-black-input"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="registerPassword">Contraseña</Label>
-              <Input
-                id="registerPassword"
-                type="password"
-                value={registerPassword}
-                onChange={(e) => setRegisterPassword(e.target.value)}
-                autoComplete="new-password"
-                className="white-on-black-input"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="registerConfirmPassword">
-                Confirmar Contraseña
-              </Label>
-              <Input
-                id="registerConfirmPassword"
-                type="password"
-                value={registerConfirmPassword}
-                onChange={(e) => setRegisterConfirmPassword(e.target.value)}
-                autoComplete="new-password"
-                className="white-on-black-input"
-              />
-            </div>
-
-            <Alert className="bg-accent/10 border border-accent">
-              <Info className="h-4 w-4" aria-hidden />
-              <AlertDescription>
-                Al registrarse, acepta los términos y condiciones de Almango.
-              </AlertDescription>
-            </Alert>
-
-            <DialogFooter className="flex justify-end gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsRegisterOpen(false)}
-              >
-                Cancelar
-              </Button>
-              <Button
-                type="submit"
-                className="btn-primary"
-                disabled={isLoading}
-              >
-                {isLoading ? "Registrando..." : "Crear Cuenta"}
-              </Button>
-            </DialogFooter>
-          </form>
+                <CardFooter className="pt-2 flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsRecoveryOpen(false)}
+                    className="rounded-lg"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="submit"
+                    className="font-semibold bg-orange-500 hover:bg-orange-600 text-white rounded-lg"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Enviando..." : "Enviar Enlace"}
+                  </Button>
+                </CardFooter>
+              </form>
+            )}
+          </Card>
         </DialogContent>
       </Dialog>
     </div>
