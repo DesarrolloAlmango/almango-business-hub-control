@@ -30,6 +30,7 @@ import {
   Clientes,
   Comunicacion,
 } from "./pages/PlaceholderRoutes";
+import RegisterPage from "./pages/RegisterPage";
 
 // Import Subastas pages
 import SubastasIndex from "./pages/subastas/SubastasIndex";
@@ -86,6 +87,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<RegisterPage />} />
 
             <Route
               path='/'
