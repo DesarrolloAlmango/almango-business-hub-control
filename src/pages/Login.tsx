@@ -111,7 +111,7 @@ export default function Login() {
           <Card className="bg-transparent shadow-none border-none rounded-2xl">
             <CardHeader className="pb-3">
               <CardTitle className="text-2xl font-bold text-black">
-                Iniciar sesión2
+                Iniciar sesión
               </CardTitle>
               <CardDescription className="text-gray-600">
                 Complete con sus datos para continuar
