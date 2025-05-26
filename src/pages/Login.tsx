@@ -36,11 +36,10 @@ export default function Login() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simple validation
     if (!email || !password) {
       toast({
         title: "Error de inicio de sesión",
@@ -51,20 +50,41 @@ export default function Login() {
       return;
     }
 
-    // Mock login - in a real app, this would call an API
-    setTimeout(() => {
-      // Store login state in localStorage
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userEmail", email);
+    try {
+      const response = await fetch(
+        `http://109.199.100.16/AlmangoXV1NETFramework/APIs/APIComercio/ObtenerLogin?Secusername=${encodeURIComponent(
+          email
+        )}&Secuserpassword=${encodeURIComponent(password)}`
+      );
+      const data = await response.json();
 
+      if (response.ok && data && data.ok === "S") {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userEmail", email);
+
+        toast({
+          title: "Inicio de sesión exitoso",
+          description: "Bienvenido a Almango Business Hub",
+        });
+
+        setIsLoading(false);
+        navigate("/");
+      } else {
+        toast({
+          title: "Error de inicio de sesión",
+          description: data?.mensaje || "Credenciales incorrectas",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+      }
+    } catch (error) {
       toast({
-        title: "Inicio de sesión exitoso",
-        description: "Bienvenido a Almango Business Hub",
+        title: "Error de inicio de sesión",
+        description: "No se pudo conectar al servidor",
+        variant: "destructive",
       });
-
       setIsLoading(false);
-      navigate("/"); // Redirect to home/dashboard
-    }, 1000);
+    }
   };
 
   const handleRecovery = (e: React.FormEvent) => {
@@ -125,7 +145,7 @@ export default function Login() {
                   </Label>
                   <Input
                     id="email"
-                    type="email"
+                    type="text"
                     placeholder="usuario@correo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
