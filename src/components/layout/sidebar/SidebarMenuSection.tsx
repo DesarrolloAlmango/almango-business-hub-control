@@ -1,9 +1,9 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom'
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/ui/collapsible';
+} from '@/components/ui/collapsible'
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -15,26 +15,26 @@ import {
   SidebarMenuSubItem,
   SidebarMenuSubButton,
   useSidebar,
-} from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
-import { ChevronDown, LucideIcon } from 'lucide-react';
-import { useState } from 'react';
-import { useTheme } from '@/hooks/use-theme';
+} from '@/components/ui/sidebar'
+import { cn } from '@/lib/utils'
+import { ChevronDown, LucideIcon } from 'lucide-react'
+import { useState } from 'react'
+import { useTheme } from '@/hooks/use-theme'
 
 interface SidebarItem {
-  title: string;
-  icon: LucideIcon;
-  path: string;
+  title: string
+  icon: LucideIcon
+  path: string
 }
 
 interface SidebarItemWithSubmenu extends SidebarItem {
-  submenu?: SidebarItem[];
+  submenu?: SidebarItem[]
 }
 
 interface SidebarMenuSectionProps {
-  label: string;
-  items: (SidebarItem | SidebarItemWithSubmenu)[];
-  iconColor?: string;
+  label: string
+  items: (SidebarItem | SidebarItemWithSubmenu)[]
+  iconColor?: string
 }
 
 export function SidebarMenuSection({
@@ -42,30 +42,31 @@ export function SidebarMenuSection({
   items,
   iconColor,
 }: SidebarMenuSectionProps) {
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const { state } = useSidebar();
-  const { theme } = useTheme();
-  const isCollapsed = state === 'collapsed';
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
+  const { state } = useSidebar()
+  const { theme } = useTheme()
+  const isCollapsed = state === 'collapsed'
 
   const toggleSubmenu = (path: string) => {
-    setOpenSubmenu(openSubmenu === path ? null : path);
-  };
+    setOpenSubmenu(openSubmenu === path ? null : path)
+  }
 
   // Define theme-based classes with white text for both themes
   const menuTextClass =
     theme === 'light'
-      ? 'text-black hover:text-primary !hover:bg-gray-100'
-      : 'text-white hover:text-white !hover:bg-sidebar-accent';
+      ? 'text-[hsl(var(--secondary))] hover:text-white hover:bg-sidebar-accent'
+      : 'text-white hover:text-white hover:bg-sidebar-accent'
 
   const submenuTextClass =
     theme === 'light'
-      ? '!text-black hover:!text-primary !hover:bg-gray-100'
-      : '!text-white hover:!text-white !hover:bg-sidebar-accent';
+      ? '!text-[hsl(var(--secondary))] hover:!text-white hover:bg-gray-100'
+      : '!text-white hover:text-white hover:bg-sidebar-accent'
 
   const iconColorClass =
-    theme === 'light' ? 'text-black' : iconColor || 'text-white';
+    iconColor || (theme === 'light' ? 'text-black' : 'text-white')
 
-  const labelClass = theme === 'light' ? 'text-gray-500' : 'text-white';
+  const labelClass =
+    theme === 'light' ? 'text-[hsl(var(--primary))]' : 'text-white'
 
   return (
     <SidebarGroup>
@@ -78,7 +79,7 @@ export function SidebarMenuSection({
         <SidebarMenu>
           {items.map((item) => {
             const hasSubmenu =
-              'submenu' in item && item.submenu && item.submenu.length > 0;
+              'submenu' in item && item.submenu && item.submenu.length > 0
 
             return (
               <SidebarMenuItem key={item.path} className='mb-0.5'>
@@ -91,8 +92,8 @@ export function SidebarMenuSection({
                         onClick={() => toggleSubmenu(item.path)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            toggleSubmenu(item.path);
+                            e.preventDefault()
+                            toggleSubmenu(item.path)
                           }
                         }}
                         className={cn(
@@ -117,7 +118,9 @@ export function SidebarMenuSection({
                             )}
                             size={16}
                           />
-                          {!isCollapsed && <span>{item.title}</span>}
+                          {!isCollapsed && (
+                            <span className='px-2'>{item.title}</span>
+                          )}
                         </div>
                         {!isCollapsed && (
                           <ChevronDown
@@ -132,8 +135,13 @@ export function SidebarMenuSection({
                     </CollapsibleTrigger>
 
                     <CollapsibleContent>
-                      {openSubmenu === item.path && !isCollapsed && (
-                        <SidebarMenuSub>
+                      {openSubmenu === item.path && (
+                        <SidebarMenuSub
+                          className={cn(
+                            'ml-4 pl-2 border-l border-l-gray-200 dark:border-l-gray-700',
+                            isCollapsed && 'ml-0 pl-0 border-l-0'
+                          )}
+                        >
                           {item.submenu!.map((subItem) => (
                             <SidebarMenuSubItem key={subItem.path}>
                               <SidebarMenuSubButton asChild>
@@ -168,7 +176,7 @@ export function SidebarMenuSection({
                         menuTextClass,
                         'transition-all duration-150 rounded-md',
                         'py-1.5 px-2 text-xs font-medium',
-                        isCollapsed && 'justify-center px-0' // Añadimos estas clases
+                        isCollapsed && 'justify-center px-0'
                       )}
                     >
                       <item.icon
@@ -184,10 +192,10 @@ export function SidebarMenuSection({
                   </SidebarMenuButton>
                 )}
               </SidebarMenuItem>
-            );
+            )
           })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  );
+  )
 }

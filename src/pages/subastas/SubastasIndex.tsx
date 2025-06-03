@@ -1,151 +1,120 @@
-import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import {
-  Filter,
-  Plus,
-  Bell,
-  Users,
-  Calendar,
-  ChevronRight,
-  Star,
-  Clock,
-} from 'lucide-react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { SubastasList } from '@/components/subastas/SubastasList';
-import { SubastaFilters } from '@/components/subastas/SubastaFilters';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { CountdownTimer } from '@/components/subastas/CountdownTimer';
-import { Progress } from '@/components/ui/progress';
-import { DetalleOferta } from '@/components/subastas/DetalleOferta';
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Filter, Plus, X, TableProperties, LayoutGrid, Search } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { SubastasList } from "@/components/subastas/SubastasList";
+import { SubastaFilters } from "@/components/subastas/SubastaFilters";
+import { DetalleOferta } from "@/components/subastas/DetalleOferta";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 // Mock data para indicadores de ofertas
 const OFERTAS_NUEVAS = {
   activas: 5,
   pendientes: 2,
-  finalizadas: 0,
+  finalizadas: 1,
   canceladas: 1,
+  adjudicadas: 4,
   todas: 7,
+  subastas: 3,
+  ofertas: 2,
 };
 
 // Mock data para subastas destacadas (resolviendo el error de variable no definida)
 const SUBASTAS_DESTACADAS = [
   {
-    id: 'SUB-2023-001',
-    titulo: 'Desarrollo de App Móvil Empresarial',
-    estado: 'en_postulacion',
-    fecha_fin_postulacion: new Date(
-      Date.now() + 5 * 24 * 60 * 60 * 1000
-    ).toISOString(), // 5 días desde ahora
+    id: "SUB-2023-001",
+    titulo: "Desarrollo de App Móvil Empresarial",
+    estado: "en_postulacion",
+    fecha_fin_postulacion: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 días desde ahora
     progreso: 65,
     postulantes: [
       {
-        id: 'POST-001',
-        proveedor: 'TechSolutions Inc.',
-        avatar: 'TS',
+        id: "POST-001",
+        proveedor: "TechSolutions Inc.",
+        avatar: "TS",
         rating: 4.8,
-        fechaEntrega: new Date(
-          Date.now() + 15 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        fechaEntrega: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
         monto: 12500,
-        estado: 'pendiente',
+        estado: "pendiente",
       },
       {
-        id: 'POST-002',
-        proveedor: 'DevMasters',
-        avatar: 'DM',
+        id: "POST-002",
+        proveedor: "DevMasters",
+        avatar: "DM",
         rating: 4.5,
-        fechaEntrega: new Date(
-          Date.now() + 12 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        fechaEntrega: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
         monto: 14200,
-        estado: 'pendiente',
+        estado: "pendiente",
       },
       {
-        id: 'POST-003',
-        proveedor: 'AppCreators',
-        avatar: 'AC',
+        id: "POST-003",
+        proveedor: "AppCreators",
+        avatar: "AC",
         rating: 4.9,
-        fechaEntrega: new Date(
-          Date.now() + 18 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        fechaEntrega: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000).toISOString(),
         monto: 11800,
-        estado: 'seleccionada',
+        estado: "seleccionada",
       },
     ],
   },
   {
-    id: 'SUB-2023-002',
-    titulo: 'Rediseño de Plataforma Web Corporativa',
-    estado: 'en_postulacion',
-    fecha_fin_postulacion: new Date(
-      Date.now() + 3 * 24 * 60 * 60 * 1000
-    ).toISOString(), // 3 días desde ahora
+    id: "SUB-2023-002",
+    titulo: "Rediseño de Plataforma Web Corporativa",
+    estado: "en_postulacion",
+    fecha_fin_postulacion: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 días desde ahora
     progreso: 80,
     postulantes: [
       {
-        id: 'POST-004',
-        proveedor: 'WebExperts',
-        avatar: 'WE',
+        id: "POST-004",
+        proveedor: "WebExperts",
+        avatar: "WE",
         rating: 4.7,
-        fechaEntrega: new Date(
-          Date.now() + 10 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        fechaEntrega: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
         monto: 8500,
-        estado: 'pendiente',
+        estado: "pendiente",
       },
       {
-        id: 'POST-005',
-        proveedor: 'CreativeWeb',
-        avatar: 'CW',
+        id: "POST-005",
+        proveedor: "CreativeWeb",
+        avatar: "CW",
         rating: 4.3,
-        fechaEntrega: new Date(
-          Date.now() + 14 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        fechaEntrega: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
         monto: 7800,
-        estado: 'rechazada',
+        estado: "rechazada",
       },
     ],
   },
   {
-    id: 'SUB-2023-003',
-    titulo: 'Implementación de Sistema CRM',
-    estado: 'adjudicada',
-    fecha_fin_postulacion: new Date(
-      Date.now() - 2 * 24 * 60 * 60 * 1000
-    ).toISOString(), // 2 días atrás
+    id: "SUB-2023-003",
+    titulo: "Implementación de Sistema CRM",
+    estado: "adjudicada",
+    fecha_fin_postulacion: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 días atrás
     progreso: 100,
     postulantes: [
       {
-        id: 'POST-006',
-        proveedor: 'SystemPro',
-        avatar: 'SP',
+        id: "POST-006",
+        proveedor: "SystemPro",
+        avatar: "SP",
         rating: 5.0,
-        fechaEntrega: new Date(
-          Date.now() + 20 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        fechaEntrega: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
         monto: 18500,
-        estado: 'seleccionada',
+        estado: "seleccionada",
       },
       {
-        id: 'POST-007',
-        proveedor: 'CRMasters',
-        avatar: 'CR',
+        id: "POST-007",
+        proveedor: "CRMasters",
+        avatar: "CR",
         rating: 4.6,
-        fechaEntrega: new Date(
-          Date.now() + 25 * 24 * 60 * 60 * 1000
-        ).toISOString(),
+        fechaEntrega: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
         monto: 16700,
-        estado: 'rechazada',
+        estado: "rechazada",
       },
     ],
   },
@@ -153,11 +122,33 @@ const SUBASTAS_DESTACADAS = [
 
 export default function SubastasIndex() {
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('activas');
+  const [selectedTab, setSelectedTab] = useState("todas");
   const [selectedOferta, setSelectedOferta] = useState<any>(null);
   const [showDetalleOferta, setShowDetalleOferta] = useState(false);
   const [showPostulantes, setShowPostulantes] = useState<string | null>(null);
 
+  //Estado para filtrado
+  const [filtros, setFiltros] = useState({
+    search: "",
+    rubro: "todos",
+    ubicacion: "todas",
+    fecha_desde: "",
+    fecha_hasta: "",
+  });
+
+  const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
+  const [suggestionText, setSuggestionText] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
+  const handleSendSuggestion = () => {
+    // Lógica para enviar el correo
+    console.log("Sugerencia enviada:", suggestionText);
+    setShowSuggestionPopup(false);
+  };
+
+  const onApplyFilters = (nuevosFiltros: any) => {
+    setFiltros(nuevosFiltros);
+  };
   ///
   const handleVerOferta = (oferta: any) => {
     setSelectedOferta(oferta);
@@ -171,32 +162,22 @@ export default function SubastasIndex() {
       setShowPostulantes(subastaId);
     }
   };
-
+  const hayFiltrosActivos = () => {
+    return Object.values(filtros).some((valor) => valor !== "");
+  };
   return (
     <DashboardLayout>
-      <div className='flex items-center justify-between mb-6'>
-        <div>
-          <h1 className='text-3xl font-bold tracking-tight'>
-            Subastas de Servicios
-          </h1>
-          <p className='text-muted-foreground'>
-            Gestione las subastas de servicios, cree nuevas o revise las
-            existentes.
-          </p>
+      <div className='flex flex-col md:flex-row md:items-center md:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4'>
+        <div className='flex-1 min-w-0'>
+          <h1 className='text-xl sm:text-2xl md:text-3xl font-bold tracking-tight truncate'>Proyectos Publicados</h1>
+          <p className='text-xs sm:text-sm text-muted-foreground truncate'>Gestione los proyectos, cree nuevos o revise los existentes</p>
         </div>
-        <div className='flex items-center gap-2'>
-          <Button
-            variant='outline'
-            className='flex items-center gap-2 border-[#d6ccc2]'
-            onClick={() => setShowFilters(!showFilters)}
-          >
+        <div className='flex gap-2 sm:gap-3'>
+          <Button variant='outline' className='flex items-center gap-2 border-[#d6ccc2]' onClick={() => setShowFilters(!showFilters)}>
             <Filter className='h-4 w-4' />
-            {showFilters ? 'Ocultar filtros' : 'Mostrar filtros'}
+            {showFilters ? "Ocultar filtros" : "Mostrar filtros"}
           </Button>
-          <Button
-            className='bg-[#f0c14b] hover:bg-[#e5b94b] text-black border-[#a88734]'
-            asChild
-          >
+          <Button className='bg-[#f0c14b] hover:bg-[#e5b94b] text-black border-[#a88734]' asChild>
             <Link to='/subastas/nueva' className='flex items-center gap-2'>
               <Plus className='h-4 w-4' />
               Nuevo Proyecto
@@ -205,309 +186,281 @@ export default function SubastasIndex() {
         </div>
       </div>
 
-      {showFilters && (
+      {showFilters ? (
         <Card className='mb-6 border-[#e6dfd7]'>
           <CardHeader className='pb-3'>
             <CardTitle className='text-lg'>Filtros</CardTitle>
-            <CardDescription>
-              Filtre las subastas según sus necesidades
-            </CardDescription>
           </CardHeader>
           <CardContent>
-            <SubastaFilters />
+            <SubastaFilters
+              onApplyFilters={onApplyFilters}
+              onClearFilters={() => {
+                setFiltros({
+                  search: "",
+                  rubro: "todos",
+                  ubicacion: "todas",
+                  fecha_desde: "",
+                  fecha_hasta: "",
+                });
+              }}
+            />
           </CardContent>
         </Card>
+      ) : (
+        hayFiltrosActivos() && (
+          <div className='flex flex-wrap gap-2 mb-2'>
+            {filtros.search && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Id-Título: {filtros.search}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() => setFiltros({ ...filtros, search: "" })}
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+            {filtros.rubro !== "todos" && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Rubro: {filtros.rubro}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() => setFiltros({ ...filtros, rubro: "todos" })}
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+            {filtros.ubicacion !== "todas" && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Ubicación: {filtros.ubicacion}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() => setFiltros({ ...filtros, ubicacion: "todas" })}
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+            {(filtros.fecha_desde || filtros.fecha_hasta) && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Fechas: {filtros.fecha_desde} {filtros.fecha_desde && "-"}
+                {filtros.fecha_hasta}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() =>
+                    setFiltros({
+                      ...filtros,
+                      fecha_desde: "",
+                      fecha_hasta: "",
+                    })
+                  }
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+          </div>
+        )
       )}
 
-      <div className='mb-6 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-        <div className='amazon-card-info blue'>
-          <div className='flex flex-col gap-2'>
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center gap-2 text-blue-800'>
-                <Bell className='h-5 w-5' />
-                <h3 className='font-medium'>Ofertas Nuevas</h3>
-              </div>
-              <Badge variant='blue'>{OFERTAS_NUEVAS.todas} Total</Badge>
+      <Tabs defaultValue='todas' className='w-full' value={selectedTab} onValueChange={setSelectedTab}>
+        <TabsList className='flex items-center justify-between bg-[#f7f5f2] p-2'>
+          <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-2'>
+              <Label className='text-sm text-muted-foreground'>Modalidad:</Label>
+              <Select
+                value={selectedTab.startsWith("oferta") ? "ofertas" : selectedTab.startsWith("subasta") ? "subastas" : "todas"}
+                onValueChange={(value) => setSelectedTab(value)}
+              >
+                <SelectTrigger className='w-[120px] h-8'>
+                  <SelectValue placeholder='Modalidad' />
+                </SelectTrigger>
+                <SelectContent className='bg-[#f7f5f2]'>
+                  <SelectItem value='ofertas'>Ofertas</SelectItem>
+                  <SelectItem value='subastas'>Subastas</SelectItem>
+                  <SelectItem value='todas'>Todas</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <p className='text-sm text-blue-700'>
-              {OFERTAS_NUEVAS.activas} ofertas nuevas en subastas activas
-            </p>
-          </div>
-        </div>
-
-        <div className='amazon-card-info green'>
-          <div className='flex flex-col gap-2'>
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center gap-2 text-green-800'>
-                <Users className='h-5 w-5' />
-                <h3 className='font-medium'>Postulantes</h3>
-              </div>
-              <Badge variant='green'>12 Total</Badge>
+            <div className='flex items-center gap-2'>
+              <Label className='text-sm text-muted-foreground'>Estado:</Label>
+              <Select
+                value={
+                  ["activas", "pendientes", "finalizadas", "adjudicadas", "canceladas", "en_revision"].includes(selectedTab)
+                    ? selectedTab
+                    : "todas"
+                }
+                onValueChange={(value) => setSelectedTab(value)}
+              >
+                <SelectTrigger className='w-[120px] h-8'>
+                  <SelectValue placeholder='Estado' />
+                </SelectTrigger>
+                <SelectContent className='bg-[#f7f5f2]'>
+                  <SelectItem value='canceladas'>Cancelados</SelectItem>
+                  <SelectItem value='activas'>Activos</SelectItem>
+                  <SelectItem value='pendientes'>Pendientes</SelectItem>
+                  <SelectItem value='finalizadas'>Finalizados</SelectItem>
+                  <SelectItem value='en_revision'>En Revisión</SelectItem>
+                  <SelectItem value='adjudicadas'>Adjudicados</SelectItem>
+                  <SelectItem value='todas'>Todos</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-            <p className='text-sm text-green-700'>
-              8 postulantes en subastas activas
-            </p>
           </div>
-        </div>
-
-        <div className='amazon-card-info amber'>
-          <div className='flex flex-col gap-2'>
-            <div className='flex items-center justify-between'>
-              <div className='flex items-center gap-2 text-amber-800'>
-                <Calendar className='h-5 w-5' />
-                <h3 className='font-medium'>Próximos Cierres</h3>
-              </div>
-              <Badge variant='amber'>3 Subastas</Badge>
+          <div className='flex items-center gap-1'>
+            <div className='relative hidden lg:flex lg:w-64'>
+              <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
+              <Input
+                type='search'
+                placeholder='Buscar proyectos por id o título'
+                className='w-full rounded-lg pl-8 shadow-none h-9'
+                value={filtros.search}
+                onChange={(e) => setFiltros({ ...filtros, search: e.target.value })}
+              />
             </div>
-            <p className='text-sm text-amber-700'>
-              La próxima subasta cierra en 5 días
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Destacados con countdown y postulantes */}
-      <div className='mb-6'>
-        <h2 className='text-xl font-semibold mb-3'>Subastas Destacadas</h2>
-        <div className='space-y-4'>
-          {SUBASTAS_DESTACADAS.map((subasta) => (
-            <Card
-              key={subasta.id}
-              className='overflow-hidden border-[#e6dfd7] hover:border-[#d6ccc2] transition-all'
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => setViewMode(viewMode === "table" ? "cards" : "table")}
+              aria-label={viewMode === "table" ? "Ver como Tarjetas" : "Ver como Tabla"}
             >
-              <div className='grid grid-cols-1 lg:grid-cols-12'>
-                <div className='lg:col-span-9 p-4'>
-                  <div className='flex flex-col md:flex-row md:items-center gap-4 justify-between mb-3'>
-                    <div>
-                      <div className='flex items-center gap-2'>
-                        <Link
-                          to={`/subastas/${subasta.id}`}
-                          className='text-lg font-medium hover:underline text-[#0066c0]'
-                        >
-                          {subasta.titulo}
-                        </Link>
-                        <Badge
-                          variant={
-                            subasta.estado === 'en_postulacion'
-                              ? 'blue'
-                              : 'purple'
-                          }
-                        >
-                          {subasta.estado === 'en_postulacion'
-                            ? 'En Postulación'
-                            : 'Adjudicada'}
-                        </Badge>
-                      </div>
-                      <div className='flex items-center gap-3 mt-1'>
-                        <CountdownTimer
-                          endDate={subasta.fecha_fin_postulacion}
-                          variant='compact'
-                        />
-                        <span className='text-xs text-muted-foreground'>
-                          ID: {subasta.id}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <Button
-                        variant='outline'
-                        size='sm'
-                        onClick={() => togglePostulantes(subasta.id)}
-                        className='flex items-center gap-1 border-[#d6ccc2]'
-                      >
-                        <Users className='h-3.5 w-3.5' />
-                        <span>
-                          {subasta.postulantes?.length || 0} Postulantes
-                        </span>
-                        <ChevronRight
-                          className={`h-3.5 w-3.5 transition-transform ${
-                            showPostulantes === subasta.id ? 'rotate-90' : ''
-                          }`}
-                        />
-                      </Button>
-                      <Button
-                        size='sm'
-                        className='bg-[#f0c14b] hover:bg-[#e5b94b] text-black border-[#a88734]'
-                        asChild
-                      >
-                        <Link to={`/subastas/${subasta.id}`}>Ver Detalles</Link>
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className='space-y-3'>
-                    <div className='flex items-center justify-between'>
-                      <span className='text-sm font-medium'>
-                        Progreso general
-                      </span>
-                      <span className='text-sm text-muted-foreground'>
-                        {subasta.progreso}%
-                      </span>
-                    </div>
-                    <Progress value={subasta.progreso} className='h-2' />
-                  </div>
-
-                  {showPostulantes === subasta.id && (
-                    <div className='mt-4 border rounded-md border-[#e6dfd7]'>
-                      <div className='bg-[#f7f5f2] p-3 border-b border-[#e6dfd7]'>
-                        <h4 className='font-medium'>Lista de Postulantes</h4>
-                      </div>
-                      <div className='p-2 divide-y divide-[#e6dfd7]'>
-                        {subasta.postulantes &&
-                          subasta.postulantes.map((postulante) => (
-                            <div key={postulante.id} className='py-2 px-1'>
-                              <div className='flex items-center justify-between'>
-                                <div className='flex items-center gap-2'>
-                                  <Avatar className='h-8 w-8 bg-[#f7f5f2] text-gray-700'>
-                                    <AvatarFallback>
-                                      {postulante.avatar}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <div>
-                                    <div className='font-medium'>
-                                      {postulante.proveedor}
-                                    </div>
-                                    <div className='flex items-center gap-2 text-xs text-muted-foreground'>
-                                      <div className='flex items-center'>
-                                        <Star className='h-3 w-3 text-yellow-500 fill-yellow-500 mr-0.5' />
-                                        <span>{postulante.rating}</span>
-                                      </div>
-                                      <div className='flex items-center'>
-                                        <Clock className='h-3 w-3 mr-0.5' />
-                                        <span>
-                                          Entrega:{' '}
-                                          {new Date(
-                                            postulante.fechaEntrega
-                                          ).toLocaleDateString()}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className='flex items-center gap-3'>
-                                  <div className='text-right'>
-                                    <div className='font-medium'>
-                                      ${postulante.monto}
-                                    </div>
-                                    <Badge
-                                      variant={
-                                        postulante.estado === 'seleccionada'
-                                          ? 'green'
-                                          : postulante.estado === 'pendiente'
-                                          ? 'amber'
-                                          : 'destructive'
-                                      }
-                                    >
-                                      {postulante.estado === 'seleccionada'
-                                        ? 'Seleccionada'
-                                        : postulante.estado === 'pendiente'
-                                        ? 'Pendiente'
-                                        : 'Rechazada'}
-                                    </Badge>
-                                  </div>
-                                  <Button
-                                    size='sm'
-                                    variant='outline'
-                                    className='border-[#d6ccc2]'
-                                    onClick={() => handleVerOferta(postulante)}
-                                  >
-                                    Ver Oferta
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className='lg:col-span-3 bg-[#f7f5f2] border-t lg:border-t-0 lg:border-l border-[#e6dfd7]'>
-                  <CountdownTimer
-                    endDate={subasta.fecha_fin_postulacion}
-                    variant='box'
-                    className='border-0 rounded-none h-full'
-                  />
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      <Tabs
-        defaultValue='activas'
-        className='w-full'
-        value={selectedTab}
-        onValueChange={setSelectedTab}
-      >
-        <TabsList className='grid w-full md:w-auto grid-cols-4 md:grid-cols-none md:flex bg-[#f7f5f2]'>
-          <TabsTrigger
-            value='activas'
-            className='relative data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black'
-          >
-            Activas
-            {OFERTAS_NUEVAS.activas > 0 && (
-              <Badge className='absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-red-500 hover:bg-red-600'>
-                {OFERTAS_NUEVAS.activas}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger
-            value='pendientes'
-            className='relative data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black'
-          >
-            Pendientes
-            {OFERTAS_NUEVAS.pendientes > 0 && (
-              <Badge className='absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-amber-500 hover:bg-amber-600'>
-                {OFERTAS_NUEVAS.pendientes}
-              </Badge>
-            )}
-          </TabsTrigger>
-          <TabsTrigger
-            value='finalizadas'
-            className='data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black'
-          >
-            Finalizadas
-          </TabsTrigger>
-          <TabsTrigger
-            value='todas'
-            className='relative data-[state=active]:bg-[#f0c14b] data-[state=active]:text-black'
-          >
-            Todas
-            {OFERTAS_NUEVAS.todas > 0 && (
-              <Badge className='absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center bg-blue-500 hover:bg-blue-600'>
-                {OFERTAS_NUEVAS.todas}
-              </Badge>
-            )}
-          </TabsTrigger>
+              {viewMode === "table" ? <LayoutGrid className='h-4 w-4' /> : <TableProperties className='h-4 w-4' />}
+            </Button>
+          </div>
         </TabsList>
+
+        <TabsContent value='ofertas'>
+          <SubastasList modalidad='oferta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='subastas'>
+          <SubastasList modalidad='subasta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
         <TabsContent value='activas'>
-          <SubastasList estado='activa' onShowPostulantes={handleVerOferta} />
+          <SubastasList estado='activa' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
         </TabsContent>
         <TabsContent value='pendientes'>
-          <SubastasList
-            estado='pendiente'
-            onShowPostulantes={handleVerOferta}
-          />
+          <SubastasList estado='pendiente' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
         </TabsContent>
         <TabsContent value='finalizadas'>
-          <SubastasList
-            estado='finalizada'
-            onShowPostulantes={handleVerOferta}
-          />
+          <SubastasList estado='finalizada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+
+        <TabsContent value='adjudicadas'>
+          <SubastasList estado='adjudicada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='canceladas'>
+          <SubastasList estado='cancelada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
         </TabsContent>
         <TabsContent value='todas'>
-          <SubastasList estado='todas' onShowPostulantes={handleVerOferta} />
+          <SubastasList estado='todas' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='en_revision'>
+          <SubastasList estado='en_revision' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
         </TabsContent>
       </Tabs>
 
       {/* Modal para ver detalle de la oferta */}
-      <DetalleOferta
-        oferta={selectedOferta}
-        open={showDetalleOferta}
-        onClose={() => setShowDetalleOferta(false)}
-      />
+      <DetalleOferta oferta={selectedOferta} open={showDetalleOferta} onClose={() => setShowDetalleOferta(false)} />
+
+      {/* Botones flotantes alineados verticalmente */}
+      <TooltipProvider>
+        <div className='fixed right-0 bottom-3 z-50 flex flex-col'>
+          {/* Botón de buzón de sugerencias */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setShowSuggestionPopup(true)}
+                className='flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-l-lg text-white relative overflow-hidden'
+              >
+                <img src='/mailIcon.png' alt='Email' className='absolute inset-0 w-full h-full object-cover p-1' />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side='left' className='bg-white shadow-md border border-gray-200'>
+              <p>Buzón de sugerencias</p>
+            </TooltipContent>
+          </Tooltip>
+
+          {/* Botón de WhatsApp */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href='https://wa.me/59899713934'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-l-lg text-white  relative overflow-hidden'
+              >
+                <img src='/wpIcon.png' alt='WhatsApp' className='absolute inset-0 w-full h-full object-cover' />
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side='left' className='bg-white shadow-md border border-gray-200'>
+              <p>Contactar al ejecutivo de cuentas</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </TooltipProvider>
+
+      {/* Popup de sugerencias consultar para usar biblioteca o peticion al backend*/}
+
+      {showSuggestionPopup && (
+        <div
+          className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]'
+          onClick={() => setShowSuggestionPopup(false)}
+        >
+          <Card className='w-full max-w-md border-[#e6dfd7]  ' onClick={(e) => e.stopPropagation()}>
+            <CardHeader className='bg-[#f7f5f2] border-b border-[#e6dfd7]'>
+              <CardTitle className='text-lg font-semibold text-[#333]'>¿Cómo podemos mejorar?</CardTitle>
+            </CardHeader>
+            <CardContent className='p-6 bg-white'>
+              <div className='space-y-4 '>
+                <div>
+                  <label className='block text-sm font-medium text-[#666] mb-1'>Tu email</label>
+                  <input
+                    type='email'
+                    placeholder='ejemplo@email.com'
+                    className='w-full border border-[#e6dfd7] rounded p-2 focus:ring-2 focus:ring-[#f0c14b] focus:border-[#f0c14b]'
+                    value={userEmail}
+                    onChange={(e) => setUserEmail(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className='block text-sm font-medium text-[#666] mb-1'>Tu sugerencia</label>
+                  <textarea
+                    className='w-full border border-[#e6dfd7] rounded p-2 h-32 focus:ring-2 focus:ring-[#f0c14b] focus:border-[#f0c14b]'
+                    placeholder='Te leemos...'
+                    value={suggestionText}
+                    onChange={(e) => setSuggestionText(e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardContent>
+            <div className='flex justify-end gap-2 p-4 bg-[#f7f5f2] border-t border-[#e6dfd7] rounded-b-lg'>
+              <Button
+                variant='outline'
+                className='border-[#e6dfd7] hover:bg-[#f0c14b] hover:text-black'
+                onClick={() => setShowSuggestionPopup(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                className='bg-[#f0c14b] hover:bg-[#e5b94b] text-black'
+                onClick={handleSendSuggestion}
+                disabled={!suggestionText || !userEmail}
+              >
+                Enviar sugerencia
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

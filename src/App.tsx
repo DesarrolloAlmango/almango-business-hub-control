@@ -1,22 +1,22 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Toaster } from '@/components/ui/toaster'
+import { Toaster as Sonner } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 // We're not using ThemeProvider from utils/theme-provider anymore
 // import { ThemeProvider } from "@/utils/theme-provider";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import SubUsuarios from "./pages/SubUsuarios";
-import Solicitudes from "./pages/Solicitudes";
-import LinkQR from "./pages/LinkQR";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
-import Messages from "./pages/Messages";
-import DeveloperEnhanced from "./pages/DeveloperEnhanced";
-import DocumentacionGestion from "./pages/DocumentacionGestion";
-import ReportesFeedback from "./pages/reportes/ReportesFeedback";
+import Dashboard from './pages/Dashboard'
+import Login from './pages/Login'
+import SubUsuarios from './pages/SubUsuarios'
+import Solicitudes from './pages/Solicitudes'
+import LinkQR from './pages/LinkQR'
+import Profile from './pages/Profile'
+import Settings from './pages/Settings'
+import Messages from './pages/Messages'
+import DeveloperEnhanced from './pages/DeveloperEnhanced'
+import DocumentacionGestion from './pages/DocumentacionGestion'
+import ReportesFeedback from './pages/reportes/ReportesFeedback'
 import {
   VisualizacionSolicitudes,
   Reportes,
@@ -29,53 +29,56 @@ import {
   Campanas,
   Clientes,
   Comunicacion,
-} from "./pages/PlaceholderRoutes";
+} from './pages/PlaceholderRoutes'
 
 // Import Subastas pages
-import SubastasIndex from "./pages/subastas/SubastasIndex";
-import NuevaSubasta from "./pages/subastas/NuevaSubasta";
-import DetalleSubasta from "./pages/subastas/DetalleSubasta";
+import SubastasIndex from './pages/subastas/SubastasIndex'
+import NuevaSubasta from './pages/subastas/NuevaSubasta'
+import DetalleSubasta from './pages/subastas/DetalleSubasta'
 
 // Import error pages
-import NotFound from "./pages/NotFound";
-import NotFound404 from "./pages/errors/NotFound404";
-import Unauthorized401 from "./pages/errors/Unauthorized401";
-import Forbidden403 from "./pages/errors/Forbidden403";
-import ServerError500 from "./pages/errors/ServerError500";
-import GatewayTimeout504 from "./pages/errors/GatewayTimeout504";
+import NotFound from './pages/NotFound'
+import NotFound404 from './pages/errors/NotFound404'
+import Unauthorized401 from './pages/errors/Unauthorized401'
+import Forbidden403 from './pages/errors/Forbidden403'
+import ServerError500 from './pages/errors/ServerError500'
+import GatewayTimeout504 from './pages/errors/GatewayTimeout504'
+import EditarSubasta from './pages/subastas/EditarSubasta'
+import ProyectosEnCurso from './pages/subastas/ProyectosEnCurso'
+import { GoogleCalendarEmbed } from './components/GoogleCalendarEmbed'
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
 // Auth check component
 interface ProtectedRouteProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
 
   if (!isLoggedIn) {
-    return <Navigate to='/login' replace />;
+    return <Navigate to='/login' replace />
   }
 
-  return <>{children}</>;
-};
+  return <>{children}</>
+}
 
 const App = () => {
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
 
   useEffect(() => {
     // Check if user is logged in
     const checkAuth = () => {
-      setIsCheckingAuth(false);
-    };
+      setIsCheckingAuth(false)
+    }
 
     // Small delay to prevent flash of login screen
-    setTimeout(checkAuth, 100);
-  }, []);
+    setTimeout(checkAuth, 100)
+  }, [])
 
   if (isCheckingAuth) {
-    return null; // Or a loading spinner
+    return null // Or a loading spinner
   }
 
   return (
@@ -91,7 +94,7 @@ const App = () => {
               path='/'
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <SubastasIndex />
                 </ProtectedRoute>
               }
             />
@@ -152,17 +155,11 @@ const App = () => {
               }
             />
 
-            {/* Redirecting old feedback route to the new reportes/feedback */}
-            <Route
-              path='/feedback'
-              element={<Navigate to='/reportes/feedback' replace />}
-            />
-
             <Route
               path='/reportes'
               element={
                 <ProtectedRoute>
-                  <Reportes />
+                  <ProyectosEnCurso />
                 </ProtectedRoute>
               }
             />
@@ -219,7 +216,7 @@ const App = () => {
               path='/calendario'
               element={
                 <ProtectedRoute>
-                  <Calendario />
+                  <GoogleCalendarEmbed calendarId='ignaciotorresmayobre8@gmail.com'/>
                 </ProtectedRoute>
               }
             />
@@ -289,6 +286,14 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path='/subastas/editar/:id'
+              element={
+                <ProtectedRoute>
+                  <EditarSubasta />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Error Pages */}
             <Route path='/error/401' element={<Unauthorized401 />} />
@@ -303,7 +308,7 @@ const App = () => {
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
-  );
-};
+  )
+}
 
-export default App;
+export default App
