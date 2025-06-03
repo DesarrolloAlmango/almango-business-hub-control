@@ -44,6 +44,9 @@ import Unauthorized401 from "./pages/errors/Unauthorized401";
 import Forbidden403 from "./pages/errors/Forbidden403";
 import ServerError500 from "./pages/errors/ServerError500";
 import GatewayTimeout504 from "./pages/errors/GatewayTimeout504";
+import EditarSubasta from "./pages/subastas/EditarSubasta";
+import ProyectosEnCurso from "./pages/subastas/ProyectosEnCurso";
+import { GoogleCalendarEmbed } from "./components/GoogleCalendarEmbed";
 
 const queryClient = new QueryClient();
 
@@ -93,7 +96,7 @@ const App = () => {
               path='/'
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <SubastasIndex />
                 </ProtectedRoute>
               }
             />
@@ -154,17 +157,11 @@ const App = () => {
               }
             />
 
-            {/* Redirecting old feedback route to the new reportes/feedback */}
-            <Route
-              path='/feedback'
-              element={<Navigate to='/reportes/feedback' replace />}
-            />
-
             <Route
               path='/reportes'
               element={
                 <ProtectedRoute>
-                  <Reportes />
+                  <ProyectosEnCurso />
                 </ProtectedRoute>
               }
             />
@@ -221,7 +218,7 @@ const App = () => {
               path='/calendario'
               element={
                 <ProtectedRoute>
-                  <Calendario />
+                  <GoogleCalendarEmbed calendarId='ignaciotorresmayobre8@gmail.com' />
                 </ProtectedRoute>
               }
             />
@@ -288,6 +285,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <DetalleSubasta />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/subastas/editar/:id'
+              element={
+                <ProtectedRoute>
+                  <EditarSubasta />
                 </ProtectedRoute>
               }
             />
