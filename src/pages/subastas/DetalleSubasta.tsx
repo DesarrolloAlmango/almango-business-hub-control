@@ -1,4 +1,3 @@
-
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { 
@@ -12,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Calendar, Clock, DollarSign, Package, Star } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation, useNavigate } from "react-router-dom";
 import { DetalleTrabajos } from "@/components/subastas/DetalleTrabajos";
 import { ComentariosSubasta } from "@/components/subastas/ComentariosSubasta";
 import { OfertasSubasta } from "@/components/subastas/OfertasSubasta";
@@ -43,6 +42,8 @@ const MOCK_SUBASTA = {
 
 export default function DetalleSubasta() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [subasta, setSubasta] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
@@ -113,11 +114,22 @@ export default function DetalleSubasta() {
     <DashboardLayout>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex items-center">
-          <Button variant="ghost" size="sm" asChild className="mr-4">
-            <Link to="/subastas" className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mr-4"
+            onClick={() => {
+              if (location.state?.from) {
+                navigate(location.state.from);
+              } else {
+                navigate("/subastas");
+              }
+            }}
+          >
+            <span className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" />
               Volver
-            </Link>
+            </span>
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{subasta.titulo}</h1>

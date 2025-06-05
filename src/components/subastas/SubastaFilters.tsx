@@ -1,84 +1,105 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Filter, X } from 'lucide-react';
-import { useState } from 'react';
+} from '@/components/ui/select'
+import { Filter, X } from 'lucide-react'
+import { useState } from 'react'
 
-export function SubastaFilters() {
+interface SubastaFiltersProps {
+  onApplyFilters: (filtros: any) => void
+  onClearFilters: () => void
+}
+
+export function SubastaFilters({
+  onApplyFilters,
+  onClearFilters,
+}: SubastaFiltersProps) {
+  const [filtros, setFiltros] = useState({
+    ubicacion: 'todas',
+    rubro: 'todos',
+    fecha_desde: '',
+    fecha_hasta: '',
+  })
+  const handleInputChange = (field: string, value: string) => {
+    setFiltros((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+
+  const handleClearFilters = () => {
+    setFiltros({
+      ubicacion: 'todas',
+      rubro: '',
+      fecha_desde: '',
+      fecha_hasta: '',
+    })
+    onClearFilters()
+  }
   return (
-    <div className='space-y-4'>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+    <div className='space-y-2 px-2 w-full max-w-screen overflow-x-auto'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
         <div className='space-y-2'>
-          <Label htmlFor='search'>Buscar</Label>
-          <div className='relative'>
-            <Input id='search' placeholder='Búsqueda por título o ID' />
-          </div>
-        </div>
-
-        <div className='space-y-2'>
-          <Label htmlFor='estado'>Estado</Label>
-          <Select>
-            <SelectTrigger id='estado'>
-              <SelectValue placeholder='Todos los estados' />
+          <Label htmlFor='ubicacion'>Ubicación</Label>
+          <Select
+            value={filtros.ubicacion}
+            onValueChange={(value) => handleInputChange('ubicacion', value)}
+          >
+            <SelectTrigger id='ubicacion'>
+              <SelectValue placeholder='Seleccionar ubicación' />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='todos'>Todos los estados</SelectItem>
-              <SelectItem value='borrador'>Borrador</SelectItem>
-              <SelectItem value='publicada'>Publicada</SelectItem>
-              <SelectItem value='en_revision'>En Revisión</SelectItem>
-              <SelectItem value='en_postulacion'>En Postulación</SelectItem>
-              <SelectItem value='adjudicada'>Adjudicada</SelectItem>
-              <SelectItem value='en_progreso'>En Progreso</SelectItem>
-              <SelectItem value='finalizada'>Finalizada</SelectItem>
+            <SelectContent className='bg-white'>
+              <SelectItem value='todas'>Todas las ubicaciones</SelectItem>
+              <SelectItem value='montevideo'>Montevideo</SelectItem>
+              <SelectItem value='canelones'>Canelones</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div className='space-y-2'>
-          <Label htmlFor='tipo_precio'>Tipo de Precio</Label>
-          <Select>
-            <SelectTrigger id='tipo_precio'>
-              <SelectValue placeholder='Todos los tipos' />
+          <Label htmlFor='rubro'>Rubro</Label>
+          <Select
+            value={filtros.rubro}
+            onValueChange={(value) => handleInputChange('rubro', value)}
+          >
+            <SelectTrigger id='rubro'>
+              <SelectValue placeholder='Rubro principal' />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='todos'>Todos los tipos</SelectItem>
-              <SelectItem value='fijo'>Precio Fijo</SelectItem>
-              <SelectItem value='mejor_oferta'>Mejor Oferta</SelectItem>
+            <SelectContent className='bg-white'>
+              <SelectItem value='todos'>Todos</SelectItem>
+              <SelectItem value='construccion'>Construcción</SelectItem>
+              <SelectItem value='servicios'>Servicios</SelectItem>
+              <SelectItem value='otros'>Otros</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <div className='space-y-2'>
           <Label htmlFor='fecha_desde'>Fecha Desde</Label>
-          <Input id='fecha_desde' type='date' />
+          <Input
+            id='fecha_desde'
+            type='date'
+            value={filtros.fecha_desde}
+            onChange={(e) => handleInputChange('fecha_desde', e.target.value)}
+          />
         </div>
 
         <div className='space-y-2'>
           <Label htmlFor='fecha_hasta'>Fecha Hasta</Label>
-          <Input id='fecha_hasta' type='date' />
-        </div>
-
-        <div className='space-y-2'>
-          <Label htmlFor='incluye_materiales'>Materiales</Label>
-          <Select>
-            <SelectTrigger id='incluye_materiales'>
-              <SelectValue placeholder='Cualquier opción' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='cualquiera'>Cualquier opción</SelectItem>
-              <SelectItem value='con_materiales'>Con materiales</SelectItem>
-              <SelectItem value='sin_materiales'>Sin materiales</SelectItem>
-            </SelectContent>
-          </Select>
+          <Input
+            id='fecha_hasta'
+            type='date'
+            value={filtros.fecha_hasta}
+            onChange={(e) => handleInputChange('fecha_hasta', e.target.value)}
+          />
         </div>
       </div>
 
@@ -87,16 +108,21 @@ export function SubastaFilters() {
           variant='outline'
           type='button'
           className='flex items-center gap-2'
+          onClick={handleClearFilters}
         >
           <X className='h-4 w-4' />
           Limpiar Filtros
         </Button>
 
-        <Button type='button' className='flex items-center gap-2'>
+        <Button
+          type='button'
+          className='flex items-center gap-2'
+          onClick={() => onApplyFilters(filtros)}
+        >
           <Filter className='h-4 w-4' />
           Aplicar Filtros
         </Button>
       </div>
     </div>
-  );
+  )
 }
