@@ -1,324 +1,477 @@
-import React, { useState } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { FiStar, FiCopy, FiXCircle, FiEdit2 } from "react-icons/fi";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Filter, Plus, X, TableProperties, LayoutGrid, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { SubastasList } from "@/components/subastas/SubastasList";
+import { SubastaFilters } from "@/components/subastas/SubastaFilters";
+import { DetalleOferta } from "@/components/subastas/DetalleOferta";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
-const estados = ["Pendiente", "Aceptado", "Finalizado"];
-const departamentos = ["Ventas", "Soporte", "Administración"];
-const sucursales = ["Sucursal A", "Sucursal B", "Sucursal C"];
-const profesionales = ["Prof. Juan", "Prof. Ana", "Prof. Luis"];
-const usuariosAlta = ["Usuario1", "Usuario2", "Usuario3"];
-const rubros = ["Rubro1", "Rubro2", "Rubro3"];
+// Mock data para indicadores de ofertas
+const OFERTAS_NUEVAS = {
+  activas: 5,
+  pendientes: 2,
+  finalizadas: 1,
+  canceladas: 1,
+  adjudicadas: 4,
+  todas: 7,
+  subastas: 3,
+  ofertas: 2,
+};
 
-const mockSolicitudes = Array.from({ length: 6 }, (_, i) => ({
-  id: i + 1,
-  estado: estados[i % estados.length],
-  fechaAlta: "2025-06-03",
-  nroSolicitud: `SOL-000${i + 1}`,
-  sucursal: sucursales[i % sucursales.length],
-  cliente: `Cliente ${i + 1}`,
-  telefono: `+54 9 11 1234 567${i}`,
-  departamento: departamentos[i % departamentos.length],
-  fechaTrabajo: "2025-06-10",
-  direccion: `Dirección ${i + 1}`,
-  importe: (1000 + i * 250).toFixed(2),
-  profesional: profesionales[i % profesionales.length],
-  usuarioAlta: usuariosAlta[i % usuariosAlta.length],
-}));
-
-const SelectFilter = ({ label, options, value, onChange }) => (
-  <select
-    className="border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white w-full"
-    value={value}
-    onChange={onChange}
-  >
-    <option value="">{label}</option>
-    {options.map((o) => (
-      <option key={o} value={o}>
-        {o}
-      </option>
-    ))}
-  </select>
-);
-
-const QuickFilters = ({ filters, setFilters }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
-    <SelectFilter
-      label="Estado"
-      options={estados}
-      value={filters.estado}
-      onChange={(e) => setFilters((f) => ({ ...f, estado: e.target.value }))}
-    />
-    <SelectFilter
-      label="Departamento"
-      options={departamentos}
-      value={filters.departamento}
-      onChange={(e) => setFilters((f) => ({ ...f, departamento: e.target.value }))}
-    />
-    <SelectFilter
-      label="Sucursal"
-      options={sucursales}
-      value={filters.sucursal}
-      onChange={(e) => setFilters((f) => ({ ...f, sucursal: e.target.value }))}
-    />
-  </div>
-);
-
-const Input = ({ value, onChange, placeholder, type = "text", className = "" }) => (
-  <input
-    type={type}
-    placeholder={placeholder}
-    value={value}
-    onChange={onChange}
-    className={`border border-gray-300 rounded px-2 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white w-full ${className}`}
-  />
-);
-
-const SearchBar = ({ filters, setFilters }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
-    <Input
-      placeholder="N° Solicitud"
-      value={filters.nroSolicitud}
-      onChange={(e) => setFilters((f) => ({ ...f, nroSolicitud: e.target.value }))}
-    />
-    <Input
-      placeholder="N° Teléfono"
-      value={filters.telefono}
-      onChange={(e) => setFilters((f) => ({ ...f, telefono: e.target.value }))}
-    />
-    <Input
-      placeholder="Nombre Cliente"
-      value={filters.cliente}
-      onChange={(e) => setFilters((f) => ({ ...f, cliente: e.target.value }))}
-    />
-    <Input
-      placeholder="Dirección"
-      value={filters.direccion}
-      onChange={(e) => setFilters((f) => ({ ...f, direccion: e.target.value }))}
-    />
-  </div>
-);
-
-const AdvancedFilters = ({ filters, setFilters }) => (
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-    <Input
-      placeholder="Nombre Profesional"
-      value={filters.profesional}
-      onChange={(e) => setFilters((f) => ({ ...f, profesional: e.target.value }))}
-    />
-    <Input
-      placeholder="Usuario de Alta"
-      value={filters.usuarioAlta}
-      onChange={(e) => setFilters((f) => ({ ...f, usuarioAlta: e.target.value }))}
-    />
-    <SelectFilter
-      label="Rubro"
-      options={rubros}
-      value={filters.rubro}
-      onChange={(e) => setFilters((f) => ({ ...f, rubro: e.target.value }))}
-    />
-    <div className="flex flex-col text-sm w-full">
-      <label className="mb-1 text-gray-700">Fecha Trabajo</label>
-      <input
-        type="date"
-        className="border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white w-full"
-        value={filters.fechaTrabajo}
-        onChange={(e) => setFilters((f) => ({ ...f, fechaTrabajo: e.target.value }))}
-      />
-    </div>
-    <div className="flex flex-col text-sm w-full">
-      <label className="mb-1 text-gray-700">Fecha Solicitud</label>
-      <input
-        type="date"
-        className="border border-gray-300 rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white w-full"
-        value={filters.fechaAlta}
-        onChange={(e) => setFilters((f) => ({ ...f, fechaAlta: e.target.value }))}
-      />
-    </div>
-  </div>
-);
-
-const ViewToggle = ({ view, setView }) => (
-  <div className="flex gap-2 mb-6">
-    {["fila", "tarjeta"].map((v) => (
-      <button
-        key={v}
-        onClick={() => setView(v)}
-        className={`px-4 py-2 rounded transition ${
-          view === v
-            ? "bg-orange-500 text-white shadow"
-            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-        }`}
-        type="button"
-        aria-pressed={view === v}
-      >
-        {v === "fila" ? "Vista en Fila" : "Vista en Tarjeta"}
-      </button>
-    ))}
-  </div>
-);
-
-const actionIcons = [
+// Mock data para subastas destacadas (resolviendo el error de variable no definida)
+const SUBASTAS_DESTACADAS = [
   {
-    icon: <FiStar size={18} />,
-    label: "Fijar",
+    id: "SUB-2023-001",
+    titulo: "Desarrollo de App Móvil Empresarial",
+    estado: "en_postulacion",
+    fecha_fin_postulacion: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 días desde ahora
+    progreso: 65,
+    postulantes: [
+      {
+        id: "POST-001",
+        proveedor: "TechSolutions Inc.",
+        avatar: "TS",
+        rating: 4.8,
+        fechaEntrega: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 12500,
+        estado: "pendiente",
+      },
+      {
+        id: "POST-002",
+        proveedor: "DevMasters",
+        avatar: "DM",
+        rating: 4.5,
+        fechaEntrega: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 14200,
+        estado: "pendiente",
+      },
+      {
+        id: "POST-003",
+        proveedor: "AppCreators",
+        avatar: "AC",
+        rating: 4.9,
+        fechaEntrega: new Date(Date.now() + 18 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 11800,
+        estado: "seleccionada",
+      },
+    ],
   },
   {
-    icon: <FiCopy size={18} />,
-    label: "Duplicar",
+    id: "SUB-2023-002",
+    titulo: "Rediseño de Plataforma Web Corporativa",
+    estado: "en_postulacion",
+    fecha_fin_postulacion: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 días desde ahora
+    progreso: 80,
+    postulantes: [
+      {
+        id: "POST-004",
+        proveedor: "WebExperts",
+        avatar: "WE",
+        rating: 4.7,
+        fechaEntrega: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 8500,
+        estado: "pendiente",
+      },
+      {
+        id: "POST-005",
+        proveedor: "CreativeWeb",
+        avatar: "CW",
+        rating: 4.3,
+        fechaEntrega: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 7800,
+        estado: "rechazada",
+      },
+    ],
   },
   {
-    icon: <FiXCircle size={18} />,
-    label: "Cancelar",
-  },
-  {
-    icon: <FiEdit2 size={18} />,
-    label: "Modificar",
+    id: "SUB-2023-003",
+    titulo: "Implementación de Sistema CRM",
+    estado: "adjudicada",
+    fecha_fin_postulacion: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 días atrás
+    progreso: 100,
+    postulantes: [
+      {
+        id: "POST-006",
+        proveedor: "SystemPro",
+        avatar: "SP",
+        rating: 5.0,
+        fechaEntrega: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 18500,
+        estado: "seleccionada",
+      },
+      {
+        id: "POST-007",
+        proveedor: "CRMasters",
+        avatar: "CR",
+        rating: 4.6,
+        fechaEntrega: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000).toISOString(),
+        monto: 16700,
+        estado: "rechazada",
+      },
+    ],
   },
 ];
 
-const Actions = () => (
-  <div className="flex gap-1 text-xs">
-    {actionIcons.map(({ icon, label }) => (
-      <button
-        key={label}
-        className="relative group bg-transparent p-1 rounded hover:bg-orange-50 transition"
-        type="button"
-        aria-label={label}
-      >
-        {icon}
-        <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-1 opacity-0 group-hover:opacity-100 pointer-events-none bg-gray-800 text-white text-xs rounded px-2 py-1 whitespace-nowrap z-10 transition-opacity">
-          {label}
-        </span>
-      </button>
-    ))}
-  </div>
-);
+export default function SubastasIndex() {
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("todas");
+  const [selectedOferta, setSelectedOferta] = useState<any>(null);
+  const [showDetalleOferta, setShowDetalleOferta] = useState(false);
+  const [showPostulantes, setShowPostulantes] = useState<string | null>(null);
 
-const RequestRow = ({ req }) => (
-  <tr className="border-b hover:bg-gray-50 transition bg-white">
-    <td className="p-2">
-      <input type="checkbox" aria-label={`Seleccionar solicitud ${req.nroSolicitud}`} />
-    </td>
-    <td className="p-2 whitespace-nowrap text-sm">
-      <Actions />
-    </td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.estado}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.fechaAlta}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.nroSolicitud}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.sucursal}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.cliente}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.telefono}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.departamento}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.fechaTrabajo}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.direccion}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">${req.importe}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.profesional}</td>
-    <td className="p-2 whitespace-nowrap text-sm text-gray-800">{req.usuarioAlta}</td>
-  </tr>
-);
+  //Estado para filtrado
+  const [filtros, setFiltros] = useState({
+    search: "",
+    rubro: "todos",
+    ubicacion: "todas",
+    fecha_desde: "",
+    fecha_hasta: "",
+  });
 
-const RequestCard = ({ req }) => (
-  <div className="border rounded-2xl p-6 shadow-md flex flex-col gap-3 text-sm bg-white transition hover:shadow-lg">
-    <div className="flex justify-between items-center">
-      <input type="checkbox" aria-label={`Seleccionar solicitud ${req.nroSolicitud}`} />
-      <span className="font-semibold text-lg text-gray-900">{req.nroSolicitud}</span>
-      <Actions />
-    </div>
-    <div><span className="font-semibold text-gray-700">Estado: </span>{req.estado}</div>
-    <div><span className="font-semibold text-gray-700">Fecha Alta: </span>{req.fechaAlta}</div>
-    <div><span className="font-semibold text-gray-700">Sucursal: </span>{req.sucursal}</div>
-    <div><span className="font-semibold text-gray-700">Cliente: </span>{req.cliente}</div>
-    <div><span className="font-semibold text-gray-700">Teléfono: </span>{req.telefono}</div>
-    <div><span className="font-semibold text-gray-700">Departamento: </span>{req.departamento}</div>
-    <div><span className="font-semibold text-gray-700">Fecha Trabajo: </span>{req.fechaTrabajo}</div>
-    <div><span className="font-semibold text-gray-700">Dirección: </span>{req.direccion}</div>
-    <div><span className="font-semibold text-gray-700">Importe: </span>${req.importe}</div>
-    <div><span className="font-semibold text-gray-700">Profesional: </span>{req.profesional}</div>
-    <div><span className="font-semibold text-gray-700">Usuario Alta: </span>{req.usuarioAlta}</div>
-  </div>
-);
+  const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
+  const [suggestionText, setSuggestionText] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  // Cambia el valor por defecto a "table" para que el modo tabla sea el predeterminado
+  const [viewMode, setViewMode] = useState<"table" | "cards">("table");
+  const [currentPage, setCurrentPage] = useState(1);
 
-const RequestList = ({ solicitudes, view }) =>
-  view === "fila" ? (
-    <div className="overflow-x-auto rounded-xl shadow bg-white">
-      <table className="table-auto border-collapse border w-full text-left mt-2 text-gray-700 bg-white">
-        <thead>
-          <tr className="bg-orange-100 border-b text-xs uppercase text-orange-700 select-none">
-            <th className="p-3 w-6"></th>
-            <th className="p-3">Acciones</th>
-            <th className="p-3">Estado</th>
-            <th className="p-3">Fecha Alta</th>
-            <th className="p-3">N° Solicitud</th>
-            <th className="p-3">Sucursal</th>
-            <th className="p-3">Cliente</th>
-            <th className="p-3">Teléfono</th>
-            <th className="p-3">Departamento</th>
-            <th className="p-3">Fecha Trabajo</th>
-            <th className="p-3">Dirección</th>
-            <th className="p-3">Importe</th>
-            <th className="p-3">Profesional</th>
-            <th className="p-3">Usuario Alta</th>
-          </tr>
-        </thead>
-        <tbody>{solicitudes.map((req) => <RequestRow key={req.id} req={req} />)}</tbody>
-      </table>
-    </div>
-  ) : (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-4">
-      {solicitudes.map((req) => (
-        <RequestCard key={req.id} req={req} />
-      ))}
-    </div>
-  );
+  const handleSendSuggestion = () => {
+    // Lógica para enviar el correo
+    console.log("Sugerencia enviada:", suggestionText);
+    setShowSuggestionPopup(false);
+  };
 
-const filterSolicitudes = (solicitudes, filters) => {
-  const keys = Object.entries(filters).filter(([, v]) => v);
-  if (!keys.length) return solicitudes;
-  return solicitudes.filter((s) =>
-    keys.every(([k, v]) =>
-      s[k]?.toString().toLowerCase().includes(v.toString().toLowerCase())
-    )
-  );
-};
+  const onApplyFilters = (nuevosFiltros: any) => {
+    setFiltros(nuevosFiltros);
+  };
+  ///
+  const handleVerOferta = (oferta: any) => {
+    setSelectedOferta(oferta);
+    setShowDetalleOferta(true);
+  };
 
-const initialFilters = {
-  estado: "",
-  departamento: "",
-  sucursal: "",
-  nroSolicitud: "",
-  telefono: "",
-  cliente: "",
-  direccion: "",
-  profesional: "",
-  usuarioAlta: "",
-  rubro: "",
-  fechaTrabajo: "",
-  fechaAlta: "",
-};
+  const togglePostulantes = (subastaId: string) => {
+    if (showPostulantes === subastaId) {
+      setShowPostulantes(null);
+    } else {
+      setShowPostulantes(subastaId);
+    }
+  };
+  const hayFiltrosActivos = () => {
+    return Object.values(filtros).some((valor) => valor !== "");
+  };
 
-export default function SolicitudesPage() {
-  const [filters, setFilters] = useState(initialFilters);
-  const [view, setView] = useState("fila");
-
-  const filteredSolicitudes = filterSolicitudes(mockSolicitudes, filters);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTab, filtros]);
 
   return (
-    <DashboardLayout>
-      <h1 className="text-2xl font-bold mb-4">Solicitudes</h1>
-      <QuickFilters filters={filters} setFilters={setFilters} />
-      <SearchBar filters={filters} setFilters={setFilters} />
-      <AdvancedFilters filters={filters} setFilters={setFilters} />
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => setFilters(initialFilters)}
-          className="text-sm bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-          type="button"
-        >
-          Limpiar Filtros
-        </button>
+    <>
+      <div className='flex flex-col md:flex-row md:items-center md:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4'>
+        <div className='flex-1 min-w-0'>
+          <h1 className='text-xl sm:text-2xl font-bold tracking-tight truncate text-[hsl(var(--blue))]'>PROYECTOS PUBLICADOS</h1>
+          <p className='text-xs sm:text-sm text-muted-foreground truncate'>Gestione los proyectos, cree nuevos o revise los existentes</p>
+        </div>
+        <div className='flex gap-2 sm:gap-3'>
+          <Button variant='outline' className='flex items-center gap-2 border-[#d6ccc2]' onClick={() => setShowFilters(!showFilters)}>
+            <Filter className='h-4 w-4' />
+            {showFilters ? "Ocultar filtros" : "Mostrar filtros"}
+          </Button>
+          <Button className='bg-[#f0c14b] hover:bg-[#e5b94b] text-black border-[#a88734]' asChild>
+            <Link to='/subastas/nueva' className='flex items-center gap-2'>
+              <Plus className='h-4 w-4' />
+              Nuevo Proyecto
+            </Link>
+          </Button>
+        </div>
       </div>
-      <ViewToggle view={view} setView={setView} />
-      <RequestList solicitudes={filteredSolicitudes} view={view} />
-    </DashboardLayout>
+
+      {showFilters ? (
+        <Card className='mb-6 border-[#e6dfd7]'>
+          <CardHeader className='pb-3'>
+            <CardTitle className='text-lg'>Filtros</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SubastaFilters
+              onApplyFilters={onApplyFilters}
+              onClearFilters={() => {
+                setFiltros({
+                  search: "",
+                  rubro: "todos",
+                  ubicacion: "todas",
+                  fecha_desde: "",
+                  fecha_hasta: "",
+                });
+              }}
+            />
+          </CardContent>
+        </Card>
+      ) : (
+        hayFiltrosActivos() && (
+          <div className='flex flex-wrap gap-2 mb-2'>
+            {filtros.search && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Id-Título: {filtros.search}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() => setFiltros({ ...filtros, search: "" })}
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+            {filtros.rubro !== "todos" && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Rubro: {filtros.rubro}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() => setFiltros({ ...filtros, rubro: "todos" })}
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+            {filtros.ubicacion !== "todas" && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Ubicación: {filtros.ubicacion}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() => setFiltros({ ...filtros, ubicacion: "todas" })}
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+            {(filtros.fecha_desde || filtros.fecha_hasta) && (
+              <Badge className='flex items-center gap-2 px-3 py-1.5 bg-[#f7f5f2] text-black hover:bg-gray-200 transition-colors duration-200 cursor-pointer rounded-sm'>
+                Fechas: {filtros.fecha_desde} {filtros.fecha_desde && "-"}
+                {filtros.fecha_hasta}
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  className='h-4 w-4 p-0 hover:bg-transparent hover:text-red-500'
+                  onClick={() =>
+                    setFiltros({
+                      ...filtros,
+                      fecha_desde: "",
+                      fecha_hasta: "",
+                    })
+                  }
+                >
+                  <X className='h-3 w-3' />
+                </Button>
+              </Badge>
+            )}
+          </div>
+        )
+      )}
+
+      <Tabs defaultValue='todas' className='w-full' value={selectedTab} onValueChange={setSelectedTab}>
+        <TabsList className='flex items-center justify-between bg-[#f7f5f2] p-2'>
+          <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-2'>
+              <Label htmlFor='modalidad' className='text-sm text-muted-foreground'>Modalidad:</Label>
+              <Select                               
+                value={selectedTab.startsWith("oferta") ? "ofertas" : selectedTab.startsWith("subasta") ? "subastas" : "todas"}
+                onValueChange={(value) => setSelectedTab(value)}
+              >
+                <SelectTrigger id='modalidad' className='w-[120px] h-8'>
+                  <SelectValue placeholder='Modalidad' />
+                </SelectTrigger>
+                <SelectContent className='bg-[#f7f5f2]'>
+                  <SelectItem value='ofertas'>Ofertas</SelectItem>
+                  <SelectItem value='subastas'>Subastas</SelectItem>
+                  <SelectItem value='todas'>Todas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className='flex items-center gap-2'>
+              <Label htmlFor='estado'className='text-sm text-muted-foreground'>Estado:</Label>
+              <Select
+                value={
+                  ["activas", "pendientes", "finalizadas", "adjudicadas", "canceladas", "en_revision"].includes(selectedTab)
+                    ? selectedTab
+                    : "todas"
+                }
+                onValueChange={(value) => setSelectedTab(value)}
+              >
+                <SelectTrigger id='estado' className='w-[120px] h-8'>
+                  <SelectValue placeholder='Estado' />
+                </SelectTrigger>
+                <SelectContent className='bg-[#f7f5f2]'>
+                  <SelectItem value='canceladas'>Cancelados</SelectItem>
+                  <SelectItem value='activas'>Activos</SelectItem>
+                  <SelectItem value='pendientes'>Pendientes</SelectItem>
+                  <SelectItem value='finalizadas'>Finalizados</SelectItem>
+                  <SelectItem value='en_revision'>En Revisión</SelectItem>
+                  <SelectItem value='adjudicadas'>Adjudicados</SelectItem>
+                  <SelectItem value='todas'>Todos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <div className='flex items-center gap-1'>
+            <div className='relative hidden lg:flex lg:w-64'>
+              <label htmlFor="search" className="sr-only">Buscar proyectos por id o título</label>
+              <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
+              <Input
+                type='search'
+                id="search"
+                name="search"
+                placeholder='Buscar proyectos por id o título'
+                className='w-full rounded-lg pl-8 shadow-none h-9'
+                value={filtros.search ?? ""}
+                onChange={(e) => setFiltros({ ...filtros, search: e.target.value })}
+              />
+            </div>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => setViewMode(viewMode === "table" ? "cards" : "table")}
+              aria-label={viewMode === "table" ? "Ver como Tarjetas" : "Ver como Tabla"}
+            >
+              {viewMode === "table" ? <LayoutGrid className='h-4 w-4' /> : <TableProperties className='h-4 w-4' />}
+            </Button>
+          </div>
+        </TabsList>
+
+        <TabsContent value='ofertas'>
+          <SubastasList modalidad='oferta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='subastas'>
+          <SubastasList modalidad='subasta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='activas'>
+          <SubastasList estado='activa' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='pendientes'>
+          <SubastasList estado='pendiente' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='finalizadas'>
+          <SubastasList estado='finalizada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+
+        <TabsContent value='adjudicadas'>
+          <SubastasList estado='adjudicada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='canceladas'>
+          <SubastasList estado='cancelada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='todas'>
+          <SubastasList estado='todas' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+        <TabsContent value='en_revision'>
+          <SubastasList estado='en_revision' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+        </TabsContent>
+      </Tabs>
+
+      {/* Modal para ver detalle de la oferta */}
+      <DetalleOferta oferta={selectedOferta} open={showDetalleOferta} onClose={() => setShowDetalleOferta(false)} />
+
+      {/* Botones flotantes alineados verticalmente */}
+      <TooltipProvider>
+        <div className='fixed right-0 bottom-3 z-50 flex flex-col'>
+          {/* Botón de buzón de sugerencias */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setShowSuggestionPopup(true)}
+                className='flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-l-lg text-white relative overflow-hidden'
+              >
+                <img src='/mailIcon.png' alt='Email' className='absolute inset-0 w-full h-full object-cover p-1' />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side='left' className='bg-white shadow-md border border-gray-200'>
+              <p>Buzón de sugerencias</p>
+            </TooltipContent>
+          </Tooltip>
+
+          {/* Botón de WhatsApp */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href='https://wa.me/59899713934'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-l-lg text-white  relative overflow-hidden'
+              >
+                <img src='/wpIcon.png' alt='WhatsApp' className='absolute inset-0 w-full h-full object-cover' />
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side='left' className='bg-white shadow-md border border-gray-200'>
+              <p>Contactar al ejecutivo de cuentas</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </TooltipProvider>
+
+      {/* Popup de sugerencias consultar para usar biblioteca o peticion al backend*/}
+
+      {showSuggestionPopup && (
+        <div
+          className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]'
+          onClick={() => setShowSuggestionPopup(false)}
+        >
+          <Card className='w-full max-w-md border-[#e6dfd7]  ' onClick={(e) => e.stopPropagation()}>
+            <CardHeader className='bg-[#f7f5f2] border-b border-[#e6dfd7]'>
+              <CardTitle className='text-lg font-semibold text-[#333]'>¿Cómo podemos mejorar?</CardTitle>
+            </CardHeader>
+            <CardContent className='p-6 bg-white'>
+              <div className='space-y-4 '>
+                <div>
+                  <label className='block text-sm font-medium text-[#666] mb-1'>Tu email</label>
+                  <input
+                    type='email'
+                    placeholder='ejemplo@email.com'
+                    className='w-full border border-[#e6dfd7] rounded p-2 focus:ring-2 focus:ring-[#f0c14b] focus:border-[#f0c14b]'
+                    value={userEmail}
+                    onChange={(e) => setUserEmail(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className='block text-sm font-medium text-[#666] mb-1'>Tu sugerencia</label>
+                  <textarea
+                    className='w-full border border-[#e6dfd7] rounded p-2 h-32 focus:ring-2 focus:ring-[#f0c14b] focus:border-[#f0c14b]'
+                    placeholder='Te leemos...'
+                    value={suggestionText}
+                    onChange={(e) => setSuggestionText(e.target.value)}
+                  />
+                </div>
+              </div>
+            </CardContent>
+            <div className='flex justify-end gap-2 p-4 bg-[#f7f5f2] border-t border-[#e6dfd7] rounded-b-lg'>
+              <Button
+                variant='outline'
+                className='border-[#e6dfd7] hover:bg-[#f0c14b] hover:text-black'
+                onClick={() => setShowSuggestionPopup(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                className='bg-[#f0c14b] hover:bg-[#e5b94b] text-black'
+                onClick={handleSendSuggestion}
+                disabled={!suggestionText || !userEmail}
+              >
+                Enviar sugerencia
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+    </>
   );
 }
