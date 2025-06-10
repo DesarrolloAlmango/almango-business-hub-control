@@ -39,6 +39,11 @@ export const principalItems: SidebarItemWithSubmenu[] = [
     icon: LayoutDashboard,
     path: '/',
   },
+    {
+    title: 'New Dashboard',
+    icon: LayoutDashboard,
+    path: '/newDashboard',
+  },
   {
     title: 'Nuevo Proyecto',
     icon: Gavel,

@@ -32,6 +32,8 @@ import {
 } from "./pages/PlaceholderRoutes";
 import RegisterPage from "./pages/RegisterPage";
 
+import SolicitudesPage from "./pages/newDashboard2";
+
 // Import Subastas pages
 import SubastasIndex from "./pages/subastas/SubastasIndex";
 import NuevaSubasta from "./pages/subastas/NuevaSubasta";
@@ -59,7 +61,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   if (!isLoggedIn) {
-    return <Navigate to='/login' replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return <>{children}</>;
@@ -89,11 +91,11 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<RegisterPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<RegisterPage />} />
 
             <Route
-              path='/'
+              path="/"
               element={
                 <ProtectedRoute>
                   <SubastasIndex />
@@ -101,7 +103,7 @@ const App = () => {
               }
             />
             <Route
-              path='/subusuarios'
+              path="/subusuarios"
               element={
                 <ProtectedRoute>
                   <SubUsuarios />
@@ -109,7 +111,7 @@ const App = () => {
               }
             />
             <Route
-              path='/solicitudes'
+              path="/solicitudes"
               element={
                 <ProtectedRoute>
                   <Solicitudes />
@@ -117,7 +119,7 @@ const App = () => {
               }
             />
             <Route
-              path='/links-qr'
+              path="/links-qr"
               element={
                 <ProtectedRoute>
                   <LinkQR />
@@ -125,7 +127,7 @@ const App = () => {
               }
             />
             <Route
-              path='/profile'
+              path="/profile"
               element={
                 <ProtectedRoute>
                   <Profile />
@@ -133,7 +135,7 @@ const App = () => {
               }
             />
             <Route
-              path='/settings'
+              path="/settings"
               element={
                 <ProtectedRoute>
                   <Settings />
@@ -141,7 +143,7 @@ const App = () => {
               }
             />
             <Route
-              path='/messages'
+              path="/messages"
               element={
                 <ProtectedRoute>
                   <Messages />
@@ -149,7 +151,7 @@ const App = () => {
               }
             />
             <Route
-              path='/visualizacion-solicitudes'
+              path="/visualizacion-solicitudes"
               element={
                 <ProtectedRoute>
                   <VisualizacionSolicitudes />
@@ -158,7 +160,7 @@ const App = () => {
             />
 
             <Route
-              path='/reportes'
+              path="/reportes"
               element={
                 <ProtectedRoute>
                   <ProyectosEnCurso />
@@ -166,7 +168,7 @@ const App = () => {
               }
             />
             <Route
-              path='/reportes/feedback'
+              path="/reportes/feedback"
               element={
                 <ProtectedRoute>
                   <ReportesFeedback />
@@ -175,7 +177,7 @@ const App = () => {
             />
 
             <Route
-              path='/lista-negra'
+              path="/lista-negra"
               element={
                 <ProtectedRoute>
                   <ListaNegra />
@@ -183,7 +185,7 @@ const App = () => {
               }
             />
             <Route
-              path='/documentacion'
+              path="/documentacion"
               element={
                 <ProtectedRoute>
                   <Documentacion />
@@ -191,7 +193,7 @@ const App = () => {
               }
             />
             <Route
-              path='/documentacion-gestion'
+              path="/documentacion-gestion"
               element={
                 <ProtectedRoute>
                   <DocumentacionGestion />
@@ -199,7 +201,7 @@ const App = () => {
               }
             />
             <Route
-              path='/incidencias'
+              path="/incidencias"
               element={
                 <ProtectedRoute>
                   <Incidencias />
@@ -207,7 +209,7 @@ const App = () => {
               }
             />
             <Route
-              path='/estadisticas'
+              path="/estadisticas"
               element={
                 <ProtectedRoute>
                   <Estadisticas />
@@ -215,15 +217,15 @@ const App = () => {
               }
             />
             <Route
-              path='/calendario'
+              path="/calendario"
               element={
                 <ProtectedRoute>
-                  <GoogleCalendarEmbed calendarId='ignaciotorresmayobre8@gmail.com' />
+                  <GoogleCalendarEmbed calendarId="ignaciotorresmayobre8@gmail.com" />
                 </ProtectedRoute>
               }
             />
             <Route
-              path='/pagos'
+              path="/pagos"
               element={
                 <ProtectedRoute>
                   <Pagos />
@@ -231,7 +233,7 @@ const App = () => {
               }
             />
             <Route
-              path='/campanas'
+              path="/campanas"
               element={
                 <ProtectedRoute>
                   <Campanas />
@@ -239,7 +241,7 @@ const App = () => {
               }
             />
             <Route
-              path='/clientes'
+              path="/clientes"
               element={
                 <ProtectedRoute>
                   <Clientes />
@@ -247,7 +249,7 @@ const App = () => {
               }
             />
             <Route
-              path='/comunicacion'
+              path="/comunicacion"
               element={
                 <ProtectedRoute>
                   <Comunicacion />
@@ -255,17 +257,24 @@ const App = () => {
               }
             />
             <Route
-              path='/developer'
+              path="/developer"
               element={
                 <ProtectedRoute>
                   <DeveloperEnhanced />
                 </ProtectedRoute>
               }
             />
-
+            <Route
+              path="/newDashboard"
+              element={
+                <ProtectedRoute>
+                  <SolicitudesPage />
+                </ProtectedRoute>
+              }
+            />
             {/* Subastas Routes */}
             <Route
-              path='/subastas'
+              path="/subastas"
               element={
                 <ProtectedRoute>
                   <SubastasIndex />
@@ -273,7 +282,7 @@ const App = () => {
               }
             />
             <Route
-              path='/subastas/nueva'
+              path="/subastas/nueva"
               element={
                 <ProtectedRoute>
                   <NuevaSubasta />
@@ -281,7 +290,7 @@ const App = () => {
               }
             />
             <Route
-              path='/subastas/:id'
+              path="/subastas/:id"
               element={
                 <ProtectedRoute>
                   <DetalleSubasta />
@@ -289,7 +298,7 @@ const App = () => {
               }
             />
             <Route
-              path='/subastas/editar/:id'
+              path="/subastas/editar/:id"
               element={
                 <ProtectedRoute>
                   <EditarSubasta />
@@ -298,14 +307,14 @@ const App = () => {
             />
 
             {/* Error Pages */}
-            <Route path='/error/401' element={<Unauthorized401 />} />
-            <Route path='/error/403' element={<Forbidden403 />} />
-            <Route path='/error/404' element={<NotFound404 />} />
-            <Route path='/error/500' element={<ServerError500 />} />
-            <Route path='/error/504' element={<GatewayTimeout504 />} />
+            <Route path="/error/401" element={<Unauthorized401 />} />
+            <Route path="/error/403" element={<Forbidden403 />} />
+            <Route path="/error/404" element={<NotFound404 />} />
+            <Route path="/error/500" element={<ServerError500 />} />
+            <Route path="/error/504" element={<GatewayTimeout504 />} />
 
             {/* Use the new 404 page */}
-            <Route path='*' element={<NotFound404 />} />
+            <Route path="*" element={<NotFound404 />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
