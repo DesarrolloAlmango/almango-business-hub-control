@@ -1,5 +1,4 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { ClipboardList, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -135,10 +134,10 @@ export default function NuevaSubasta() {
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className='flex items-center mb-6'>
         <Button variant='ghost' size='sm' asChild className='mr-4'>
-          <Link to='/subastas' className='flex items-center gap-2'>
+          <Link to='/' className='flex items-center gap-2'>
             <ArrowLeft className='h-4 w-4' />
             Volver
           </Link>
@@ -983,6 +982,6 @@ export default function NuevaSubasta() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }
