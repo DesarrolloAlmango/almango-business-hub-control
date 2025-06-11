@@ -19,24 +19,29 @@ import {
   Calendar,
   PinOff,
   Pin,
+  Gavel,
 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { getBadgeVariant, getEstadoText, getSubastaText } from "./subastaUtils";
+import { getBadgeVariant, getEstadoText } from "./subastaUtils";
 import { CountdownTimer } from "./CountdownTimer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { TrabajosSubasta } from "./TrabajosSubasta";
+import { IncidenciasSubasta } from "./IncidenciasSubasta";
+import { useState } from "react";
+import { FeedbackForm } from "./FeedbackForm";
 
 export function SubastaCardView({
   subastas,
   columnsVisible,
   pinnedSubastas,
   setPinnedSubastas,
-  onShowPostulantes,
-  onAgregarTarea,
-  onAgregarIncidencia,
+  onShowPostulantes, 
   expandedRows,
   setExpandedRows,
   isMobile,
   isTablet,
+  subastaConTareas,
+  onSetSubastaConTareas,
+  mostrarFeedback,
 }: {
   subastas: any[];
   columnsVisible: {
@@ -55,9 +60,33 @@ export function SubastaCardView({
   setExpandedRows: React.Dispatch<React.SetStateAction<string[]>>;
   isMobile: boolean;
   isTablet: boolean;
+  subastaConTareas?: string | null;
+  onSetSubastaConTareas?: (id: string | null) => void;
+  mostrarFeedback?: boolean;
 }) {
   const navigate = useNavigate();
   const { consultas = false, customActions = false, progreso = false, adjudicacion = false } = columnsVisible || {};
+  const [subastaConIncidencias, setSubastaConIncidencias] = useState<string | null>(null);
+
+  const handleAgregarTarea = (id: string) => {
+    if (onSetSubastaConTareas) onSetSubastaConTareas(id);
+    setSubastaConIncidencias(null);
+  };
+  const handleAgregarIncidencia = (id: string) => {
+    setSubastaConIncidencias(id);
+    if (onSetSubastaConTareas) onSetSubastaConTareas(null);
+  };
+
+   const handleCalificarClick = (subastaId: string) => {    
+    if (!mostrarFeedback) {
+      navigate(`/feedback`, { state: { subastaId } });
+    } else {
+      // setExpandedRows((prev) =>
+      //   prev.includes(subastaId) ? prev.filter((id) => id !== subastaId) : [...prev, subastaId]
+      // );
+    }
+  };
+
   return (
     <div className='grid grid-cols-1  lg:grid-cols-3 gap-4 w-full'>
       {subastas.map((subasta) => (
@@ -107,6 +136,12 @@ export function SubastaCardView({
               </>
             )}
           </div>
+          <div className='flex items-center mt-1 gap-2'>
+            <Gavel className='h-4 w-4 text-muted-foreground' />
+            <span className='uppercase tracking-wide text-xs font-semibold text-[#0066c0]'>
+              {subasta.modalidad}
+            </span>
+          </div>
 
           <div className='mt-2 space-y-2 text-sm'>
             <div className='flex items-center gap-2'>
@@ -143,6 +178,11 @@ export function SubastaCardView({
                   size='sm'
                   className='h-7 flex items-center gap-1 border-[#d6ccc2]'
                   disabled={!subasta.postulantes?.length || (subasta.estado !== "adjudicada" && subasta.estado !== "finalizada")}
+                   onClick={() =>
+                    setExpandedRows((prev) =>
+                      prev.includes(subasta.id) ? prev.filter((id) => id !== subasta.id) : [...prev, subasta.id]
+                    )
+                  }
                 >
                   <Users className='h-4 w-4 text-muted-foreground' />
                   <span>{subasta.postulantes?.length || 0} postulantes</span>
@@ -156,46 +196,54 @@ export function SubastaCardView({
                     {subasta.postulantes?.map((postulante) => (
                       <div
                         key={postulante.id}
-                        className='bg-white p-3 rounded-md border border-[#e6dfd7] flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'
+                        className='bg-white p-3 rounded-md border border-[#e6dfd7] flex flex-col gap-2'
                       >
-                        <div>
-                          <div className='font-medium'>{subasta.estado === "finalizada" ? '"..."' : postulante.proveedor}</div>
-                          <div className='flex flex-col sm:flex-row sm:items-center gap-3 text-xs text-muted-foreground mt-1'>
-                            <div className='flex items-center gap-1'>
-                              <Clock className='h-3.5 w-3.5' />
-                              <span>Entrega: {new Date(postulante.fechaEntrega).toLocaleDateString()}</span>
-                            </div>
-                            <div className='flex items-center gap-1'>
-                              <span>
-                                {subasta.moneda === "uyu" ? "U$ " : "USD "}
-                                {postulante.monto.toLocaleString("es-UY", {
-                                  maximumFractionDigits: 0,
-                                })}
-                              </span>
+                        <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
+                          <div>
+                            <div className='font-medium'>{subasta.estado === "finalizada" ? '"..."' : postulante.proveedor}</div>
+                            <div className='flex flex-col sm:flex-row sm:items-center gap-3 text-xs text-muted-foreground mt-1'>
+                              <div className='flex items-center gap-1'>
+                                <Clock className='h-3.5 w-3.5' />
+                                <span>Entrega: {new Date(postulante.fechaEntrega).toLocaleDateString()}</span>
+                              </div>
+                              <div className='flex items-center gap-1'>
+                                <span>
+                                  {subasta.moneda === "uyu" ? "U$ " : "USD "}
+                                  {postulante.monto.toLocaleString("es-UY", {
+                                    maximumFractionDigits: 0,
+                                  })}
+                                </span>
+                              </div>
                             </div>
                           </div>
+                          <div className='flex items-center gap-2'>
+                            <Badge
+                              variant={
+                                postulante.estado === "seleccionada" ? "green" : postulante.estado === "pendiente" ? "amber" : "destructive"
+                              }
+                            >
+                              {postulante.estado === "seleccionada"
+                                ? "Seleccionada"
+                                : postulante.estado === "pendiente"
+                                ? "Pendiente"
+                                : "Rechazada"}
+                            </Badge>
+                            <Button
+                              size='sm'
+                              variant='outline'
+                              className='border-[#d6ccc2]'
+                              onClick={() => onShowPostulantes && onShowPostulantes(postulante)}
+                            >
+                              Ver Detalles
+                            </Button>
+                          </div>
                         </div>
-                        <div className='flex items-center gap-2'>
-                          <Badge
-                            variant={
-                              postulante.estado === "seleccionada" ? "green" : postulante.estado === "pendiente" ? "amber" : "destructive"
-                            }
-                          >
-                            {postulante.estado === "seleccionada"
-                              ? "Seleccionada"
-                              : postulante.estado === "pendiente"
-                              ? "Pendiente"
-                              : "Rechazada"}
-                          </Badge>
-                          <Button
-                            size='sm'
-                            variant='outline'
-                            className='border-[#d6ccc2]'
-                            onClick={() => onShowPostulantes && onShowPostulantes(postulante)}
-                          >
-                            Ver Detalles
-                          </Button>
-                        </div>
+                        {mostrarFeedback && (
+                          <div className="bg-[#f7f5f2] p-3 rounded-md border border-[#e6dfd7]">
+                            <FeedbackForm postulanteId={postulante.id} subastaId={subasta.id} />
+                          </div>
+                        )}
+                      
                       </div>
                     ))}
                   </div>
@@ -203,65 +251,96 @@ export function SubastaCardView({
               </CollapsibleContent>
             </Collapsible>
           </div>
-          <div className='mt-4 flex items-center gap-2'>
+          {/* Dropdown de acciones */}
+          <div className='mt-4 flex flex-col gap-2'>
             {customActions ? (
               <>
-                <span className='text-sm font-medium'>Acciones</span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant='ghost' size='icon'>
-                      <MoreVertical className='h-5 w-5' />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent
-                    align='start'
-                    sideOffset={4}
-                    className='mt-2 bg-white shadow-lg rounded-md w-48 p-1'
-                    avoidCollisions
-                    collisionPadding={8}
-                  >
-                    <DropdownMenuItem
-                      className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer '
-                      onClick={() => navigate(`/subastas/${subasta.id}`, { state: { from: window.location.pathname } })}
-                    >
-                      <Settings className='h-4 w-4 text-muted-foreground' />
-                      Ver detalles
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
-                      onClick={() => navigate(`/subastas/editar/${subasta.id}`)}
-                    >
-                      <EditIcon className='h-4 w-4 text-muted-foreground' />
-                      Editar
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer '
-                      onClick={() => onAgregarTarea && onAgregarTarea(subasta)}
-                    >
-                      <Plus className='h-4 w-4 text-muted-foreground' />
-                      Agregar tarea
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
-                      onClick={() => navigate(`/pagos`)}
-                    >
-                      <DollarSign className='h-4 w-4 text-muted-foreground' />
-                      Pagos
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
-                      onClick={() => onAgregarIncidencia && onAgregarIncidencia(subasta)}
-                    >
-                      <AlertTriangle className='h-4 w-4 text-amber-500' />
-                      Registrar incidencia
-                    </DropdownMenuItem>
-                    <div className='border-t my-1' />
-                    <DropdownMenuItem className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-red-50 text-red-600 rounded cursor-pointer'>
-                      <CheckCircle className='h-4 w-4 text-red-500' />
-                      Finalizar proyecto
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="flex items-center gap-2">
+                  <span className='text-sm font-medium'>Acciones</span>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant='ghost' size='icon'>
+                        <MoreVertical className='h-5 w-5' />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align='start' sideOffset={4} className='mt-2 bg-white shadow-lg rounded-md w-48 p-1' avoidCollisions collisionPadding={8}>
+                      <DropdownMenuItem
+                        className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer '
+                        onClick={() => navigate(`/subastas/${subasta.id}`, { state: { from: window.location.pathname } })}
+                      >
+                        <Settings className='h-4 w-4 text-muted-foreground' />
+                        Ver detalles
+                      </DropdownMenuItem>
+                       {(subasta.estado !== 'finalizada'&& !mostrarFeedback) && (
+                        <DropdownMenuItem
+                          className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
+                          onClick={() => navigate(`/subastas/editar/${subasta.id}`)}
+                        >
+                          <EditIcon className='h-4 w-4 text-muted-foreground' />
+                          Editar
+                        </DropdownMenuItem>)
+                      }
+                      {(subasta.estado !== "finalizada" && !mostrarFeedback) && (
+                        <DropdownMenuItem
+                          className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer '
+                          onClick={() => handleAgregarTarea(subasta.id)}
+                        >
+                          <Plus className='h-4 w-4 text-muted-foreground' />
+                          Agregar tarea
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem
+                        className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
+                        onClick={() => navigate(`/pagos`)}
+                      >
+                        <DollarSign className='h-4 w-4 text-muted-foreground' />
+                        Pagos
+                      </DropdownMenuItem>
+                      {(subasta.estado !== "finalizada" && !mostrarFeedback) && (
+                        <DropdownMenuItem
+                          className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
+                          onClick={() => handleAgregarIncidencia(subasta.id)}
+                        >
+                          <AlertTriangle className='h-4 w-4 text-amber-500' />
+                          Registrar incidencia
+                        </DropdownMenuItem>
+                      )}
+                      <div className='border-t my-1' />
+                      {(subasta.estado === "finalizada" || mostrarFeedback) && (
+                        <DropdownMenuItem
+                          className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-green-50 text-green-600 rounded cursor-pointer'
+                          onClick={() =>handleCalificarClick(subasta.id)}
+                        >
+                          <CheckCircle className='h-4 w-4 text-green-500' />
+                          Calificar proyecto
+                        </DropdownMenuItem>
+                      )}
+                      {(subasta.estado !== "finalizada" && !mostrarFeedback) && (
+                        <DropdownMenuItem className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-red-50 text-red-600 rounded cursor-pointer'>
+                          <CheckCircle className='h-4 w-4 text-red-500' />
+                          Finalizar proyecto
+                        </DropdownMenuItem>
+                      )}
+                      </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                {subastaConTareas === subasta.id && (
+                  <div className="w-full">
+                    <TrabajosSubasta
+                      subasta={subasta}
+                      onFinalizar={() => onSetSubastaConTareas && onSetSubastaConTareas(null)}
+                      forceVerticalLayout={true}
+                    />
+                  </div>
+                )}
+                {subastaConIncidencias === subasta.id && (
+                  <div className="w-full">
+                    <IncidenciasSubasta
+                      subasta={subasta}
+                      onFinalizar={() => setSubastaConIncidencias(null)}
+                    />
+                  </div>
+                )}
               </>
             ) : (
               <>
@@ -297,5 +376,4 @@ export function SubastaCardView({
       ))}
     </div>
   );
-  // ...copia aquí el contenido de CardView desde SubastasList.tsx...
 }

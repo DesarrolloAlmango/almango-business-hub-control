@@ -83,7 +83,7 @@ export function SubastasTabList({
         </div>
         {/* Buscador y botón de formato de vista a la derecha */}
         <div className='flex items-center gap-2 flex-shrink-0'>
-          <div className='relative max-w-xs'>
+          <div className='relative max-w-xs hidden md:block'>
             <input
               id='search-input'
               name='search-input'

@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 // We're not using ThemeProvider from utils/theme-provider anymore
 // import { ThemeProvider } from "@/utils/theme-provider";
@@ -16,15 +16,13 @@ import Settings from "./pages/Settings";
 import Messages from "./pages/Messages";
 import DeveloperEnhanced from "./pages/DeveloperEnhanced";
 import DocumentacionGestion from "./pages/DocumentacionGestion";
-import ReportesFeedback from "./pages/reportes/ReportesFeedback";
+
 import {
   VisualizacionSolicitudes,
-  Reportes,
   ListaNegra,
   Documentacion,
   Incidencias,
-  Estadisticas,
-  Calendario,
+  Estadisticas,  
   Pagos,
   Campanas,
   Clientes,
@@ -46,7 +44,8 @@ import ServerError500 from "./pages/errors/ServerError500";
 import GatewayTimeout504 from "./pages/errors/GatewayTimeout504";
 import EditarSubasta from "./pages/subastas/EditarSubasta";
 import ProyectosEnCurso from "./pages/subastas/ProyectosEnCurso";
-import { GoogleCalendarEmbed } from "./components/GoogleCalendarEmbed";
+import { DashboardLayout } from "./components/layout/DashboardLayout";
+import { Calendar } from "./components/ui/calendar";
 
 const queryClient = new QueryClient();
 
@@ -96,207 +95,211 @@ const App = () => {
               path='/'
               element={
                 <ProtectedRoute>
-                  <SubastasIndex />
+                  <DashboardLayout>
+                    <Outlet />
+                  </DashboardLayout>
                 </ProtectedRoute>
               }
-            />
-            <Route
-              path='/subusuarios'
-              element={
-                <ProtectedRoute>
-                  <SubUsuarios />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/solicitudes'
-              element={
-                <ProtectedRoute>
-                  <Solicitudes />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/links-qr'
-              element={
-                <ProtectedRoute>
-                  <LinkQR />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/profile'
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/settings'
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/messages'
-              element={
-                <ProtectedRoute>
-                  <Messages />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/visualizacion-solicitudes'
-              element={
-                <ProtectedRoute>
-                  <VisualizacionSolicitudes />
-                </ProtectedRoute>
-              }
-            />
+            >
+              <Route index element={<SubastasIndex />} />
+              <Route
+                path='/subusuarios'
+                element={
+                  <ProtectedRoute>
+                    <SubUsuarios />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/solicitudes'
+                element={
+                  <ProtectedRoute>
+                    <Solicitudes />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/links-qr'
+                element={
+                  <ProtectedRoute>
+                    <LinkQR />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/profile'
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/settings'
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/messages'
+                element={
+                  <ProtectedRoute>
+                    <Messages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/visualizacion-solicitudes'
+                element={
+                  <ProtectedRoute>
+                    <VisualizacionSolicitudes />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path='/reportes'
-              element={
-                <ProtectedRoute>
-                  <ProyectosEnCurso />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/reportes/feedback'
-              element={
-                <ProtectedRoute>
-                  <ReportesFeedback />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path='/proyectos-en-curso'
+                element={
+                  <ProtectedRoute>
+                    <ProyectosEnCurso estadoSubasta="adjudicada"/>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/proyectos-finalizados'
+                element={
+                  <ProtectedRoute>
+                    <ProyectosEnCurso estadoSubasta="finalizada"/>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/feedback'
+                element={
+                  <ProtectedRoute>
+                    <ProyectosEnCurso estadoSubasta="adjudicada" mostrarFeedback={true} />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path='/lista-negra'
-              element={
-                <ProtectedRoute>
-                  <ListaNegra />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/documentacion'
-              element={
-                <ProtectedRoute>
-                  <Documentacion />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/documentacion-gestion'
-              element={
-                <ProtectedRoute>
-                  <DocumentacionGestion />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/incidencias'
-              element={
-                <ProtectedRoute>
-                  <Incidencias />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/estadisticas'
-              element={
-                <ProtectedRoute>
-                  <Estadisticas />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/calendario'
-              element={
-                <ProtectedRoute>
-                  <GoogleCalendarEmbed calendarId='ignaciotorresmayobre8@gmail.com' />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/pagos'
-              element={
-                <ProtectedRoute>
-                  <Pagos />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/campanas'
-              element={
-                <ProtectedRoute>
-                  <Campanas />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/clientes'
-              element={
-                <ProtectedRoute>
-                  <Clientes />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/comunicacion'
-              element={
-                <ProtectedRoute>
-                  <Comunicacion />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/developer'
-              element={
-                <ProtectedRoute>
-                  <DeveloperEnhanced />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path='/lista-negra'
+                element={
+                  <ProtectedRoute>
+                    <ListaNegra />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/documentacion'
+                element={
+                  <ProtectedRoute>
+                    <Documentacion />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/documentacion-gestion'
+                element={
+                  <ProtectedRoute>
+                    <DocumentacionGestion />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/incidencias'
+                element={
+                  <ProtectedRoute>
+                    <Incidencias />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/estadisticas'
+                element={
+                  <ProtectedRoute>
+                    <Estadisticas />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/calendario'
+                element={
+                  <ProtectedRoute>
+                    <Calendar />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/pagos'
+                element={
+                  <ProtectedRoute>
+                    <Pagos />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/campanas'
+                element={
+                  <ProtectedRoute>
+                    <Campanas />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/clientes'
+                element={
+                  <ProtectedRoute>
+                    <Clientes />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/comunicacion'
+                element={
+                  <ProtectedRoute>
+                    <Comunicacion />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/developer'
+                element={
+                  <ProtectedRoute>
+                    <DeveloperEnhanced />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Subastas Routes */}
-            <Route
-              path='/subastas'
-              element={
-                <ProtectedRoute>
-                  <SubastasIndex />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/subastas/nueva'
-              element={
-                <ProtectedRoute>
-                  <NuevaSubasta />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/subastas/:id'
-              element={
-                <ProtectedRoute>
-                  <DetalleSubasta />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path='/subastas/editar/:id'
-              element={
-                <ProtectedRoute>
-                  <EditarSubasta />
-                </ProtectedRoute>
-              }
-            />
-
+              {/* Subastas Routes */}
+              
+              <Route
+                path='/subastas/nueva'
+                element={
+                  <ProtectedRoute>
+                    <NuevaSubasta />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/subastas/:id'
+                element={
+                  <ProtectedRoute>
+                    <DetalleSubasta />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/subastas/editar/:id'
+                element={
+                  <ProtectedRoute>
+                    <EditarSubasta />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
             {/* Error Pages */}
             <Route path='/error/401' element={<Unauthorized401 />} />
             <Route path='/error/403' element={<Forbidden403 />} />

@@ -23,6 +23,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getBadgeVariant, getEstadoText, getSubastaText } from "./subastaUtils";
 import { CountdownTimer } from "./CountdownTimer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { FeedbackForm, StarRating } from "./FeedbackForm";
+import { useState } from "react"; // Add this import
 
 export function SubastaTableRow({
   subasta,
@@ -30,6 +32,7 @@ export function SubastaTableRow({
   customActions,
   progreso,
   adjudicacion,
+  fechaLimite,
   isPinned,
   onPin,
   onExpand,
@@ -37,12 +40,14 @@ export function SubastaTableRow({
   onShowPostulantes,
   onAgregarTarea,
   onAgregarIncidencia,
+  mostrarFeedback
 }: {
   subasta: any;
   consultas: boolean;
   customActions: boolean;
   progreso: boolean;
   adjudicacion: boolean;
+  fechaLimite: boolean;
   isPinned: boolean;
   onPin: () => void;
   onExpand: () => void;
@@ -50,8 +55,19 @@ export function SubastaTableRow({
   onShowPostulantes?: (postulante: any) => void;
   onAgregarTarea?: (subasta: any) => void;
   onAgregarIncidencia?: (subasta: any) => void;
+  mostrarFeedback?: boolean;
 }) {
   const navigate = useNavigate();
+  const [expandFeedback, setExpandFeedback] = useState(false); // State to control feedback expansion
+
+  const handleCalificarClick = () => {
+    if (!mostrarFeedback) {
+      navigate(`/feedback`); 
+    } else {
+      onExpand();
+    }
+  };
+
   return (
     <>
       <TableRow>
@@ -130,6 +146,13 @@ export function SubastaTableRow({
         <TableCell>
           <span className='text-sm text-muted-foreground'>{subasta.rubro.toUpperCase() || "Sin especificar"}</span>
         </TableCell>
+        {mostrarFeedback && (
+          <TableCell>
+            <div className="flex justify-start">
+              <StarRating value={4} onChange={() => {}} /> {/* Simulated average rating */}
+            </div>
+          </TableCell>
+        )}
         <TableCell>
           <CollapsibleTrigger asChild>
             <Button
@@ -144,7 +167,7 @@ export function SubastaTableRow({
             </Button>
           </CollapsibleTrigger>
         </TableCell>
-        <TableCell>
+        {fechaLimite && <TableCell>
           <div className='flex items-center gap-1'>
             {subasta.estado === "cancelada" ? (
               <span className='text-xs text-red-600'>Cancelada</span>
@@ -161,7 +184,7 @@ export function SubastaTableRow({
               />
             )}
           </div>
-        </TableCell>
+        </TableCell>}
         <TableCell>
           {customActions ? (
             <DropdownMenu>
@@ -184,20 +207,22 @@ export function SubastaTableRow({
                   <Settings className='h-4 w-4 text-muted-foreground' />
                   Ver detalles
                 </DropdownMenuItem>
-                <DropdownMenuItem
+                {(subasta.estado !== 'finalizada'&& !mostrarFeedback) && (<DropdownMenuItem
                   className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
                   onClick={() => navigate(`/subastas/editar/${subasta.id}`)}
                 >
                   <EditIcon className='h-4 w-4 text-muted-foreground' />
                   Editar
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer '
-                  onClick={() => onAgregarTarea && onAgregarTarea(subasta)}
-                >
-                  <Plus className='h-4 w-4 text-muted-foreground' />
-                  Agregar tarea
-                </DropdownMenuItem>
+                </DropdownMenuItem>)}
+                {(subasta.estado !== "finalizada" && !mostrarFeedback) && (
+                  <DropdownMenuItem
+                    className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer '
+                    onClick={() => onAgregarTarea && onAgregarTarea(subasta)}
+                  >
+                    <Plus className='h-4 w-4 text-muted-foreground' />
+                    Agregar tarea
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem
                   className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
                   onClick={() => navigate(`/pagos`)}
@@ -205,18 +230,31 @@ export function SubastaTableRow({
                   <DollarSign className='h-4 w-4 text-muted-foreground' />
                   Pagos
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
-                  onClick={() => onAgregarIncidencia && onAgregarIncidencia(subasta)}
-                >
-                  <AlertTriangle className='h-4 w-4 text-amber-500' />
-                  Registrar incidencia
-                </DropdownMenuItem>
+                {(subasta.estado !== "finalizada" && !mostrarFeedback) && (
+                  <DropdownMenuItem
+                    className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-[#f7f5f2] rounded cursor-pointer'
+                    onClick={() => onAgregarIncidencia && onAgregarIncidencia(subasta)}
+                  >
+                    <AlertTriangle className='h-4 w-4 text-amber-500' />
+                    Registrar incidencia
+                  </DropdownMenuItem>
+                )}
                 <div className='border-t my-1' />
-                <DropdownMenuItem className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-red-50 text-red-600 rounded cursor-pointer'>
-                  <CheckCircle className='h-4 w-4 text-red-500' />
-                  Finalizar proyecto
-                </DropdownMenuItem>
+                {(subasta.estado !== "finalizada" && !mostrarFeedback) && (
+                  <DropdownMenuItem className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-red-50 text-red-600 rounded cursor-pointer'>
+                    <CheckCircle className='h-4 w-4 text-red-500' />
+                    Finalizar proyecto
+                  </DropdownMenuItem>
+                )}
+                {(subasta.estado === "finalizada" || mostrarFeedback) && (
+                  <DropdownMenuItem
+                    className='flex items-center gap-2 px-3 py-2 text-sm hover:bg-green-50 text-green-600 rounded cursor-pointer'
+                    onClick={handleCalificarClick} // Use the updated handler
+                  >
+                    <CheckCircle className='h-4 w-4 text-green-500' />
+                    Calificar proyecto
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -256,44 +294,60 @@ export function SubastaTableRow({
             <div className='bg-[#f7f5f2] p-3'>
               <h4 className='font-medium mb-2'>Postulantes para "{subasta.titulo}"</h4>
               <div className='space-y-2'>
-                {subasta.postulantes?.map((postulante: any) => (
-                  <div key={postulante.id} className='bg-white p-3 rounded-md border border-[#e6dfd7] flex items-center justify-between'>
-                    <div>
-                      <div className='font-medium'>{subasta.estado === "finalizada" ? '"..."' : postulante.proveedor}</div>
-                      <div className='flex items-center gap-3 text-xs text-muted-foreground mt-1'>
-                        <div className='flex items-center gap-1'>
-                          <Clock className='h-3.5 w-3.5' />
-                          <span>Entrega: {new Date(postulante.fechaEntrega).toLocaleDateString()}</span>
-                        </div>
-                        <div className='flex items-center gap-1'>
-                          <span>
-                            {subasta.moneda === "uyu" ? "U$ " : "USD "}
-                            {postulante.monto.toLocaleString("es-UY", { maximumFractionDigits: 0 })}
-                          </span>
+                {subasta.postulantes?.map((postulante: any, idx: number) => (
+                  <div
+                    key={postulante.id}
+                    className={`space-y-0 ${mostrarFeedback ? (idx !== subasta.postulantes.length - 1 ? 'mb-4' : '') : ''}`}
+                  >
+                    <div
+                      className={
+                        mostrarFeedback
+                          ? 'bg-white p-3 rounded-t-md border border-[#e6dfd7] flex items-center justify-between border-b-0'
+                          : 'bg-white p-3 rounded-md border border-[#e6dfd7] flex items-center justify-between'
+                      }
+                    >
+                      <div>
+                        <div className='font-medium'>{subasta.estado === "finalizada" ? '"..."' : postulante.proveedor}</div>
+                        <div className='flex items-center gap-3 text-xs text-muted-foreground mt-1'>
+                          <div className='flex items-center gap-1'>
+                            <Clock className='h-3.5 w-3.5' />
+                            <span>Entrega: {new Date(postulante.fechaEntrega).toLocaleDateString()}</span>
+                          </div>
+                          <div className='flex items-center gap-1'>
+                            <span>
+                              {subasta.moneda === "uyu" ? "U$ " : "USD "}
+                              {postulante.monto.toLocaleString("es-UY", { maximumFractionDigits: 0 })}
+                            </span>
+                          </div>
                         </div>
                       </div>
+                      <div className='flex items-center gap-2'>
+                        <Badge
+                          variant={
+                            postulante.estado === "seleccionada" ? "green" : postulante.estado === "pendiente" ? "amber" : "destructive"
+                          }
+                        >
+                          {postulante.estado === "seleccionada"
+                            ? "Seleccionada"
+                            : postulante.estado === "pendiente"
+                            ? "Pendiente"
+                            : "Rechazada"}
+                        </Badge>
+                        <Button
+                          size='sm'
+                          variant='outline'
+                          className='border-[#d6ccc2]'
+                          onClick={() => onShowPostulantes && onShowPostulantes(postulante)}
+                        >
+                          Ver Detalles
+                        </Button>
+                      </div>
                     </div>
-                    <div className='flex items-center gap-2'>
-                      <Badge
-                        variant={
-                          postulante.estado === "seleccionada" ? "green" : postulante.estado === "pendiente" ? "amber" : "destructive"
-                        }
-                      >
-                        {postulante.estado === "seleccionada"
-                          ? "Seleccionada"
-                          : postulante.estado === "pendiente"
-                          ? "Pendiente"
-                          : "Rechazada"}
-                      </Badge>
-                      <Button
-                        size='sm'
-                        variant='outline'
-                        className='border-[#d6ccc2]'
-                        onClick={() => onShowPostulantes && onShowPostulantes(postulante)}
-                      >
-                        Ver Detalles
-                      </Button>
-                    </div>
+                    {mostrarFeedback && (
+                      <div className="bg-[#f7f5f2] p-3 rounded-b-md border border-[#e6dfd7] border-t-0">
+                        <FeedbackForm postulanteId={postulante.id} subastaId={subasta.id} />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

@@ -53,12 +53,17 @@ export const principalItems: SidebarItemWithSubmenu[] = [
       {
         title: 'Proyectos en Curso',
         icon: LineChart,
-        path: '/reportes',
+        path: '/proyectos-en-curso',
       },
       {
-        title: 'Feedback y Evaluaciones',
+        title: 'Proyectos Finalizados',
+        icon: FileText,
+        path: '/proyectos-finalizados',
+      },
+      {
+        title: 'Feedback',
         icon: Star,
-        path: '/reportes/feedback',
+        path: '/feedback',
       },
     ],
   },
@@ -77,7 +82,7 @@ export const reportesItems: SidebarItem[] = [
   },
 ]
 
-export const gestionItems: SidebarItem[] = [
+export const gestionItems: SidebarItemWithSubmenu[] = [
   {
     title: 'Lista Negra',
     icon: UserX,
@@ -97,11 +102,19 @@ export const gestionItems: SidebarItem[] = [
   {
     title: 'Documentación',
     icon: FolderArchive,
-    path: '/documentacion-gestion',
-  },
-  {
-    title: 'Documentación de Proveedores',
-    icon: FileImage,
-    path: '/documentacion',
-  },
+    path: '',
+    isExpandable: true,
+    submenu: [
+      {
+        title: 'Contratos',
+        icon: FileImage,
+        path: '/documentacion-gestion',
+      },
+      {
+        title: 'Documentación de Proveedores',
+        icon: FileImage,
+        path: '/documentacion',
+      },      
+    ]
+  },  
 ]

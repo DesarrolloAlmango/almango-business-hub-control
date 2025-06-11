@@ -176,7 +176,7 @@ export const MOCK_SUBASTAS = [
   {
     id: "4",
     titulo: "Desarrollo de aplicación móvil",
-    consultas: 0,
+    consultas: 1,
     estado: "adjudicada",
     rubro: "construccion",
     tipo_precio: "mejor_oferta",
