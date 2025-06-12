@@ -61,19 +61,25 @@ const subastaFormSchema = z.object({
   PublicacionesHoraVisita: z.string().optional(),
   PublicacionesDirVisita: z.string().max(40,"La direccion no puede exceder los 40 caracteres").optional(),
   mostrar_contratante: z.enum(["publico", "privado"]),
-  pliego_llamado: z.string().optional(),
+  pliego_llamado: z.string().max(40,"La URL no puede superar los 40 caracteres").optional().refine((val) => val === undefined || val === "" || z.string().url().safeParse(val).success, {
+    message: "Debe ser una URL válida",
+  }),
   PublicacionesCondiciones: z.string().max(100, "Las condiciones no pueden exceder los 100 caracteres").optional(),
   PublicacionesTipoDesembolso: z.enum(["total", "parcial", "porcentaje", "convenir", "otro"]).default("convenir"),
-  PublicacionesOtroTipoDes: z.string().optional(),
-  PublicacionesModalidad: z.enum(["subasta", "oferta"]).default("subasta"),
+  PublicacionesOtroTipoDes: z.string().max(40,"La forma de pago no debe exceder los 40 caracteres").optional(),
+  PublicacionesModalidad: z.enum(["S", "O"]).default("S"),
   PublicacionesPrecio: z.number().nullable().default(null).optional(),
   MonedaId: z.number().optional(),
   PublicacionesFecCierre: z.string().min(1, "Debe seleccionar una fecha de cierre"),
   documentacion_requerida: z.array(z.string()).default([]).optional(),
-  PublicacionesDocDescripcion: z.string().optional(),
+  PublicacionesDocDescripcion: z.string().max(100,"La descripción no puede exceder los 100 caracteres").optional(),
   PublicacionesTipoEmpresa: z.enum(["no_aplica", "cualquier_tipo", "monotributo", "literal_e", "regimen_general"]).default("no_aplica"),
-  PublicacionesContratoId: z.string().optional(),
-  PublicacionesTerminoObra:  z.string().optional(),
+  PublicacionesContratoId: z.string().max(40,"La URL no puede superar los 40 caracteres").optional().refine((val) => val === undefined || val === "" || z.string().url().safeParse(val).success, {
+    message: "Debe ser una URL válida",
+  }),
+  PublicacionesTerminoObra:  z.string().max(40,"La URL no puede superar los 40 caracteres").optional().refine((val) => val === undefined || val === "" || z.string().url().safeParse(val).success, {
+    message: "Debe ser una URL válida",
+  }),
 }).superRefine((data, ctx) => {
    // 🔸 Validación 1: incluye materiales → detalle obligatorio
   if (data.incluye_materiales && (!data.PublicacionesDetalleMateriales || data.PublicacionesDetalleMateriales.trim() === '')) {
@@ -110,7 +116,7 @@ const subastaFormSchema = z.object({
   }
 
   // 🔸 Validación 3: modalidad "oferta" → moneda y precio obligatorios
-  if (data.PublicacionesModalidad === 'oferta') {
+  if (data.PublicacionesModalidad === 'O') {
     if (!data.MonedaId || data.MonedaId <= 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -198,6 +204,17 @@ const subastaFormSchema = z.object({
       });
     }
   }
+  // Validación 8: Si selecciona forma pago otra -> debe completar el campo "Otro tipo de desembolso"
+  if (data.PublicacionesTipoDesembolso === "otro") {
+    if (!data.PublicacionesOtroTipoDes || data.PublicacionesOtroTipoDes.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["PublicacionesOtroTipoDes"],
+        message: "Debe completar el campo 'Otro tipo de desembolso' si selecciona 'otro'",
+      });
+    }
+  }
+
 });
 
 export default function NuevaSubasta() {
@@ -238,7 +255,7 @@ export default function NuevaSubasta() {
       PublicacionesCondiciones: "",
       PublicacionesTipoDesembolso: "convenir",
       PublicacionesOtroTipoDes: "",
-      PublicacionesModalidad: "subasta",
+      PublicacionesModalidad: "S",
       PublicacionesPrecio: null,
       MonedaId: 0,
       PublicacionesFecCierre: "",
@@ -260,22 +277,17 @@ export default function NuevaSubasta() {
       ]);
 
       const departamentosData = await departamentosResponse.json();
-      const monedasData = await monedasResponse.json();
-      console.log("monedasfetch:", monedasData);
+      const monedasData = await monedasResponse.json();      
 
       const monedasDataCountry = obtenerMonedasPorPais("UY", monedasData);
-      console.log("monedasDataCountry:", monedasDataCountry);
-      const {SDTPaisMoneda} = monedasData;
-
-      console.log(SDTPaisMoneda,"sdt");
-      console.log("departamentosfetch:", departamentosData);
+      
       setDepartamentos(departamentosData);
       setMonedas(monedasDataCountry); 
     } catch (error) {
       console.error("Error fetching initial data:", error);
     }
     };
-
+    
     fetchInitialData();
   }, []);
 
@@ -286,7 +298,7 @@ export default function NuevaSubasta() {
         try {
           const response = await fetch(`https://app.almango.com.uy/WebAPI/ObtenerMunicipio?DepartamentoId=${selectedDepartamento}`);
           const data = await response.json();
-          console.log("Fetched localidades:", data);
+          
           setLocalidades(data);
         } catch (error) {
           console.error("Error fetching localidades:", error);
@@ -303,71 +315,62 @@ export default function NuevaSubasta() {
   };
 
   async function onSubmit(values: z.infer<typeof subastaFormSchema>) {
-    //objeto de prueba para probar api parcial
-    const publicacionesFields = {
-      PublicacionesTitulo: values.PublicacionesTitulo,
-      PublicacionesDescripcion: values.PublicacionesDescripcion,
-      PublicacionesFecTentInicio: values.PublicacionesFecTentInicio ? new Date(values.PublicacionesFecTentInicio).toISOString() : null,
-      PublicacionesFecRealInicio: values.PublicacionesFecRealInicio ? new Date(values.PublicacionesFecRealInicio).toISOString() : null,
-      PublicacionesFecFinPostulacion: values.PublicacionesFecFinPostulacion ? new Date(values.PublicacionesFecFinPostulacion).toISOString() : null,
-      PublicacionesFecCierre: values.PublicacionesFecCierre ? new Date(values.PublicacionesFecCierre).toISOString() : null,
-      PublicacionesFecVisita: values.PublicacionesFecVisita ? new Date(values.PublicacionesFecVisita).toISOString() : null,
-      PublicacionesHoraVisita: values.PublicacionesHoraVisita ? `${values.PublicacionesHoraVisita}:00` : null,
-      PublicacionesDirVisita: values.PublicacionesDirVisita,
-      PublicacionesCondiciones: values.PublicacionesCondiciones,
-      PublicacionesTipoDesembolso: values.PublicacionesTipoDesembolso,
-      PublicacionesOtroTipoDes: values.PublicacionesOtroTipoDes,
-      PublicacionesModalidad: values.PublicacionesModalidad,
-      PublicacionesPrecio: values.PublicacionesPrecio,
-      PublicacionesDocDescripcion: values.PublicacionesDocDescripcion,
-      PublicacionesTipoEmpresa: values.PublicacionesTipoEmpresa,
-      PublicacionesContratoId: values.PublicacionesContratoId,
-      PublicacionesTerminoObra: values.PublicacionesTerminoObra,
-      PublicacionesDetalleMateriales: values.PublicacionesDetalleMateriales,
-      DepartamentoId: values.DepartamentoId,
-      DepartamentoMunicipioId: values.DepartamentoMunicipioId || null,
-      MonedaId: values.MonedaId || 0,
-      PublicacionesEstado: "PEN",
-      PublicacionesDocReq: "bps"
-    };
+    try {
+        // Configurar publicacionesFields
+        const publicacionesFields = Object.fromEntries(
+            Object.entries({
+                PublicacionesTitulo: values.PublicacionesTitulo,
+                PublicacionesDescripcion: values.PublicacionesDescripcion,
+                PublicacionesFecTentInicio: values.PublicacionesFecTentInicio ? new Date(values.PublicacionesFecTentInicio).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecRealInicio: values.PublicacionesFecRealInicio ? new Date(values.PublicacionesFecRealInicio).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecFinPostulacion: values.PublicacionesFecFinPostulacion ? new Date(values.PublicacionesFecFinPostulacion).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecCierre: values.PublicacionesFecCierre ? new Date(values.PublicacionesFecCierre).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecVisita: values.PublicacionesFecVisita ? new Date(values.PublicacionesFecVisita).toISOString().replace(".000Z", "") : null,
+                PublicacionesHoraVisita: values.PublicacionesHoraVisita ? `${values.PublicacionesHoraVisita}:00` : null,
+                PublicacionesDirVisita: values.PublicacionesDirVisita,
+                PublicacionesCondiciones: values.PublicacionesCondiciones,
+                PublicacionesTipoDesembolso: values.PublicacionesTipoDesembolso,
+                PublicacionesOtroTipoDes: values.PublicacionesOtroTipoDes,
+                PublicacionesModalidad: values.PublicacionesModalidad,
+                PublicacionesPrecio: values.PublicacionesPrecio,
+                PublicacionesDocDescripcion: values.PublicacionesDocDescripcion,
+                PublicacionesTipoEmpresa: values.PublicacionesTipoEmpresa,
+                PublicacionesContratoId: values.PublicacionesContratoId,
+                PublicacionesTerminoObra: values.PublicacionesTerminoObra,
+                PublicacionesDetalleMateriales: values.PublicacionesDetalleMateriales,
+                DepartamentoId: values.DepartamentoId,
+                DepartamentoMunicipioId: values.DepartamentoMunicipioId || null,
+                MonedaId: values.MonedaId || null,
+                PublicacionesEstado: "PEN",
+                PublicacionesDocReq: "bps",
+            }).map(([key, value]) => [key, value || null])
+        );
 
-    console.log("Publicaciones fields:", publicacionesFields);
+        console.log("Publicaciones fields:", publicacionesFields);
 
-    const isoFormattedValues = {
-      ...values,
-      PublicacionesHoraVisita: values.PublicacionesHoraVisita ? `${values.PublicacionesHoraVisita}:00` : null,
-      PublicacionesFecTentInicio: values.PublicacionesFecTentInicio ? new Date(values.PublicacionesFecTentInicio).toISOString() : null,
-      PublicacionesFecRealInicio: values.PublicacionesFecRealInicio ? new Date(values.PublicacionesFecRealInicio).toISOString() : null,
-      PublicacionesFecFinPostulacion: values.PublicacionesFecFinPostulacion ? new Date(values.PublicacionesFecFinPostulacion).toISOString() : null,
-      PublicacionesFecCierre: values.PublicacionesFecCierre ? new Date(values.PublicacionesFecCierre).toISOString() : null,
-      PublicacionesFecVisita: values.PublicacionesFecVisita ? new Date(values.PublicacionesFecVisita).toISOString() : null,
-    };
+        // Convertir publicacionesFields a JSON y codificarlo para la URL
+        const queryParam = encodeURIComponent(JSON.stringify(publicacionesFields));
+        // Realizar la solicitud GET con el parámetro en la URL usando el proxy configurado
+        const url = `/api/SubastasAPI/AltaPublicaciones?Jsonpublicaciones=${queryParam}`;
 
-    console.log("Submitting form with ISO formatted values:", isoFormattedValues);
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include", // Incluir cookies en la solicitud
+        });
 
-    //  try {
-    //   const response = await fetch("https://api.example.com/subastas", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(publicacionesFields),
-    //   });
+        if (!response.ok) {
+            throw new Error("Error al enviar los datos");
+        }
 
-    //   if (!response.ok) {
-    //     throw new Error("Error al enviar los datos");
-    //   }
+        const data = await response.json();
+        console.log("Respuesta del servidor:", data);
 
-    //   const data = await response.json();
-    //   console.log("Respuesta del servidor:", data);
-
-    //   toast.success("Subasta creada correctamente");
-    //   navigate("/");
-    // } catch (error) {
-    //   toast.error("Error al crear la subasta");
-    //   console.error(error);
-    // }
-
+        toast.success("Subasta creada correctamente");
+        navigate("/");
+    } catch (error) {
+        toast.error("Error al crear la subasta");
+        console.error(error);
+    }
   }
 
   return (
@@ -887,7 +890,14 @@ export default function NuevaSubasta() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Forma de Pago</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select 
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              if (value !== "otro") {
+                                form.setValue("PublicacionesOtroTipoDes", "");
+                              }
+                            }}
+                            defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder='Seleccione tipo' />
@@ -936,7 +946,7 @@ export default function NuevaSubasta() {
                           <FormLabel>Modalidad</FormLabel>
                           <Select onValueChange={(value) => {
                               field.onChange(value);
-                                if (value === "subasta") {
+                                if (value === "S") {
                                   form.setValue("MonedaId", 0); // Limpiar el campo MonedaId
                                   form.setValue("PublicacionesPrecio", null); // Limpiar el campo PublicacionesPrecio
                                 }
@@ -949,8 +959,8 @@ export default function NuevaSubasta() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className='bg-white'>
-                              <SelectItem value='subasta'>Subasta</SelectItem>
-                              <SelectItem value='oferta'>Oferta de Servicio</SelectItem>
+                              <SelectItem value="S">Subasta</SelectItem>
+                              <SelectItem value="O">Oferta de Servicio</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormDescription>Seleccione la modalidad de publicación del proyecto</FormDescription>
@@ -959,7 +969,7 @@ export default function NuevaSubasta() {
                       )}
                     />
 
-                    {form.watch("PublicacionesModalidad") === "oferta" && (
+                    {form.watch("PublicacionesModalidad") === "O" && (
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <FormField
                           control={form.control}
