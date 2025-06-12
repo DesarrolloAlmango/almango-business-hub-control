@@ -10,6 +10,7 @@ import { MOCK_SUBASTAS } from "./subastaUtils";
 import { SubastaTableRow } from "./SubastaTableRow";
 import { SubastaCardView } from "./SubastaCardView";
 import { TrabajosSubasta } from "./TrabajosSubasta";
+import { IncidenciasSubasta } from "./IncidenciasSubasta";
 import React from "react";
 
 interface SubastasListProps {
@@ -33,7 +34,11 @@ interface SubastasListProps {
     customActions?: boolean;
     progreso?: boolean;
     adjudicacion?: boolean;
+    fechaLimite?: boolean;
   };
+  currentPage?: number;
+  setCurrentPage?: (page: number) => void;
+  mostrarFeedback?: boolean;
 }
 
 export function SubastasList({
@@ -44,9 +49,11 @@ export function SubastasList({
   viewMode = "table",
   columnsVisible = {},
   onAgregarTarea,
-  onAgregarIncidencia,
   subastaConTareas,
   onSetSubastaConTareas,
+  currentPage = 1,
+  setCurrentPage,
+  mostrarFeedback,
 }: SubastasListProps) {
   const SafeFragment = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
@@ -54,16 +61,17 @@ export function SubastasList({
   //estado para manejar orden por fecha limite
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   //Paginado
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [pinnedSubastas, setPinnedSubastas] = useState<string[]>([]);
+  // Estado local para incidencias
+  const [subastaConIncidencias, setSubastaConIncidencias] = useState<string | null>(null);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const currentViewMode = isMobile || isTablet ? "cards" : viewMode;
   // Filtrar subastas según el estado seleccionado
 
-  const { consultas = false, customActions = false, progreso = false, adjudicacion = false } = columnsVisible;
+  const { consultas = true, customActions = false, progreso = false, adjudicacion = false, fechaLimite=true } = columnsVisible;
   const toggleRowExpand = (id: string) => {
     setExpandedRows((current) => (current.includes(id) ? current.filter((rowId) => rowId !== id) : [...current, id]));
   };
@@ -159,11 +167,21 @@ export function SubastasList({
 
   // Función para cambiar de página
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    if (setCurrentPage) {
+      setCurrentPage(page);
+    }
     setExpandedRows([]); // Resetear filas expandidas al cambiar de página
   };
 
-  // const { consultas = false, customActions = false, progreso = false, adjudicacion = false } = columnsVisible;
+  // Funciones para alternar tareas/incidencias
+  const handleAgregarTarea = (id: string) => {
+    if (onSetSubastaConTareas) onSetSubastaConTareas(id);
+    setSubastaConIncidencias(null);
+  };
+  const handleAgregarIncidencia = (id: string) => {
+    setSubastaConIncidencias(id);
+    if (onSetSubastaConTareas) onSetSubastaConTareas(null);
+  };
 
   if (subastas.length === 0) {
     return (
@@ -192,8 +210,9 @@ export function SubastasList({
                 {progreso && <TableHead>Progreso</TableHead>}
                 <TableHead>Ubicación</TableHead>
                 <TableHead>Rubro</TableHead>
+                {mostrarFeedback && <TableHead>Calificación</TableHead>}
                 <TableHead>{adjudicacion ? "Adjudicados" : "Postulantes"}</TableHead>
-                <TableHead className='flex items-center gap-2'>
+                {fechaLimite && <TableHead className='flex items-center gap-2'>
                   Fecha Límite
                   <Button
                     variant='ghost'
@@ -203,7 +222,7 @@ export function SubastasList({
                   >
                     <ArrowUpDown className={`h-4 w-4 transition-transform ${sortOrder === "desc" ? "rotate-180" : ""}`} />
                   </Button>
-                </TableHead>
+                </TableHead>}
                 <TableHead>Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -217,6 +236,7 @@ export function SubastasList({
                       customActions={customActions}
                       progreso={progreso}
                       adjudicacion={adjudicacion}
+                      fechaLimite={fechaLimite}
                       isPinned={pinnedSubastas.includes(subasta.id)}
                       onPin={() => {
                         setPinnedSubastas((prev) =>
@@ -226,8 +246,9 @@ export function SubastasList({
                       onExpand={() => toggleRowExpand(subasta.id)}
                       isExpanded={expandedRows.includes(subasta.id)}
                       onShowPostulantes={onShowPostulantes}
-                      onAgregarTarea={onAgregarTarea}
-                      onAgregarIncidencia={onAgregarIncidencia}
+                      onAgregarTarea={() => handleAgregarTarea(subasta.id)}
+                      onAgregarIncidencia={() => handleAgregarIncidencia(subasta.id)}
+                      mostrarFeedback={mostrarFeedback}
                     />
                   </Collapsible>
                   {subastaConTareas === subasta.id && (
@@ -236,7 +257,16 @@ export function SubastasList({
                         <TrabajosSubasta
                           subasta={subasta}
                           onFinalizar={() => onSetSubastaConTareas && onSetSubastaConTareas(null)}
-                          // ...otros props...
+                        />
+                      </TableCell>
+                    </TableRow>
+                  )}
+                  {subastaConIncidencias === subasta.id && (
+                    <TableRow>
+                      <TableCell colSpan={10}>
+                        <IncidenciasSubasta
+                          subasta={subasta}
+                          onFinalizar={() => setSubastaConIncidencias(null)}
                         />
                       </TableCell>
                     </TableRow>
@@ -254,12 +284,15 @@ export function SubastasList({
             pinnedSubastas={pinnedSubastas}
             setPinnedSubastas={setPinnedSubastas}
             onShowPostulantes={onShowPostulantes}
-            onAgregarTarea={onAgregarTarea}
-            onAgregarIncidencia={onAgregarIncidencia}
+            onAgregarTarea={(subasta) => handleAgregarTarea(subasta.id)}
+            onAgregarIncidencia={(subasta) => handleAgregarIncidencia(subasta.id)}
             expandedRows={expandedRows}
             setExpandedRows={setExpandedRows}
             isMobile={isMobile}
             isTablet={isTablet}
+            subastaConTareas={subastaConTareas}
+            onSetSubastaConTareas={onSetSubastaConTareas}
+            mostrarFeedback={mostrarFeedback}
           />
         </div>
       )}

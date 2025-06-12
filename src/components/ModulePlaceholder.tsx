@@ -1,5 +1,3 @@
-
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,7 +31,7 @@ export default function ModulePlaceholder({
   };
 
   return (
-    <DashboardLayout>
+    <>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">{title}</h1>
       </div>
@@ -105,7 +103,7 @@ export default function ModulePlaceholder({
           </p>
         </CardContent>
       </Card>
-    </DashboardLayout>
+    </>
   );
 }
 

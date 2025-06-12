@@ -1,4 +1,3 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { ClipboardList, Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -377,29 +376,29 @@ export default function EditarSubasta() {
 
   if (loading) {
     return (
-      <DashboardLayout>
+      <>
         <div className='flex items-center justify-center h-96'>
           <div className='animate-pulse text-center'>
             <p>Cargando datos de la subasta...</p>
           </div>
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
   if (!subasta) {
     return (
-      <DashboardLayout>
+      <>
         <div className='flex items-center justify-center h-96'>
           <div className='text-center'>
-            <h2 className='text-2xl font-bold mb-2'>Subasta no encontrada</h2>
-            <p className='text-muted-foreground mb-4'>No pudimos encontrar la subasta solicitada</p>
+            <h2 className='text-2xl font-bold mb-2'>Proyecto no encontrado</h2>
+            <p className='text-muted-foreground mb-4'>No pudimos encontrar el proyecto solicitado</p>
             <Button asChild>
-              <Link to='/subastas'>Volver a Subastas</Link>
+              <Link to='/'>Volver a Proyectos</Link>
             </Button>
           </div>
         </div>
-      </DashboardLayout>
+      </>
     );
   }
 
@@ -408,12 +407,12 @@ export default function EditarSubasta() {
   // Puedes copiar el JSX del formulario desde NuevaSubasta.tsx
 
   return (
-    <DashboardLayout>
+    <>
       <div className='container mx-auto py-6'>
         <div className='flex items-center justify-between mb-4'>
           <div className='flex items-center gap-2'>
             <Button variant='ghost' size='sm' asChild>
-              <Link to='/subastas'>
+              <Link to='/proyectos-finalizados'>
                 <ArrowLeft className='h-4 w-4 mr-2' />
                 Volver
               </Link>
@@ -1146,6 +1145,6 @@ export default function EditarSubasta() {
           </form>
         </Form>
       </div>
-    </DashboardLayout>
+    </>
   );
 }

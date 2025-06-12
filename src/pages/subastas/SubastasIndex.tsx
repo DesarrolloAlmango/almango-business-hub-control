@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Filter, Plus, X, TableProperties, LayoutGrid, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SubastasList } from "@/components/subastas/SubastasList";
 import { SubastaFilters } from "@/components/subastas/SubastaFilters";
@@ -139,7 +139,10 @@ export default function SubastasIndex() {
   const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
   const [suggestionText, setSuggestionText] = useState("");
   const [userEmail, setUserEmail] = useState("");
-  const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
+  // Cambia el valor por defecto a "table" para que el modo tabla sea el predeterminado
+  const [viewMode, setViewMode] = useState<"table" | "cards">("table");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleSendSuggestion = () => {
     // Lógica para enviar el correo
     console.log("Sugerencia enviada:", suggestionText);
@@ -165,11 +168,16 @@ export default function SubastasIndex() {
   const hayFiltrosActivos = () => {
     return Object.values(filtros).some((valor) => valor !== "");
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedTab, filtros]);
+
   return (
-    <DashboardLayout>
+    <>
       <div className='flex flex-col md:flex-row md:items-center md:justify-between mb-4 sm:mb-6 gap-3 sm:gap-4'>
         <div className='flex-1 min-w-0'>
-          <h1 className='text-xl sm:text-2xl md:text-3xl font-bold tracking-tight truncate'>Proyectos Publicados</h1>
+          <h1 className='text-xl sm:text-2xl font-bold tracking-tight truncate text-[hsl(var(--blue))]'>PROYECTOS PUBLICADOS</h1>
           <p className='text-xs sm:text-sm text-muted-foreground truncate'>Gestione los proyectos, cree nuevos o revise los existentes</p>
         </div>
         <div className='flex gap-2 sm:gap-3'>
@@ -276,12 +284,12 @@ export default function SubastasIndex() {
         <TabsList className='flex items-center justify-between bg-[#f7f5f2] p-2'>
           <div className='flex items-center gap-4'>
             <div className='flex items-center gap-2'>
-              <Label className='text-sm text-muted-foreground'>Modalidad:</Label>
-              <Select
+              <Label htmlFor='modalidad' className='text-sm text-muted-foreground'>Modalidad:</Label>
+              <Select                               
                 value={selectedTab.startsWith("oferta") ? "ofertas" : selectedTab.startsWith("subasta") ? "subastas" : "todas"}
                 onValueChange={(value) => setSelectedTab(value)}
               >
-                <SelectTrigger className='w-[120px] h-8'>
+                <SelectTrigger id='modalidad' className='w-[120px] h-8'>
                   <SelectValue placeholder='Modalidad' />
                 </SelectTrigger>
                 <SelectContent className='bg-[#f7f5f2]'>
@@ -292,7 +300,7 @@ export default function SubastasIndex() {
               </Select>
             </div>
             <div className='flex items-center gap-2'>
-              <Label className='text-sm text-muted-foreground'>Estado:</Label>
+              <Label htmlFor='estado'className='text-sm text-muted-foreground'>Estado:</Label>
               <Select
                 value={
                   ["activas", "pendientes", "finalizadas", "adjudicadas", "canceladas", "en_revision"].includes(selectedTab)
@@ -301,7 +309,7 @@ export default function SubastasIndex() {
                 }
                 onValueChange={(value) => setSelectedTab(value)}
               >
-                <SelectTrigger className='w-[120px] h-8'>
+                <SelectTrigger id='estado' className='w-[120px] h-8'>
                   <SelectValue placeholder='Estado' />
                 </SelectTrigger>
                 <SelectContent className='bg-[#f7f5f2]'>
@@ -318,12 +326,15 @@ export default function SubastasIndex() {
           </div>
           <div className='flex items-center gap-1'>
             <div className='relative hidden lg:flex lg:w-64'>
+              <label htmlFor="search" className="sr-only">Buscar proyectos por id o título</label>
               <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
               <Input
                 type='search'
+                id="search"
+                name="search"
                 placeholder='Buscar proyectos por id o título'
                 className='w-full rounded-lg pl-8 shadow-none h-9'
-                value={filtros.search}
+                value={filtros.search ?? ""}
                 onChange={(e) => setFiltros({ ...filtros, search: e.target.value })}
               />
             </div>
@@ -339,32 +350,32 @@ export default function SubastasIndex() {
         </TabsList>
 
         <TabsContent value='ofertas'>
-          <SubastasList modalidad='oferta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList modalidad='oferta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
         <TabsContent value='subastas'>
-          <SubastasList modalidad='subasta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList modalidad='subasta' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
         <TabsContent value='activas'>
-          <SubastasList estado='activa' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList estado='activa' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
         <TabsContent value='pendientes'>
-          <SubastasList estado='pendiente' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList estado='pendiente' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
         <TabsContent value='finalizadas'>
-          <SubastasList estado='finalizada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList estado='finalizada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
 
         <TabsContent value='adjudicadas'>
-          <SubastasList estado='adjudicada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList estado='adjudicada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
         <TabsContent value='canceladas'>
-          <SubastasList estado='cancelada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList estado='cancelada' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
         <TabsContent value='todas'>
-          <SubastasList estado='todas' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList estado='todas' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
         <TabsContent value='en_revision'>
-          <SubastasList estado='en_revision' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} />
+          <SubastasList estado='en_revision' viewMode={viewMode} onShowPostulantes={handleVerOferta} filtros={filtros} currentPage={currentPage} setCurrentPage={setCurrentPage} />
         </TabsContent>
       </Tabs>
 
@@ -461,6 +472,6 @@ export default function SubastasIndex() {
           </Card>
         </div>
       )}
-    </DashboardLayout>
+    </>
   );
 }

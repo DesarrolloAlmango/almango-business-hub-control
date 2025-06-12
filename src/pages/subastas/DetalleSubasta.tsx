@@ -1,4 +1,3 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { 
   Card, 
@@ -58,19 +57,19 @@ export default function DetalleSubasta() {
   
   if (loading) {
     return (
-      <DashboardLayout>
+      <>
         <div className="flex items-center justify-center h-96">
           <div className="animate-pulse text-center">
             <p>Cargando detalles de la subasta...</p>
           </div>
         </div>
-      </DashboardLayout>
+      </>
     );
   }
   
   if (!subasta) {
     return (
-      <DashboardLayout>
+      <>
         <div className="flex items-center justify-center h-96">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Subasta no encontrada</h2>
@@ -80,7 +79,7 @@ export default function DetalleSubasta() {
             </Button>
           </div>
         </div>
-      </DashboardLayout>
+      </>
     );
   }
   
@@ -111,7 +110,7 @@ export default function DetalleSubasta() {
   };
   
   return (
-    <DashboardLayout>
+    <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div className="flex items-center">
           <Button
@@ -269,6 +268,6 @@ export default function DetalleSubasta() {
           </Card>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }

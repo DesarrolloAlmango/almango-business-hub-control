@@ -1,5 +1,4 @@
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { ClipboardList, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,13 +11,32 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Plus, Save, Trash, FileText, Upload, Video } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { DocumentosSubasta } from "@/components/subastas/DocumentosSubasta";
 import { MultimediaSubasta } from "@/components/subastas/MultimediaSubasta";
 import { Checkbox } from "@/components/ui/checkbox";
+
+//Seccion monedas reutilizable
+type Moneda = {
+  PaisId: string;
+  PaisNombre: string;
+  MonedaId: number;
+  MonedaNombre: string;
+};
+
+type ApiResponse = {
+  SDTPaisMoneda: Moneda[];
+};
+
+function obtenerMonedasPorPais(paisId: string, data: ApiResponse): { MonedaId: number; MonedaNombre: string }[] {
+  return data.SDTPaisMoneda
+    .filter((moneda) => moneda.PaisId === paisId)
+    .map(({ MonedaId, MonedaNombre }) => ({ MonedaId, MonedaNombre }));
+}
+//
 
 // Definir esquema de validación
 const subastaFormSchema = z.object({
@@ -28,35 +46,175 @@ const subastaFormSchema = z.object({
         rubro: z.string().min(3, "El rubro debe tener al menos 3 caracteres"),
         subrubros: z.array(z.string()).min(1, "Debe seleccionar al menos un subrubro"),
       })
-    )
-    .min(1, "Debe seleccionar al menos un rubro"),
-  titulo: z.string().min(5, "El título debe tener al menos 5 caracteres"),
-  descripcion: z.string().min(10, "La descripción debe tener al menos 10 caracteres"),
+    ).min(1, "Debe agregar al menos un rubro"),
+  PublicacionesTitulo: z.string().min(5, "El título debe tener al menos 5 caracteres").max(80, "El título no puede exceder los 100 caracteres"),
+  PublicacionesDescripcion: z.string().min(10, "La descripción debe tener al menos 10 caracteres"),
   incluye_materiales: z.boolean().default(false),
-  detalle_materiales: z.string().optional(),
-  departamento: z.string().min(1, "Debe seleccionar un departamento"),
-  localidad: z.string().optional(),
-  fecha_tentativa_inicio: z.string().min(1, "Debe seleccionar una fecha"),
-  fecha_real_inicio: z.string().min(1, "Debe seleccionar una fecha"),
-  fecha_fin_postulacion: z.string().min(1, "Debe seleccionar una fecha de fin de postulación"),
+  PublicacionesDetalleMateriales: z.string().max(100, "La descripción de materiales no puede exceder los 100 caracteres").optional(),   
+  DepartamentoId: z.number().min(1, "Debe seleccionar un departamento"),
+  DepartamentoMunicipioId: z.number().optional(),
+  PublicacionesFecTentInicio: z.string().optional(),
+  PublicacionesFecRealInicio: z.string().optional(),
+  PublicacionesFecFinPostulacion: z.string().min(1, "Debe seleccionar una fecha de fin de postulación"),
   visita_obligatoria: z.boolean().default(false),
-  fecha_visita: z.string().optional(),
-  hora_visita: z.string().optional(),
-  direccion_visita: z.string().optional(),
+  PublicacionesFecVisita: z.string().optional(),
+  PublicacionesHoraVisita: z.string().optional(),
+  PublicacionesDirVisita: z.string().max(40,"La direccion no puede exceder los 40 caracteres").optional(),
   mostrar_contratante: z.enum(["publico", "privado"]),
-  pliego_llamado: z.instanceof(File).optional(),
-  condiciones_particulares: z.string().optional(),
-  tipo_desembolso: z.enum(["total", "parcial", "porcentaje", "convenir", "otro"]).default("convenir"),
-  otro_tipo_desembolso: z.string().min(1, "Especifique forma de pago").optional(),
-  modalidad: z.enum(["subasta", "oferta"]).default("subasta"),
-  monto_oferta: z.number().nullable().default(null).optional(),
-  moneda: z.enum(["usd", "uyu"]).optional(),
-  fecha_cierre: z.string().min(1, "Debe seleccionar una fecha de cierre"),
-  documentacion_requerida: z.array(z.string()).default([]),
-  descripcion_otros_documentos: z.string().optional(),
-  tipo_empresa: z.enum(["no_aplica", "cualquier_tipo", "monotributo", "literal_e", "regimen_general"]).default("no_aplica"),
-  contrato_trabajo_id: z.string().optional(),
-  termino_obra: z.instanceof(File).optional(),
+  pliego_llamado: z.string().max(40,"La URL no puede superar los 40 caracteres").optional().refine((val) => val === undefined || val === "" || z.string().url().safeParse(val).success, {
+    message: "Debe ser una URL válida",
+  }),
+  PublicacionesCondiciones: z.string().max(100, "Las condiciones no pueden exceder los 100 caracteres").optional(),
+  PublicacionesTipoDesembolso: z.enum(["total", "parcial", "porcentaje", "convenir", "otro"]).default("convenir"),
+  PublicacionesOtroTipoDes: z.string().max(40,"La forma de pago no debe exceder los 40 caracteres").optional(),
+  PublicacionesModalidad: z.enum(["S", "O"]).default("S"),
+  PublicacionesPrecio: z.number().nullable().default(null).optional(),
+  MonedaId: z.number().optional(),
+  PublicacionesFecCierre: z.string().min(1, "Debe seleccionar una fecha de cierre"),
+  documentacion_requerida: z.array(z.string()).default([]).optional(),
+  PublicacionesDocDescripcion: z.string().max(100,"La descripción no puede exceder los 100 caracteres").optional(),
+  PublicacionesTipoEmpresa: z.enum(["no_aplica", "cualquier_tipo", "monotributo", "literal_e", "regimen_general"]).default("no_aplica"),
+  PublicacionesContratoId: z.string().max(40,"La URL no puede superar los 40 caracteres").optional().refine((val) => val === undefined || val === "" || z.string().url().safeParse(val).success, {
+    message: "Debe ser una URL válida",
+  }),
+  PublicacionesTerminoObra:  z.string().max(40,"La URL no puede superar los 40 caracteres").optional().refine((val) => val === undefined || val === "" || z.string().url().safeParse(val).success, {
+    message: "Debe ser una URL válida",
+  }),
+}).superRefine((data, ctx) => {
+   // 🔸 Validación 1: incluye materiales → detalle obligatorio
+  if (data.incluye_materiales && (!data.PublicacionesDetalleMateriales || data.PublicacionesDetalleMateriales.trim() === '')) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Debe ingresar una descripción de materiales si incluye materiales',
+      path: ['PublicacionesDetalleMateriales'],
+    });
+  }
+
+   // 🔸 Validación 2: visita obligaoria → datos relacionados obligatorios
+  if (data.visita_obligatoria) {
+    if (!data.PublicacionesFecVisita || data.PublicacionesFecVisita.trim() === '') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Debe ingresar una fecha de visita si la visita es obligatoria',
+        path: ['PublicacionesFecVisita'],
+      });
+    }
+    if (!data.PublicacionesHoraVisita || data.PublicacionesHoraVisita.trim() === '') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Debe ingresar una hora de visita si la visita es obligatoria',
+        path: ['PublicacionesHoraVisita'],
+      });
+    }
+    if (!data.PublicacionesDirVisita || data.PublicacionesDirVisita.trim() === '') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Debe ingresar una dirección de visita si la visita es obligatoria',
+        path: ['PublicacionesDirVisita'],
+      });
+    }
+  }
+
+  // 🔸 Validación 3: modalidad "oferta" → moneda y precio obligatorios
+  if (data.PublicacionesModalidad === 'O') {
+    if (!data.MonedaId || data.MonedaId <= 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Debe seleccionar una moneda si la modalidad es oferta',
+        path: ['MonedaId'],
+      });
+    }
+    if (!data.PublicacionesPrecio || data.PublicacionesPrecio <= 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Debe ingresar un precio válido si la modalidad es oferta',
+        path: ['PublicacionesPrecio'],
+      });
+    }
+  }
+
+  // 🔸 Validación 4: fechas de publicación → al menos una debe estar presente
+  const tieneFechaTentativa = data.PublicacionesFecTentInicio?.trim();
+  const tieneFechaReal = data.PublicacionesFecRealInicio?.trim();
+
+  if (!tieneFechaTentativa && !tieneFechaReal) {
+    ctx.addIssue({
+      path: ["PublicacionesFecTentInicio"],
+      message: "Debe ingresar al menos una fecha: tentativa o real.",
+      code: z.ZodIssueCode.custom,
+    });
+
+    ctx.addIssue({
+      path: ["PublicacionesFecRealInicio"],
+      message: "Debe ingresar al menos una fecha: tentativa o real.",
+      code: z.ZodIssueCode.custom,
+    });
+  }
+
+   // Validación 5: si ambas están presentes, tentativa no puede ser después de la real
+  if (tieneFechaTentativa && tieneFechaReal) {
+    const fechaTent = new Date(tieneFechaTentativa);
+    const fechaReal = new Date(tieneFechaReal);
+
+    if (fechaTent > fechaReal) {
+      ctx.addIssue({
+        path: ["PublicacionesFecTentInicio"],
+        message: "La fecha tentativa no puede ser posterior a la fecha real.",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  }
+
+  // Validacion 6. Ambas fechas deben ser hoy o futuro
+  const hoy= new Date();
+  hoy.setHours(0, 0, 0, 0);
+  if (tieneFechaTentativa) {
+    const fechaTent = new Date(tieneFechaTentativa);
+    if (fechaTent < hoy) {
+      ctx.addIssue({
+        path: ["PublicacionesFecTentInicio"],
+        message: "La fecha tentativa debe ser igual o posterior a hoy.",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  }
+
+  if (tieneFechaReal) {
+    const fechaReal = new Date(tieneFechaReal);
+    if (fechaReal < hoy) {
+      ctx.addIssue({
+        path: ["PublicacionesFecRealInicio"],
+        message: "La fecha real debe ser igual o posterior a hoy.",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  }
+
+  // Validación 7: cierre posterior a fin de postulación
+  const fecFinPost = data.PublicacionesFecFinPostulacion?.trim();
+  const fecCierre = data.PublicacionesFecCierre?.trim();
+  if (fecFinPost && fecCierre) {
+    const fechaFin = new Date(fecFinPost);
+    const fechaCierre = new Date(fecCierre);
+    if (fechaCierre <= fechaFin) {
+      ctx.addIssue({
+        path: ["PublicacionesFecCierre"],
+        message: "La fecha de cierre debe ser posterior a la fecha de fin de postulación.",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  }
+  // Validación 8: Si selecciona forma pago otra -> debe completar el campo "Otro tipo de desembolso"
+  if (data.PublicacionesTipoDesembolso === "otro") {
+    if (!data.PublicacionesOtroTipoDes || data.PublicacionesOtroTipoDes.trim() === "") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["PublicacionesOtroTipoDes"],
+        message: "Debe completar el campo 'Otro tipo de desembolso' si selecciona 'otro'",
+      });
+    }
+  }
+
 });
 
 export default function NuevaSubasta() {
@@ -72,73 +230,154 @@ export default function NuevaSubasta() {
       url: string | null;
     }[]
   >([]);
+  const [departamentos, setDepartamentos] = useState([]);
+  const [localidades, setLocalidades] = useState([]);
+  const [monedas, setMonedas] = useState([]);
+
+  const form = useForm<z.infer<typeof subastaFormSchema>>({
+    resolver: zodResolver(subastaFormSchema),
+    defaultValues: {
+      rubros: [],
+      PublicacionesTitulo: "",
+      PublicacionesDescripcion: "",
+      DepartamentoId: 0,
+      DepartamentoMunicipioId: 0,
+      PublicacionesFecTentInicio: "",
+      PublicacionesFecRealInicio: "",
+      PublicacionesFecFinPostulacion: "",
+      visita_obligatoria: false,
+      incluye_materiales: false,
+      PublicacionesFecVisita: "",
+      PublicacionesHoraVisita: "",
+      PublicacionesDirVisita: "",
+      mostrar_contratante: "publico",
+      pliego_llamado: "",
+      PublicacionesCondiciones: "",
+      PublicacionesTipoDesembolso: "convenir",
+      PublicacionesOtroTipoDes: "",
+      PublicacionesModalidad: "S",
+      PublicacionesPrecio: null,
+      MonedaId: 0,
+      PublicacionesFecCierre: "",
+      documentacion_requerida: [],
+      PublicacionesDocDescripcion: "",
+      PublicacionesTipoEmpresa: "no_aplica",
+      PublicacionesContratoId: "",
+      PublicacionesTerminoObra: "",
+      PublicacionesDetalleMateriales: "",
+    },
+  });
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+      const [departamentosResponse, monedasResponse] = await Promise.all([
+        fetch("https://app.almango.com.uy/WebAPI/ObtenerDepto"),
+        fetch("http://109.199.100.16/AlmangoXV1NETFramework/SubastasAPI/ObtenerPaisMoneda"),
+      ]);
+
+      const departamentosData = await departamentosResponse.json();
+      const monedasData = await monedasResponse.json();      
+
+      const monedasDataCountry = obtenerMonedasPorPais("UY", monedasData);
+      
+      setDepartamentos(departamentosData);
+      setMonedas(monedasDataCountry); 
+    } catch (error) {
+      console.error("Error fetching initial data:", error);
+    }
+    };
+    
+    fetchInitialData();
+  }, []);
+
+  useEffect(() => {
+    const fetchLocalidades = async () => {
+      const selectedDepartamento = form.watch("DepartamentoId");     
+      if (selectedDepartamento) {
+        try {
+          const response = await fetch(`https://app.almango.com.uy/WebAPI/ObtenerMunicipio?DepartamentoId=${selectedDepartamento}`);
+          const data = await response.json();
+          
+          setLocalidades(data);
+        } catch (error) {
+          console.error("Error fetching localidades:", error);
+        }
+      }
+    };
+
+    fetchLocalidades();
+  }, [form.watch("DepartamentoId")]);
 
   const rubros = {
     construccion: ["Albañilería", "Carpintería", "Electricidad", "Pintura", "Plomería"],
     tecnologia: ["Desarrollo Web", "Desarrollo Móvil", "Soporte Técnico", "Redes", "Seguridad"],
   };
 
-  const departamentos = {
-    montevideo: ["Centro", "Pocitos", "Carrasco", "Prado", "Malvín", "Buceo"],
-    canelones: ["Las Piedras", "Pando", "La Paz", "Ciudad de la Costa", "Santa Lucía"],
-  };
-
-  const form = useForm<z.infer<typeof subastaFormSchema>>({
-    resolver: zodResolver(subastaFormSchema),
-    defaultValues: {
-      rubros: [],
-      titulo: "",
-      descripcion: "",
-      departamento: "",
-      localidad: "",
-      fecha_tentativa_inicio: "",
-      fecha_real_inicio: "",
-      fecha_fin_postulacion: "",
-      visita_obligatoria: false,
-      fecha_visita: "",
-      hora_visita: "",
-      direccion_visita: "",
-      mostrar_contratante: "publico",
-      pliego_llamado: null,
-      condiciones_particulares: "",
-      tipo_desembolso: "convenir",
-      otro_tipo_desembolso: "",
-      modalidad: "subasta",
-      monto_oferta: null,
-      moneda: "uyu",
-      fecha_cierre: "",
-      documentacion_requerida: [],
-      descripcion_otros_documentos: "",
-      tipo_empresa: "no_aplica",
-      contrato_trabajo_id: "",
-      termino_obra: null,
-      detalle_materiales: "",
-    },
-  });
-
   async function onSubmit(values: z.infer<typeof subastaFormSchema>) {
     try {
-      if (documentos.length === 0) {
-        toast.error("Debe agregar al menos un documento");
-        return;
-      }
+        // Configurar publicacionesFields
+        const publicacionesFields = Object.fromEntries(
+            Object.entries({
+                PublicacionesTitulo: values.PublicacionesTitulo,
+                PublicacionesDescripcion: values.PublicacionesDescripcion,
+                PublicacionesFecTentInicio: values.PublicacionesFecTentInicio ? new Date(values.PublicacionesFecTentInicio).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecRealInicio: values.PublicacionesFecRealInicio ? new Date(values.PublicacionesFecRealInicio).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecFinPostulacion: values.PublicacionesFecFinPostulacion ? new Date(values.PublicacionesFecFinPostulacion).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecCierre: values.PublicacionesFecCierre ? new Date(values.PublicacionesFecCierre).toISOString().replace(".000Z", "") : null,
+                PublicacionesFecVisita: values.PublicacionesFecVisita ? new Date(values.PublicacionesFecVisita).toISOString().replace(".000Z", "") : null,
+                PublicacionesHoraVisita: values.PublicacionesHoraVisita ? `${values.PublicacionesHoraVisita}:00` : null,
+                PublicacionesDirVisita: values.PublicacionesDirVisita,
+                PublicacionesCondiciones: values.PublicacionesCondiciones,
+                PublicacionesTipoDesembolso: values.PublicacionesTipoDesembolso,
+                PublicacionesOtroTipoDes: values.PublicacionesOtroTipoDes,
+                PublicacionesModalidad: values.PublicacionesModalidad,
+                PublicacionesPrecio: values.PublicacionesPrecio,
+                PublicacionesDocDescripcion: values.PublicacionesDocDescripcion,
+                PublicacionesTipoEmpresa: values.PublicacionesTipoEmpresa,
+                PublicacionesContratoId: values.PublicacionesContratoId,
+                PublicacionesTerminoObra: values.PublicacionesTerminoObra,
+                PublicacionesDetalleMateriales: values.PublicacionesDetalleMateriales,
+                DepartamentoId: values.DepartamentoId,
+                DepartamentoMunicipioId: values.DepartamentoMunicipioId || null,
+                MonedaId: values.MonedaId || null,
+                PublicacionesEstado: "PEN",
+                PublicacionesDocReq: "bps",
+            }).map(([key, value]) => [key, value || null])
+        );
 
-      // Aquí iría la lógica para guardar la subasta
-      console.log({ ...values, documentos, multimedia });
+        console.log("Publicaciones fields:", publicacionesFields);
 
-      toast.success("Subasta creada correctamente");
-      navigate("/subastas");
+        // Convertir publicacionesFields a JSON y codificarlo para la URL
+        const queryParam = encodeURIComponent(JSON.stringify(publicacionesFields));
+        // Realizar la solicitud GET con el parámetro en la URL usando el proxy configurado
+        const url = `/api/SubastasAPI/AltaPublicaciones?Jsonpublicaciones=${queryParam}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            credentials: "include", // Incluir cookies en la solicitud
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al enviar los datos");
+        }
+
+        const data = await response.json();
+        console.log("Respuesta del servidor:", data);
+
+        toast.success("Subasta creada correctamente");
+        navigate("/");
     } catch (error) {
-      toast.error("Error al crear la subasta");
-      console.error(error);
+        toast.error("Error al crear la subasta");
+        console.error(error);
     }
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className='flex items-center mb-6'>
         <Button variant='ghost' size='sm' asChild className='mr-4'>
-          <Link to='/subastas' className='flex items-center gap-2'>
+          <Link to='/' className='flex items-center gap-2'>
             <ArrowLeft className='h-4 w-4' />
             Volver
           </Link>
@@ -192,7 +431,7 @@ export default function NuevaSubasta() {
                             name={`rubros.${index}.subrubros`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Subrubros</FormLabel>
+                                <FormLabel htmlFor={`subrubro_${index}`}>Subrubros</FormLabel>
                                 <div className='space-y-2'>
                                   {rubros[form.watch(`rubros.${index}.rubro`) as keyof typeof rubros].map((subrubro) => (
                                     <div key={subrubro} className='flex items-center space-x-2'>
@@ -250,16 +489,25 @@ export default function NuevaSubasta() {
                       <Plus className='h-4 w-4 mr-2' />
                       Agregar Rubro
                     </Button>
+                    <FormField
+                      control={form.control}
+                      name="rubros"
+                      render={() => (
+                        <FormItem>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   <FormField
                     control={form.control}
-                    name='titulo'
+                    name='PublicacionesTitulo'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel htmlFor='titulo'>Título del Llamado</FormLabel>
+                        <FormLabel htmlFor='PublicacionesTitulo'>Título del Llamado</FormLabel>
                         <FormControl>
-                          <Input id='titulo' name='titulo' placeholder='Ej: Remodelación de oficina' {...field} />
+                          <Input id='PublicacionesTitulo' name='PublicacionesTitulo' placeholder='Ej: Remodelación de oficina' {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -268,14 +516,14 @@ export default function NuevaSubasta() {
 
                   <FormField
                     control={form.control}
-                    name='descripcion'
+                    name='PublicacionesDescripcion'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel htmlFor='descripcion'>Resumen del trabajo</FormLabel>
+                        <FormLabel htmlFor='PublicacionesDescripcion'>Resumen del trabajo</FormLabel>
                         <FormControl>
                           <Textarea
-                            id='descripcion'
-                            name='descripcion'
+                            id='PublicacionesDescripcion'
+                            name='PublicacionesDescripcion'
                             placeholder='Describa detalladamente el llamado'
                             className='min-h-[100px]'
                             {...field}
@@ -296,7 +544,13 @@ export default function NuevaSubasta() {
                             <FormDescription>Marque si el proveedor debe suministrar materiales</FormDescription>
                           </div>
                           <FormControl>
-                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                            <Switch checked={field.value} onCheckedChange={(checked) => {
+                                field.onChange(checked);
+                                if (!checked) {
+                                  form.setValue("PublicacionesDetalleMateriales", ""); // Limpiar el campo si incluye_materiales es false
+                                }
+                              }} 
+                              />
                           </FormControl>
                         </FormItem>
                       )}
@@ -305,12 +559,12 @@ export default function NuevaSubasta() {
                     {form.watch("incluye_materiales") && (
                       <FormField
                         control={form.control}
-                        name='detalle_materiales'
+                        name='PublicacionesDetalleMateriales'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel htmlFor='detalle_materiales'>Especifique</FormLabel>
+                            <FormLabel htmlFor='PublicacionesDetalleMateriales'>Especifique</FormLabel>
                             <FormControl>
-                              <Textarea id='detalle_materiales' name='detalle_materiales' {...field} />
+                              <Textarea id='PublicacionesDetalleMateriales' name='PublicacionesDetalleMateriales' {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -321,19 +575,22 @@ export default function NuevaSubasta() {
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                     <FormField
                       control={form.control}
-                      name='departamento'
+                      name='DepartamentoId'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Ubicación</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={(value)=>field.onChange(Number(value))} defaultValue={field.value === 0 ? "" : field.value.toString()}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder='Seleccione departamento' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className='bg-popover border rounded-md bg-white'>
-                              <SelectItem value='montevideo'>Montevideo</SelectItem>
-                              <SelectItem value='canelones'>Canelones</SelectItem>
+                              {departamentos.map((departamento) => (
+                                <SelectItem key={departamento.DepartamentoId} value={departamento.DepartamentoId.toString()}>
+                                  {departamento.DepartamentoDepartamento}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -341,23 +598,23 @@ export default function NuevaSubasta() {
                       )}
                     />
 
-                    {form.watch("departamento") && (
+                    {form.watch("DepartamentoId") ? (
                       <FormField
                         control={form.control}
-                        name='localidad'
+                        name='DepartamentoMunicipioId'
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Localidad / Barrio</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value === 0 ? "" : field.value.toString()}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder='Seleccione localidad' />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent className='bg-white'>
-                                {departamentos[form.watch("departamento") as keyof typeof departamentos].map((localidad) => (
-                                  <SelectItem key={localidad} value={localidad.toLowerCase()}>
-                                    {localidad}
+                                {localidades?.map((localidad) => (
+                                  <SelectItem key={localidad.DepartamentoMunicipioId} value={localidad.DepartamentoMunicipioId.toString()}>
+                                    {localidad.DepartamentoMunicipioNombre}
                                   </SelectItem>
                                 ))}
                               </SelectContent>
@@ -366,83 +623,81 @@ export default function NuevaSubasta() {
                           </FormItem>
                         )}
                       />
-                    )}
+                    ): null}
                   </div>
 
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                    <div className='space-y-4'>
-                      <FormField
-                        control={form.control}
-                        name='fecha_tentativa_inicio'
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className='flex items-center gap-2 min-h-[28px]'>
-                              <FormLabel className='leading-none py-1'>Fecha Tentativa</FormLabel>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info className='h-4 w-4 text-muted-foreground cursor-help hover:text-primary' />
-                                </TooltipTrigger>
-                                <TooltipContent className='text-sm text-popover-foreground'>
-                                  <p className='text-sm text-popover-foreground'>Fecha estimada de inicio del trabajo.</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                            <FormControl>
-                              <Input type='date' {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name='fecha_fin_postulacion'
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className='flex items-center gap-2 min-h-[28px]'>
-                              <FormLabel className='leading-none py-1'>Fecha Fin Postulación</FormLabel>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info className='h-4 w-4 text-muted-foreground cursor-help hover:text-primary' />
-                                </TooltipTrigger>
-                                <TooltipContent className='text-sm text-popover-foreground'>
-                                  <p className='text-sm text-popover-foreground'>Fecha límite para postular a esta subasta.</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                            <FormControl>
-                              <Input type='date' {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <div>
-                      <FormField
-                        control={form.control}
-                        name='fecha_real_inicio'
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className='flex items-center gap-2 min-h-[28px]'>
-                              <FormLabel className='leading-none py-1'>Fecha Real</FormLabel>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Info className='h-4 w-4 text-muted-foreground cursor-help hover:text-primary' />
-                                </TooltipTrigger>
-                                <TooltipContent className='text-sm text-popover-foreground'>
-                                  <p className='text-sm text-popover-foreground'>Fecha en que debe ser iniciado el trabajo.</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </div>
-                            <FormControl>
-                              <Input type='date' {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    <FormField
+                      control={form.control}
+                      name='PublicacionesFecTentInicio'
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className='flex items-center gap-2 min-h-[28px]'>
+                            <FormLabel className='leading-none py-1'>Fecha Tentativa</FormLabel>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Info className='h-4 w-4 text-muted-foreground cursor-help hover:text-primary' />
+                              </TooltipTrigger>
+                              <TooltipContent className='text-sm text-popover-foreground'>
+                                <p className='text-sm text-popover-foreground'>Fecha estimada de inicio del trabajo.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <FormControl>
+                            <Input type='date' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='PublicacionesFecFinPostulacion'
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className='flex items-center gap-2 min-h-[28px]'>
+                            <FormLabel className='leading-none py-1'>Fecha Fin Postulación</FormLabel>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Info className='h-4 w-4 text-muted-foreground cursor-help hover:text-primary' />
+                              </TooltipTrigger>
+                              <TooltipContent className='text-sm text-popover-foreground'>
+                                <p className='text-sm text-popover-foreground'>Fecha límite para postular a esta subasta.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <FormControl>
+                            <Input type='date' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <FormField
+                      control={form.control}
+                      name='PublicacionesFecRealInicio'
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className='flex items-center gap-2 min-h-[28px]'>
+                            <FormLabel className='leading-none py-1'>Fecha Real</FormLabel>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Info className='h-4 w-4 text-muted-foreground cursor-help hover:text-primary' />
+                              </TooltipTrigger>
+                              <TooltipContent className='text-sm text-popover-foreground'>
+                                <p className='text-sm text-popover-foreground'>Fecha en que debe ser iniciado el trabajo.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                          <FormControl>
+                            <Input type='date' {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -456,7 +711,17 @@ export default function NuevaSubasta() {
                             <FormDescription>En caso de necesitar asistencia contactese con nosotros</FormDescription>
                           </div>
                           <FormControl>
-                            <Switch checked={field.value} onCheckedChange={field.onChange} />
+                            <Switch
+                              checked={field.value}
+                              onCheckedChange={(checked) => {
+                                field.onChange(checked);
+                                if (!checked) {
+                                  form.setValue("PublicacionesDirVisita", "");
+                                  form.setValue("PublicacionesFecVisita", "");
+                                  form.setValue("PublicacionesHoraVisita", "");
+                                }
+                              }}
+                            />
                           </FormControl>
                         </FormItem>
                       )}
@@ -466,14 +731,14 @@ export default function NuevaSubasta() {
                       <div className='grid grid-cols-1 gap-4'>
                         <FormField
                           control={form.control}
-                          name='direccion_visita'
+                          name='PublicacionesDirVisita'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel htmlFor='direccion_visita'>Dirección del Proyecto</FormLabel>
+                              <FormLabel htmlFor='PublicacionesDirVisita'>Dirección del Proyecto</FormLabel>
                               <FormControl>
                                 <Input
-                                  id='direccion_visita'
-                                  name='direccion_visita'
+                                  id='PublicacionesDirVisita'
+                                  name='PublicacionesDirVisita'
                                   placeholder='Especifique la dirección exacta donde se realizará la visita técnica'
                                   {...field}
                                 />
@@ -486,12 +751,12 @@ export default function NuevaSubasta() {
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                           <FormField
                             control={form.control}
-                            name='fecha_visita'
+                            name='PublicacionesFecVisita'
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel htmlFor='fecha_visita'>Fecha de Visita</FormLabel>
+                                <FormLabel htmlFor='PublicacionesFecVisita'>Fecha de Visita</FormLabel>
                                 <FormControl>
-                                  <Input id='fecha_visita' name='fecha_visita' type='date' {...field} />
+                                  <Input id='PublicacionesFecVisita' name='PublicacionesFecVisita' type='date' {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -500,12 +765,12 @@ export default function NuevaSubasta() {
 
                           <FormField
                             control={form.control}
-                            name='hora_visita'
+                            name='PublicacionesHoraVisita'
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel htmlFor='hora_visita'>Hora de Visita</FormLabel>
+                                <FormLabel htmlFor='PublicacionesHoraVisita'>Hora de Visita</FormLabel>
                                 <FormControl>
-                                  <Input id='hora_visita' name='hora_visita' type='time' {...field} />
+                                  <Input id='PublicacionesHoraVisita' name='PublicacionesHoraVisita' type='time' {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -550,23 +815,18 @@ export default function NuevaSubasta() {
                     <FormField
                       control={form.control}
                       name='pliego_llamado'
-                      render={({ field: { value, onChange, ...field } }) => (
+                      render={({ field }) => (
                         <FormItem>
                           <FormLabel htmlFor='pliego_llamado'>Pliego del Llamado</FormLabel>
                           <FormControl>
                             <Input
                               id='pliego_llamado'
                               name='pliego_llamado'
-                              type='file'
-                              accept='.pdf,.doc,.docx'
-                              onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                onChange(file);
-                              }}
+                              type='url'
+                              placeholder='Ingrese la URL del pliego del llamado'
                               {...field}
                             />
-                          </FormControl>
-                          <FormDescription>Adjunte el documento del pliego en formato PDF o Word</FormDescription>
+                          </FormControl>                          
                           <FormMessage />
                         </FormItem>
                       )}
@@ -576,14 +836,14 @@ export default function NuevaSubasta() {
                   <div className='grid grid-cols-1 gap-4'>
                     <FormField
                       control={form.control}
-                      name='condiciones_particulares'
+                      name='PublicacionesCondiciones'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel htmlFor='condiciones_particulares'>Condiciones Particulares</FormLabel>
+                          <FormLabel htmlFor='PublicacionesCondiciones'>Condiciones Particulares</FormLabel>
                           <FormControl>
                             <Textarea
-                              id='condiciones_particulares'
-                              name='condiciones_particulares'
+                              id='PublicacionesCondiciones'
+                              name='PublicacionesCondiciones'
                               placeholder='Especifique cualquier condición especial o requisito particular para este trabajo'
                               className='min-h-[100px]'
                               {...field}
@@ -626,11 +886,18 @@ export default function NuevaSubasta() {
                   <div className='grid grid-cols-1 gap-4'>
                     <FormField
                       control={form.control}
-                      name='tipo_desembolso'
+                      name='PublicacionesTipoDesembolso'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Forma de Pago</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select 
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              if (value !== "otro") {
+                                form.setValue("PublicacionesOtroTipoDes", "");
+                              }
+                            }}
+                            defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder='Seleccione tipo' />
@@ -654,15 +921,15 @@ export default function NuevaSubasta() {
                         </FormItem>
                       )}
                     />
-                    {form.watch("tipo_desembolso") === "otro" && (
+                    {form.watch("PublicacionesTipoDesembolso") === "otro" && (
                       <FormField
                         control={form.control}
-                        name='otro_tipo_desembolso'
+                        name='PublicacionesOtroTipoDes'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel htmlFor='otro_tipo_desembolso'>Especifique</FormLabel>
+                            <FormLabel htmlFor='PublicacionesOtroTipoDes'>Especifique</FormLabel>
                             <FormControl>
-                              <Input id='otro_tipo_desembolso' name='otro_tipo_desembolso' type='text' {...field} />
+                              <Input id='PublicacionesOtroTipoDes' name='PublicacionesOtroTipoDes' type='text' {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -673,19 +940,27 @@ export default function NuevaSubasta() {
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                     <FormField
                       control={form.control}
-                      name='modalidad'
+                      name='PublicacionesModalidad'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Modalidad</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={(value) => {
+                              field.onChange(value);
+                                if (value === "S") {
+                                  form.setValue("MonedaId", 0); // Limpiar el campo MonedaId
+                                  form.setValue("PublicacionesPrecio", null); // Limpiar el campo PublicacionesPrecio
+                                }
+                            }}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder='Seleccione modalidad' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent className='bg-white'>
-                              <SelectItem value='subasta'>Subasta</SelectItem>
-                              <SelectItem value='oferta'>Oferta de Servicio</SelectItem>
+                              <SelectItem value="S">Subasta</SelectItem>
+                              <SelectItem value="O">Oferta de Servicio</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormDescription>Seleccione la modalidad de publicación del proyecto</FormDescription>
@@ -694,23 +969,26 @@ export default function NuevaSubasta() {
                       )}
                     />
 
-                    {form.watch("modalidad") === "oferta" && (
+                    {form.watch("PublicacionesModalidad") === "O" && (
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <FormField
                           control={form.control}
-                          name='moneda'
+                          name='MonedaId'
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Moneda</FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <Select onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value === 0 ? "" : field.value.toString()}>
                                 <FormControl>
                                   <SelectTrigger>
                                     <SelectValue placeholder='Seleccione moneda' />
                                   </SelectTrigger>
                                 </FormControl>
-                                <SelectContent>
-                                  <SelectItem value='uyu'>Pesos Uruguayos (UYU)</SelectItem>
-                                  <SelectItem value='usd'>Dólares Americanos (USD)</SelectItem>
+                                <SelectContent className='bg-white'>
+                                  {monedas.map((moneda) => (
+                                    <SelectItem key={moneda.MonedaId} value={moneda.MonedaId.toString()}>
+                                      {moneda.MonedaNombre}
+                                    </SelectItem>
+                                  ))}                                  
                                 </SelectContent>
                               </Select>
                               <FormMessage />
@@ -719,14 +997,14 @@ export default function NuevaSubasta() {
                         />
                         <FormField
                           control={form.control}
-                          name='monto_oferta'
+                          name='PublicacionesPrecio'
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel htmlFor='monto_oferta'>¿Cuánto querés pagar?</FormLabel>
+                              <FormLabel htmlFor='PublicacionesPrecio'>¿Cuánto querés pagar?</FormLabel>
                               <FormControl>
                                 <Input
-                                  id='monto_oferta'
-                                  name='monto_oferta'
+                                  id='PublicacionesPrecio'
+                                  name='PublicacionesPrecio'
                                   type='text'
                                   placeholder='0.00'
                                   {...field}
@@ -747,7 +1025,7 @@ export default function NuevaSubasta() {
                   </div>
                   <FormField
                     control={form.control}
-                    name='fecha_cierre'
+                    name='PublicacionesFecCierre'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Fecha límite de entrega de trabajos</FormLabel>
@@ -810,14 +1088,14 @@ export default function NuevaSubasta() {
                     {form.watch("documentacion_requerida").includes("Otros") && (
                       <FormField
                         control={form.control}
-                        name='descripcion_otros_documentos'
+                        name='PublicacionesDocDescripcion'
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel htmlFor='descripcion_otros_documentos'>Descripción de Otros Documentos</FormLabel>
+                            <FormLabel htmlFor='PublicacionesDocDescripcion'>Descripción de Otros Documentos</FormLabel>
                             <FormControl>
                               <Textarea
-                                id='descripcion_otros_documentos'
-                                name='descripcion_otros_documentos'
+                                id='PublicacionesDocDescripcion'
+                                name='PublicacionesDocDescripcion'
                                 placeholder='Describa los documentos adicionales requeridos'
                                 {...field}
                               />
@@ -830,13 +1108,13 @@ export default function NuevaSubasta() {
 
                     <FormField
                       control={form.control}
-                      name='tipo_empresa'
+                      name='PublicacionesTipoEmpresa'
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel htmlFor='tipo_empresa'>Tipo de Empresa del Proveedor</FormLabel>
+                          <FormLabel htmlFor='PublicacionesTipoEmpresa'>Tipo de Empresa del Proveedor</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
-                              <SelectTrigger id='tipo_empresa' name='tipo_empresa'>
+                              <SelectTrigger id='PublicacionesTipoEmpresa' name='PublicacionesTipoEmpresa'>
                                 <SelectValue />
                               </SelectTrigger>
                             </FormControl>
@@ -858,25 +1136,19 @@ export default function NuevaSubasta() {
 
                   <FormField
                     control={form.control}
-                    name='contrato_trabajo_id'
+                    name='PublicacionesContratoId'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Contrato de Trabajo</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder='Seleccione un contrato' />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className='bg-white'>
-                            {documentos.map((doc) => (
-                              <SelectItem key={doc.id} value={doc.id}>
-                                {doc.titulo}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>Seleccione el contrato de trabajo aplicable</FormDescription>
+                        <FormLabel htmlFor='PublicacionesContratoId'>Contrato de Trabajo</FormLabel>
+                        <FormControl>
+                          <Input
+                            id='PublicacionesContratoId'
+                            name='PublicacionesContratoId'
+                            type='url'
+                            placeholder='Ingrese la URL del contrato de trabajo'
+                            {...field}
+                          />
+                        </FormControl>                        
                         <FormMessage />
                       </FormItem>
                     )}
@@ -884,24 +1156,19 @@ export default function NuevaSubasta() {
 
                   <FormField
                     control={form.control}
-                    name='termino_obra'
-                    render={({ field: { value, onChange, ...field } }) => (
+                    name='PublicacionesTerminoObra'
+                    render={({ field }) => (
                       <FormItem>
-                        <FormLabel htmlFor='termino_obra'>Término de Obra</FormLabel>
+                        <FormLabel htmlFor='PublicacionesTerminoObra'>Término de Obra</FormLabel>
                         <FormControl>
                           <Input
-                            id='termino_obra'
-                            name='termino_obra'
-                            type='file'
-                            accept='.pdf,.doc,.docx'
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              onChange(file);
-                            }}
+                            id='PublicacionesTerminoObra'
+                            name='PublicacionesTerminoObra'
+                            type='url'
+                            placeholder='Ingrese la URL del documento de término de obra'
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription>Adjunte el documento de término de obra</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -983,6 +1250,6 @@ export default function NuevaSubasta() {
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }
