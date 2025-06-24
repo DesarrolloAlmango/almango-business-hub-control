@@ -51,6 +51,17 @@ export default function Login() {
     }
 
     try {
+             localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userEmail", email);
+
+        toast({
+          title: "Inicio de sesión exitoso",
+          description: "Bienvenido a Almango Business Hub",
+        });
+
+        setIsLoading(false);
+        navigate("/");
+        return;
       const response = await fetch(
         `http://109.199.100.16/AlmangoXV1NETFramework/APIs/APIComercio/ObtenerLogin?Secusername=${encodeURIComponent(
           email
