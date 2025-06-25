@@ -102,6 +102,7 @@ export default function SubUsuarios() {
       filtroEstado === "Todos" || u.estado === filtroEstado;
     return coincideBusqueda && coincideRol && coincideEstado;
   });
+
   const handleEditUsuario = async (usuario) => {
     const { value } = await Swal.fire({
       title: "Editar Subusuario",
@@ -112,15 +113,6 @@ export default function SubUsuarios() {
       <input id="swal-input-email" class="swal2-input" placeholder="Email" value="${
         usuario.email
       }">
-      <select id="swal-input-rol" class="swal2-select">
-        <option ${
-          usuario.rol === "Administrador" ? "selected" : ""
-        }>Administrador</option>
-        <option ${usuario.rol === "Editor" ? "selected" : ""}>Editor</option>
-        <option ${
-          usuario.rol === "Visualizador" ? "selected" : ""
-        }>Visualizador</option>
-      </select>
       <select id="swal-input-estado" class="swal2-select">
         <option ${usuario.estado === "Activo" ? "selected" : ""}>Activo</option>
         <option ${
@@ -136,21 +128,62 @@ export default function SubUsuarios() {
         const email = (
           document.getElementById("swal-input-email") as HTMLInputElement
         ).value.trim();
-        const rol = (
-          document.getElementById("swal-input-rol") as HTMLSelectElement
-        ).value;
         const estado = (
           document.getElementById("swal-input-estado") as HTMLSelectElement
         ).value;
         if (!nombre || !email)
           Swal.showValidationMessage("Nombre y Email obligatorios");
-        return { nombre, email, rol, estado };
+        return { nombre, email, estado };
       },
     });
     if (value) {
       setUsuarios((prev) =>
         prev.map((u) => (u.id === usuario.id ? { ...u, ...value } : u))
       );
+    }
+  };
+
+  const handleChangeRol = async (usuario) => {
+    const { value } = await Swal.fire({
+      title: "Cambiar Rol",
+      html: `
+      <select id="swal-input-rol" class="swal2-select">
+        <option ${
+          usuario.rol === "Administrador" ? "selected" : ""
+        }>Administrador</option>
+        <option ${usuario.rol === "Editor" ? "selected" : ""}>Editor</option>
+        <option ${
+          usuario.rol === "Visualizador" ? "selected" : ""
+        }>Visualizador</option>
+      </select>`,
+      focusConfirm: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        const rol = (
+          document.getElementById("swal-input-rol") as HTMLSelectElement
+        ).value;
+        return { rol };
+      },
+    });
+    if (value) {
+      setUsuarios((prev) =>
+        prev.map((u) => (u.id === usuario.id ? { ...u, rol: value.rol } : u))
+      );
+    }
+  };
+
+  const handleDeleteUsuario = async (usuario) => {
+    const confirmed = await Swal.fire({
+      title: "¿Eliminar subusuario?",
+      text: `Esta acción eliminará a ${usuario.nombre}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#e11d48",
+    });
+    if (confirmed.isConfirmed) {
+      setUsuarios((prev) => prev.filter((u) => u.id !== usuario.id));
     }
   };
 
@@ -276,7 +309,7 @@ export default function SubUsuarios() {
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end" className="bg-black">
                           <DropdownMenuItem
                             onClick={() => handleEditUsuario(usuario)}
                           >
@@ -284,15 +317,21 @@ export default function SubUsuarios() {
                             <span>Editar</span>
                           </DropdownMenuItem>
 
-                          <DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleChangeRol(usuario)}
+                          >
                             <Lock className="mr-2 h-4 w-4" />
-                            <span>Cambiar permisos</span>
+                            <span>Cambiar rol</span>
                           </DropdownMenuItem>
+
                           <DropdownMenuItem>
                             <Mail className="mr-2 h-4 w-4" />
                             <span>Reenviar invitación</span>
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => handleDeleteUsuario(usuario)}
+                          >
                             <Trash className="mr-2 h-4 w-4" />
                             <span>Eliminar</span>
                           </DropdownMenuItem>
