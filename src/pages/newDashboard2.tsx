@@ -410,7 +410,7 @@ export default function SolicitudesPage() {
   });
 
   return (
-    <DashboardLayout>
+    <>
       <div className="p-2 space-y-2">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Gestión de Solicitudes</h1>
@@ -925,6 +925,6 @@ export default function SolicitudesPage() {
           )}
         </div>
       </div>
-    </DashboardLayout>
+    </>
   );
 }
