@@ -45,6 +45,11 @@ export const principalItems: SidebarItemWithSubmenu[] = [
     path: '/newDashboard',
   },
   {
+    title: 'Subsuarios',
+    icon: Users,
+    path: '/subUsuarios',
+  },
+  {
     title: 'Nuevo Proyecto',
     icon: Gavel,
     path: '/subastas/nueva',
