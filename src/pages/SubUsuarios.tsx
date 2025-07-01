@@ -42,6 +42,8 @@ export default function SubUsuarios() {
   const [filtroRol, setFiltroRol] = useState("Todos");
   const [filtroEstado, setFiltroEstado] = useState("Todos");
 
+  const [filtroSucursal, setFiltroSucursal] = useState("Todos");
+
   // Dummy data for subusuarios
   const [usuarios, setUsuarios] = useState([
     {
@@ -50,6 +52,7 @@ export default function SubUsuarios() {
       email: "maria@empresa.com",
       rol: "Administrador",
       estado: "Activo",
+      sucursal: "Sucursal X",
       ultimoAcceso: "Hoy, 09:45 AM",
     },
     {
@@ -58,6 +61,7 @@ export default function SubUsuarios() {
       email: "carlos@empresa.com",
       rol: "Editor",
       estado: "Activo",
+      sucursal: "Sucursal X",
       ultimoAcceso: "Ayer, 14:30 PM",
     },
     {
@@ -66,6 +70,7 @@ export default function SubUsuarios() {
       email: "ana@empresa.com",
       rol: "Visualizador",
       estado: "Inactivo",
+      sucursal: "Sucursal X",
       ultimoAcceso: "Hace 1 semana",
     },
     {
@@ -74,6 +79,7 @@ export default function SubUsuarios() {
       email: "juan@empresa.com",
       rol: "Editor",
       estado: "Activo",
+      sucursal: "Sucursal X",
       ultimoAcceso: "Hoy, 11:25 AM",
     },
     {
@@ -82,9 +88,15 @@ export default function SubUsuarios() {
       email: "laura@empresa.com",
       rol: "Visualizador",
       estado: "Activo",
+      sucursal: "Sucursal X",
       ultimoAcceso: "Hace 3 días",
     },
   ]);
+
+   const sucursales = useMemo(
+    () => ["Todos", ...new Set(usuarios.map((u) => u.sucursal))],
+    [usuarios]
+  );
 
   const roles = useMemo(
     () => ["Todos", ...new Set(usuarios.map((u) => u.rol))],
@@ -100,7 +112,11 @@ export default function SubUsuarios() {
     const coincideRol = filtroRol === "Todos" || u.rol === filtroRol;
     const coincideEstado =
       filtroEstado === "Todos" || u.estado === filtroEstado;
-    return coincideBusqueda && coincideRol && coincideEstado;
+    const coincideSucursal =
+      filtroSucursal === "Todos" || u.sucursal === filtroSucursal;
+    return (
+      coincideBusqueda && coincideRol && coincideEstado && coincideSucursal
+    );
   });
 
   const handleEditUsuario = async (usuario) => {
@@ -113,12 +129,16 @@ export default function SubUsuarios() {
       <input id="swal-input-email" class="swal2-input" placeholder="Email" value="${
         usuario.email
       }">
+      <input id="swal-input-telefono" class="swal2-input" placeholder="Teléfono" value="${
+        usuario.telefono || ""
+      }">
       <select id="swal-input-estado" class="swal2-select">
         <option ${usuario.estado === "Activo" ? "selected" : ""}>Activo</option>
         <option ${
           usuario.estado === "Inactivo" ? "selected" : ""
         }>Inactivo</option>
       </select>`,
+
       focusConfirm: false,
       showCancelButton: true,
       preConfirm: () => {
@@ -128,12 +148,15 @@ export default function SubUsuarios() {
         const email = (
           document.getElementById("swal-input-email") as HTMLInputElement
         ).value.trim();
+        const telefono = (
+          document.getElementById("swal-input-telefono") as HTMLInputElement
+        ).value.trim();
         const estado = (
           document.getElementById("swal-input-estado") as HTMLSelectElement
         ).value;
         if (!nombre || !email)
           Swal.showValidationMessage("Nombre y Email obligatorios");
-        return { nombre, email, estado };
+        return { nombre, email, telefono, estado };
       },
     });
     if (value) {
@@ -223,6 +246,22 @@ export default function SubUsuarios() {
             </div>
 
             <div className="flex flex-col">
+              <small className="mb-1 text-muted-foreground">Sucursal</small>
+              <select
+                value={filtroSucursal}
+                onChange={(e) => setFiltroSucursal(e.target.value)}
+                className="border rounded-md p-2 bg-background"
+              >
+                <option value="Todos">Todos</option>
+                {sucursales.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col">
               <small className="mb-1 text-muted-foreground">Rol</small>
               <select
                 value={filtroRol}
@@ -258,6 +297,7 @@ export default function SubUsuarios() {
                 <TableRow>
                   <TableHead>Nombre</TableHead>
                   <TableHead>Email</TableHead>
+                  <TableHead>Sucursal</TableHead>
                   <TableHead>Rol</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead>Último Acceso</TableHead>
@@ -271,6 +311,8 @@ export default function SubUsuarios() {
                       {usuario.nombre}
                     </TableCell>
                     <TableCell>{usuario.email}</TableCell>
+                    <TableCell>{usuario.sucursal}</TableCell>
+
                     <TableCell>
                       <Badge
                         variant={
