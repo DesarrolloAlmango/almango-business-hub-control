@@ -82,6 +82,11 @@ export const principalItems: SidebarItemWithSubmenu[] = [
     icon: Calendar,
     path: '/calendario',
   },
+  {
+    title: 'Clientes',
+    icon: Users,
+    path: '/clientes'
+  }
 ]
 
 export const reportesItems: SidebarItem[] = [

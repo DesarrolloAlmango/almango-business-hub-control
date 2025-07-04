@@ -16,16 +16,15 @@ import Settings from "./pages/Settings";
 import Messages from "./pages/Messages";
 import DeveloperEnhanced from "./pages/DeveloperEnhanced";
 import DocumentacionGestion from "./pages/DocumentacionGestion";
+import ListaNegra from "./pages/ListaNegra";
 
 import {
   VisualizacionSolicitudes,
-  ListaNegra,
   Documentacion,
   Incidencias,
   Estadisticas,  
   Pagos,
   Campanas,
-  Clientes,
   Comunicacion,
 } from "./pages/PlaceholderRoutes";
 import RegisterPage from "./pages/RegisterPage";
@@ -47,7 +46,10 @@ import GatewayTimeout504 from "./pages/errors/GatewayTimeout504";
 import EditarSubasta from "./pages/subastas/EditarSubasta";
 import ProyectosEnCurso from "./pages/subastas/ProyectosEnCurso";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
-import { Calendar } from "./components/ui/calendar";
+
+import Calendar from "./pages/Calendar";
+
+import Clientes from "./pages/Clients";
 
 const queryClient = new QueryClient();
 
@@ -231,6 +233,14 @@ const App = () => {
                 element={
                   <ProtectedRoute>
                     <Calendar />
+                  </ProtectedRoute>
+                }
+              />
+                    <Route
+                path='/clientes'
+                element={
+                  <ProtectedRoute>
+                    <Clientes />
                   </ProtectedRoute>
                 }
               />
