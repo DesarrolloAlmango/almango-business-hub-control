@@ -1,5 +1,4 @@
-
-import { DashboardLayout } from "@/components/layout/DashboardLayout";
+// import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,66 +23,198 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  UserPlus, 
-  MoreHorizontal, 
-  Search, 
-  Edit, 
-  Trash, 
-  Lock, 
-  Mail 
+import {
+  UserPlus,
+  MoreHorizontal,
+  Search,
+  Edit,
+  Trash,
+  Lock,
+  Mail,
 } from "lucide-react";
 
+import { useState, useMemo } from "react";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
+
 export default function SubUsuarios() {
+  const [busqueda, setBusqueda] = useState("");
+  const [filtroRol, setFiltroRol] = useState("Todos");
+  const [filtroEstado, setFiltroEstado] = useState("Todos");
+
+  const [filtroSucursal, setFiltroSucursal] = useState("Todos");
+
   // Dummy data for subusuarios
-  const usuarios = [
-    { 
-      id: 1, 
-      nombre: "María González", 
-      email: "maria@empresa.com", 
-      rol: "Administrador", 
+  const [usuarios, setUsuarios] = useState([
+    {
+      id: 1,
+      nombre: "María González",
+      email: "maria@empresa.com",
+      rol: "Administrador",
       estado: "Activo",
-      ultimoAcceso: "Hoy, 09:45 AM"
+      sucursal: "Sucursal X",
+      ultimoAcceso: "Hoy, 09:45 AM",
     },
-    { 
-      id: 2, 
-      nombre: "Carlos Pérez", 
-      email: "carlos@empresa.com", 
-      rol: "Editor", 
+    {
+      id: 2,
+      nombre: "Carlos Pérez",
+      email: "carlos@empresa.com",
+      rol: "Editor",
       estado: "Activo",
-      ultimoAcceso: "Ayer, 14:30 PM"
+      sucursal: "Sucursal X",
+      ultimoAcceso: "Ayer, 14:30 PM",
     },
-    { 
-      id: 3, 
-      nombre: "Ana Rodríguez", 
-      email: "ana@empresa.com", 
-      rol: "Visualizador", 
+    {
+      id: 3,
+      nombre: "Ana Rodríguez",
+      email: "ana@empresa.com",
+      rol: "Visualizador",
       estado: "Inactivo",
-      ultimoAcceso: "Hace 1 semana"
+      sucursal: "Sucursal X",
+      ultimoAcceso: "Hace 1 semana",
     },
-    { 
-      id: 4, 
-      nombre: "Juan López", 
-      email: "juan@empresa.com", 
-      rol: "Editor", 
+    {
+      id: 4,
+      nombre: "Juan López",
+      email: "juan@empresa.com",
+      rol: "Editor",
       estado: "Activo",
-      ultimoAcceso: "Hoy, 11:25 AM"
+      sucursal: "Sucursal X",
+      ultimoAcceso: "Hoy, 11:25 AM",
     },
-    { 
-      id: 5, 
-      nombre: "Laura Sánchez", 
-      email: "laura@empresa.com", 
-      rol: "Visualizador", 
+    {
+      id: 5,
+      nombre: "Laura Sánchez",
+      email: "laura@empresa.com",
+      rol: "Visualizador",
       estado: "Activo",
-      ultimoAcceso: "Hace 3 días"
+      sucursal: "Sucursal X",
+      ultimoAcceso: "Hace 3 días",
     },
-  ];
+  ]);
+
+   const sucursales = useMemo(
+    () => ["Todos", ...new Set(usuarios.map((u) => u.sucursal))],
+    [usuarios]
+  );
+
+  const roles = useMemo(
+    () => ["Todos", ...new Set(usuarios.map((u) => u.rol))],
+    [usuarios]
+  );
+
+  const usuariosFiltrados = usuarios.filter((u) => {
+    const coincideBusqueda =
+      busqueda === "" ||
+      [u.nombre, u.email].some((v) =>
+        v.toLowerCase().includes(busqueda.toLowerCase())
+      );
+    const coincideRol = filtroRol === "Todos" || u.rol === filtroRol;
+    const coincideEstado =
+      filtroEstado === "Todos" || u.estado === filtroEstado;
+    const coincideSucursal =
+      filtroSucursal === "Todos" || u.sucursal === filtroSucursal;
+    return (
+      coincideBusqueda && coincideRol && coincideEstado && coincideSucursal
+    );
+  });
+
+  const handleEditUsuario = async (usuario) => {
+    const { value } = await Swal.fire({
+      title: "Editar Subusuario",
+      html: `
+      <input id="swal-input-nombre" class="swal2-input" placeholder="Nombre" value="${
+        usuario.nombre
+      }">
+      <input id="swal-input-email" class="swal2-input" placeholder="Email" value="${
+        usuario.email
+      }">
+      <input id="swal-input-telefono" class="swal2-input" placeholder="Teléfono" value="${
+        usuario.telefono || ""
+      }">
+      <select id="swal-input-estado" class="swal2-select">
+        <option ${usuario.estado === "Activo" ? "selected" : ""}>Activo</option>
+        <option ${
+          usuario.estado === "Inactivo" ? "selected" : ""
+        }>Inactivo</option>
+      </select>`,
+
+      focusConfirm: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        const nombre = (
+          document.getElementById("swal-input-nombre") as HTMLInputElement
+        ).value.trim();
+        const email = (
+          document.getElementById("swal-input-email") as HTMLInputElement
+        ).value.trim();
+        const telefono = (
+          document.getElementById("swal-input-telefono") as HTMLInputElement
+        ).value.trim();
+        const estado = (
+          document.getElementById("swal-input-estado") as HTMLSelectElement
+        ).value;
+        if (!nombre || !email)
+          Swal.showValidationMessage("Nombre y Email obligatorios");
+        return { nombre, email, telefono, estado };
+      },
+    });
+    if (value) {
+      setUsuarios((prev) =>
+        prev.map((u) => (u.id === usuario.id ? { ...u, ...value } : u))
+      );
+    }
+  };
+
+  const handleChangeRol = async (usuario) => {
+    const { value } = await Swal.fire({
+      title: "Cambiar Rol",
+      html: `
+      <select id="swal-input-rol" class="swal2-select">
+        <option ${
+          usuario.rol === "Administrador" ? "selected" : ""
+        }>Administrador</option>
+        <option ${usuario.rol === "Editor" ? "selected" : ""}>Editor</option>
+        <option ${
+          usuario.rol === "Visualizador" ? "selected" : ""
+        }>Visualizador</option>
+      </select>`,
+      focusConfirm: false,
+      showCancelButton: true,
+      preConfirm: () => {
+        const rol = (
+          document.getElementById("swal-input-rol") as HTMLSelectElement
+        ).value;
+        return { rol };
+      },
+    });
+    if (value) {
+      setUsuarios((prev) =>
+        prev.map((u) => (u.id === usuario.id ? { ...u, rol: value.rol } : u))
+      );
+    }
+  };
+
+  const handleDeleteUsuario = async (usuario) => {
+    const confirmed = await Swal.fire({
+      title: "¿Eliminar subusuario?",
+      text: `Esta acción eliminará a ${usuario.nombre}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#e11d48",
+    });
+    if (confirmed.isConfirmed) {
+      setUsuarios((prev) => prev.filter((u) => u.id !== usuario.id));
+    }
+  };
 
   return (
-    <DashboardLayout>
+    <>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Gestión de Subusuarios</h1>
-        <Button className="bg-primary">
+        <Button className="bg-primary" onClick={handleEditUsuario}>
           <UserPlus className="mr-2 h-4 w-4" />
           Nuevo Subusuario
         </Button>
@@ -97,14 +228,66 @@ export default function SubUsuarios() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center mb-4">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input 
-                type="search" 
-                placeholder="Buscar subusuario..." 
-                className="pl-8"
-              />
+          <div className="flex flex-wrap items-center gap-4 mb-4">
+            <div className="flex flex-col">
+              <small className="mb-1 text-muted-foreground">
+                Buscar nombre o email
+              </small>
+              <div className="relative flex-1 max-w-xs">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Ingre su búsqueda ..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <small className="mb-1 text-muted-foreground">Sucursal</small>
+              <select
+                value={filtroSucursal}
+                onChange={(e) => setFiltroSucursal(e.target.value)}
+                className="border rounded-md p-2 bg-background"
+              >
+                <option value="Todos">Todos</option>
+                {sucursales.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col">
+              <small className="mb-1 text-muted-foreground">Rol</small>
+              <select
+                value={filtroRol}
+                onChange={(e) => setFiltroRol(e.target.value)}
+                className="border rounded-md p-2 bg-background"
+              >
+                <option value="Todos">Todos</option>
+                {roles.map((rol) => (
+                  <option key={rol} value={rol}>
+                    {rol}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col">
+              <small className="mb-1 text-muted-foreground">Estado</small>
+              <select
+                value={filtroEstado}
+                onChange={(e) => setFiltroEstado(e.target.value)}
+                className="border rounded-md p-2 bg-background"
+              >
+                <option value="Todos">Todos</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
             </div>
           </div>
 
@@ -114,6 +297,7 @@ export default function SubUsuarios() {
                 <TableRow>
                   <TableHead>Nombre</TableHead>
                   <TableHead>Email</TableHead>
+                  <TableHead>Sucursal</TableHead>
                   <TableHead>Rol</TableHead>
                   <TableHead>Estado</TableHead>
                   <TableHead>Último Acceso</TableHead>
@@ -121,19 +305,40 @@ export default function SubUsuarios() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {usuarios.map((usuario) => (
+                {usuariosFiltrados.map((usuario) => (
                   <TableRow key={usuario.id}>
-                    <TableCell className="font-medium">{usuario.nombre}</TableCell>
+                    <TableCell className="font-medium">
+                      {usuario.nombre}
+                    </TableCell>
                     <TableCell>{usuario.email}</TableCell>
+                    <TableCell>{usuario.sucursal}</TableCell>
+
                     <TableCell>
-                      <Badge variant={usuario.rol === "Administrador" ? "default" : 
-                              usuario.rol === "Editor" ? "secondary" : "outline"}>
+                      <Badge
+                        variant={
+                          usuario.rol === "Administrador"
+                            ? "default"
+                            : usuario.rol === "Editor"
+                            ? "secondary"
+                            : "outline"
+                        }
+                      >
                         {usuario.rol}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={usuario.estado === "Activo" ? "outline" : "destructive"} 
-                        className={`${usuario.estado === "Activo" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                      <Badge
+                        variant={
+                          usuario.estado === "Activo"
+                            ? "outline"
+                            : "destructive"
+                        }
+                        className={`${
+                          usuario.estado === "Activo"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
                         {usuario.estado}
                       </Badge>
                     </TableCell>
@@ -146,20 +351,29 @@ export default function SubUsuarios() {
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                        <DropdownMenuContent align="end" className="bg-black">
+                          <DropdownMenuItem
+                            onClick={() => handleEditUsuario(usuario)}
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             <span>Editar</span>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+
+                          <DropdownMenuItem
+                            onClick={() => handleChangeRol(usuario)}
+                          >
                             <Lock className="mr-2 h-4 w-4" />
-                            <span>Cambiar permisos</span>
+                            <span>Cambiar rol</span>
                           </DropdownMenuItem>
+
                           <DropdownMenuItem>
                             <Mail className="mr-2 h-4 w-4" />
                             <span>Reenviar invitación</span>
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => handleDeleteUsuario(usuario)}
+                          >
                             <Trash className="mr-2 h-4 w-4" />
                             <span>Eliminar</span>
                           </DropdownMenuItem>
@@ -173,6 +387,6 @@ export default function SubUsuarios() {
           </div>
         </CardContent>
       </Card>
-    </DashboardLayout>
+    </>
   );
 }

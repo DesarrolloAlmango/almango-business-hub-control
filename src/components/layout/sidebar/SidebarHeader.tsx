@@ -1,20 +1,20 @@
-import { SidebarHeader as UISidebarHeader } from "@/components/ui/sidebar";
-import { useSidebar } from "@/components/ui/sidebar";
-import { ChevronRight, Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTheme } from "@/hooks/use-theme";
+import { SidebarHeader as UISidebarHeader } from '@/components/ui/sidebar'
+import { useSidebar } from '@/components/ui/sidebar'
+import { ChevronRight, Menu } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useTheme } from '@/hooks/use-theme'
 
 export function SidebarHeader() {
-  const { toggleSidebar, state } = useSidebar();
-  const { theme } = useTheme();
+  const { toggleSidebar, state } = useSidebar()
+  const { theme } = useTheme()
 
   return (
     <UISidebarHeader className='flex items-center justify-between p-3'>
-      {state === "expanded" && (
+      {state === 'expanded' && (
         <img
           src='/lovable-uploads/almango-business.png'
           alt='Almango Logo'
-          className='h-14 w-34'
+          className='h-13 w-33'
         />
       )}
 
@@ -23,13 +23,13 @@ export function SidebarHeader() {
         size='icon'
         onClick={toggleSidebar}
         className={`${
-          theme === "light"
-            ? "text-black hover:bg-gray-100 hover:rounded-full"
-            : "text-white hover:bg-sidebar-accent"
+          theme === 'light'
+            ? '!text-black hover:bg-gray-100 hover:rounded-full'
+            : 'text-white hover:bg-sidebar-accent'
         } transition-all duration-300`}
       >
-        {state === "expanded" ? <ChevronRight size={18} /> : <Menu size={18} />}
+        {state === 'expanded' ? <ChevronRight size={18} /> : <Menu size={18} />}
       </Button>
     </UISidebarHeader>
-  );
+  )
 }
